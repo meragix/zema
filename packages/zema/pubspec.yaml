@@ -1,0 +1,22 @@
+name: zema
+description: "A high-performance, type-safe schema validation library for Dart & Flutter."
+version: 0.0.1-dev.1
+homepage: https://github.com/meragix/zema
+repository: https://github.com/meragix/zema
+issue_tracker: https://github.com/meragix/zema/issues
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+# NO dependencies for v0.1.0 (zero dependencies!)
+dependencies:
+
+dev_dependencies:
+  lints: ^3.0.0
+
+topics:
+  - validation
+  - schema
+  - parsing
+  - zod
+  - type-safe
