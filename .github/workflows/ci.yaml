@@ -1,0 +1,77 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+      
+      - name: Install Melos
+        run: dart pub global activate melos
+      
+      - name: Bootstrap
+        run: melos bootstrap
+      
+      - name: Analyze
+        run: melos analyze
+      
+      - name: Check formatting
+        run: melos format:check
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        sdk: [stable, beta]
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: ${{ matrix.sdk }}
+      
+      - name: Install Melos
+        run: dart pub global activate melos
+      
+      - name: Bootstrap
+        run: melos bootstrap
+      
+      - name: Run tests
+        run: melos test
+      
+      - name: Upload coverage
+        if: matrix.sdk == 'stable'
+        uses: codecov/codecov-action@v3
+        with:
+          files: packages/zema/coverage/lcov.info
+
+  pana:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: dart-lang/setup-dart@v1
+      
+      - name: Install Melos
+        run: dart pub global activate melos
+      
+      - name: Install Pana
+        run: dart pub global activate pana
+      
+      - name: Bootstrap
+        run: melos bootstrap
+      
+      - name: Run Pana
+        run: |
+          cd packages/zema
+          pana --no-warning --exit-code-threshold 0

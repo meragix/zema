@@ -1,0 +1,32 @@
+name: Publish
+
+on:
+  push:
+    tags:
+      - 'zema-v*'
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write
+    steps:
+      - uses: actions/checkout@v3
+      
+      - uses: dart-lang/setup-dart@v1
+      
+      - name: Install Melos
+        run: dart pub global activate melos
+      
+      - name: Bootstrap
+        run: melos bootstrap
+      
+      - name: Run tests
+        run: melos test
+      
+      - name: Publish to pub.dev
+        run: |
+          cd packages/zema
+          dart pub publish --force
+        env:
+          PUB_CREDENTIALS: ${{ secrets.PUB_CREDENTIALS }}
