@@ -1,0 +1,29 @@
+# Dart
+.dart_tool/
+.packages
+build/
+pubspec.lock
+
+# Coverage
+coverage/
+*.lcov
+
+# IDE
+.idea/
+.vscode/
+*.iml
+*.code-workspace
+
+# Melos
+.melos_tool/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test
+*.test.dart.js
+*.test.dart.js.map
+
+# Other
+*.log
