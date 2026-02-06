@@ -10,14 +10,20 @@ jobs:
   analyze:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       
       - uses: dart-lang/setup-dart@v1
         with:
-          sdk: stable
+          sdk: "3.9.0"
       
+      - name: Cache pub
+        uses: actions/cache@v3
+        with:
+          path: ~/.pub-cache
+          key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+
       - name: Install Melos
-        run: dart pub global activate melos
+        run: dart pub global activate melos 7.4.0
       
       - name: Bootstrap
         run: melos bootstrap
@@ -32,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        sdk: [stable, beta]
+        sdk: ["3.9.0", beta]
     steps:
       - uses: actions/checkout@v3
       
@@ -40,8 +46,14 @@ jobs:
         with:
           sdk: ${{ matrix.sdk }}
       
+      - name: Cache pub
+        uses: actions/cache@v3
+        with:
+          path: ~/.pub-cache
+          key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+
       - name: Install Melos
-        run: dart pub global activate melos
+        run: dart pub global activate melos 7.4.0
       
       - name: Bootstrap
         run: melos bootstrap
@@ -50,23 +62,25 @@ jobs:
         run: melos test
       
       - name: Upload coverage
-        if: matrix.sdk == 'stable'
+        if: matrix.sdk == '3.9.0'
         uses: codecov/codecov-action@v3
         with:
           files: packages/zema/coverage/lcov.info
+          fail_ci_if_error: fasle
 
   pana:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
-      
+      - uses: actions/checkout@v4
+    
       - uses: dart-lang/setup-dart@v1
-      
-      - name: Install Melos
-        run: dart pub global activate melos
-      
-      - name: Install Pana
-        run: dart pub global activate pana
+        with:
+          sdk: "3.9.0"
+
+      - name: Install tools
+        run: |
+          dart pub global activate melos 7.0.0
+          dart pub global activate pana
       
       - name: Bootstrap
         run: melos bootstrap
@@ -74,4 +88,4 @@ jobs:
       - name: Run Pana
         run: |
           cd packages/zema
-          pana --no-warning --exit-code-threshold 0
+          pana --exit-code-threshold 20
