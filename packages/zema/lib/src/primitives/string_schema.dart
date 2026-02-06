@@ -1,4 +1,3 @@
-// String validation schema with fluent API
 import 'package:zema/src/core/result.dart';
 import 'package:zema/src/core/schema.dart';
 import 'package:zema/src/error/i18n.dart';
@@ -47,7 +46,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
         receivedValue: value,
         meta: {'expected': 'string', 'received': value.runtimeType.toString()},
       );
-      return _singleFailure(
+      return singleFailure(
         applyCustomMessage(issue),
       );
     }
@@ -146,10 +145,10 @@ final class ZemaString extends ZemaSchema<dynamic, String>
     }
 
     if (issues.isNotEmpty) {
-      return _failure(issues);
+      return failure(issues);
     }
 
-    return _success(str);
+    return success(str);
   }
 
   // Fluent API

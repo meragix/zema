@@ -42,6 +42,7 @@ extension type ZemaResult<T>._((T?, List<ZemaIssue>?) _record) {
   (T?, List<ZemaIssue>?) get asRecord => _record;
 }
 
-ZemaResult<T> _success<T>(T data) => ZemaResult.success(data);
-ZemaResult<T> _failure<T>(List<ZemaIssue> issues) => ZemaResult.failure(issues);
-ZemaResult<T> _singleFailure<T>(ZemaIssue issue) => ZemaResult.failure([issue]);
+// Helpers publics
+ZemaResult<T> success<T>(T data) => ZemaResult.success(data);
+ZemaResult<T> failure<T>(List<ZemaIssue> issues) => ZemaResult.failure(issues);
+ZemaResult<T> singleFailure<T>(ZemaIssue issue) => ZemaResult.failure([issue]);
