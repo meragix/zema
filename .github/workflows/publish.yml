@@ -3,7 +3,7 @@ name: Publish
 on:
   push:
     tags:
-      - 'zema-v*'
+      - '*-v*'
 
 jobs:
   publish:
