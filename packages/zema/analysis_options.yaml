@@ -58,4 +58,3 @@ linter:
     - use_function_type_syntax_for_parameters
     - use_rethrow_when_possible
     - unnecessary_parenthesis
-    - package_api_docs

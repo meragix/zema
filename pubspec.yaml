@@ -1,9 +1,65 @@
 name: zema_workspace
 description: Monorepo workspace for Zema packages
+repository: https://github.com/meragix/zema
 publish_to: none
 
 environment:
-  sdk: '>=3.3.0 <4.0.0'
+  sdk: ^3.9.0
+
+workspace:
+  - packages/zema
 
 dev_dependencies:
   melos: ^7.4.0
+
+melos:
+  command:
+    version:
+      # Generate commit links in package changelogs.
+      linkToCommits: true
+      # Only allow versioning to happen on main branch.
+      # Additionally build a changelog at the root of the workspace.
+      workspaceChangelog: true
+    bootstrap:
+      runPubGetInParallel: true
+
+  scripts:
+    # Analysis
+    analyze:
+      description: Run static analysis on all packages
+      run: melos exec -- dart analyze .
+
+    # Formatting
+    format:
+      description: Format all packages
+      run: melos exec -- dart format .
+
+    format:check:
+      description: Check formatting
+      run: melos exec -- dart format --output=none --set-exit-if-changed .
+
+    # Testing
+    test:
+      description: Run all tests
+      run: melos exec --fail-fast -- dart test --coverage=coverage
+
+    test:coverage:
+      description: Generate coverage report
+      run: |
+        melos exec -- dart test --coverage=coverage
+        melos exec -- dart run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --report-on=lib
+
+    # Publishing
+    publish:check:
+      description: Dry run publish
+      run: melos exec -- dart pub publish --dry-run
+
+    # Version management
+    version:
+      description: Update version across packages
+      run: melos version
+
+    # Clean
+    clean:
+      description: Clean all packages
+      run: melos exec -- dart pub cache clean
