@@ -1,16 +1,16 @@
-name: Publish
+name: Publish to pub.dev
 
 on:
   push:
     tags:
-      # - '*-v*'
-      "v*"
+      - 'zema-*'
+      # - '*' # Allow any tag
 
 jobs:
   publish:
     runs-on: ubuntu-latest
     permissions:
-      id-token: write
+      id-token: write # Required for authentication using OIDC
     steps:
       - uses: actions/checkout@v4
       
@@ -37,5 +37,3 @@ jobs:
         run: |
           cd packages/zema
           dart pub publish --force
-        env:
-          PUB_CREDENTIALS: ${{ secrets.PUB_CREDENTIALS }}
