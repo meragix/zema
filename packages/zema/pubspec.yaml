@@ -6,16 +6,17 @@ repository: https://github.com/meragix/zema
 issue_tracker: https://github.com/meragix/zema/issues
 
 environment:
-  sdk: '>=3.5.0 <4.0.0'
+  sdk: ">=3.5.0 <4.0.0"
 
 resolution: workspace
 
-# NO dependencies for v0.1.0 (zero dependencies!)
-dependencies: {}
+dependencies:
+  meta: ^1.10.0
 
 dev_dependencies:
   test: ^1.24.0
   coverage: ^1.7.0
+  benchmark_harness: ^2.2.0
   lints: ^6.1.0
 
 topics:
