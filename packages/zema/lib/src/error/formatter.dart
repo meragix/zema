@@ -1,7 +1,11 @@
+import 'package:zema/src/error/error_map.dart';
+import 'package:zema/src/error/i18n.dart';
+import 'package:zema/src/error/issue.dart';
+
 /// Formatted error structure (nested)
 typedef ZemaFormattedErrors = Map<String, dynamic>;
 
-/// Extension on List<ZemaIssue> for formatting
+/// Extension on List&lt;ZemaIssue&gt; for formatting
 extension ZemaIssueListExtensions on List<ZemaIssue> {
   /// Format issues into nested structure
   /// 

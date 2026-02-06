@@ -1,15 +1,20 @@
-// Translation map for error messages
+import 'package:zema/src/error/error_map.dart';
+import 'package:zema/src/error/translations/en.dart';
+import 'package:zema/src/error/translations/fr.dart';
+
+/// Translation map for error messages
 typedef ZemaTranslations = Map<String, String Function(Map<String, dynamic>?)>;
 
 /// Localization manager
 class ZemaI18n {
   static final Map<String, ZemaTranslations> _translations = {
-    'en': _englishTranslations,
-    'fr': _frenchTranslations,
+    'en': englishTranslations,
+    'fr': frenchTranslations,
   };
 
   /// Register custom translations for a locale
-  static void registerTranslations(String locale, ZemaTranslations translations) {
+  static void registerTranslations(
+      String locale, ZemaTranslations translations) {
     _translations[locale] = translations;
   }
 

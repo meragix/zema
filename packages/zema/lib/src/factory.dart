@@ -1,12 +1,12 @@
-import 'package:meta/mata.dart';
+import 'package:meta/meta.dart';
 
 @immutable
 class Zema {
   const Zema._();
-  
+
   // Primitives
-  
+
   // Complex types
-  
+
   // Coercion
 }

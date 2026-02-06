@@ -1,4 +1,5 @@
 import 'package:meta/meta.dart';
+import 'package:zema/src/error/issue.dart';
 
 /// Function signature for custom error message generators
 typedef ZemaErrorMapFunc = String? Function(ZemaIssue issue, ZemaErrorContext ctx);
