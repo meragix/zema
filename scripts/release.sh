@@ -17,26 +17,26 @@ warning() { echo -e "${YELLOW}⚠ $1${NC}"; }
 
 # Parse arguments
 if [ -z "$1" ]; then
-  error "Usage: ./scripts/release.sh <package>-v<version>
+  error "Usage: ./scripts/release.sh <package>-<version>
 
 Examples:
-  ./scripts/release.sh zema-v0.1.0
-  ./scripts/release.sh zema-v0.2.0-dev.1
-  ./scripts/release.sh flutter_zema-v0.1.0
-  ./scripts/release.sh flutter_zema-v0.1.0-beta.2"
+  ./scripts/release.sh zema-0.1.0
+  ./scripts/release.sh zema-0.2.0-dev.1
+  ./scripts/release.sh flutter_zema-0.1.0
+  ./scripts/release.sh flutter_zema-0.1.0-beta.2"
 fi
 
 TAG=$1
 
 # Extract package name and version
-# Supports: zema-v0.1.0, zema-v0.1.0-dev.1, flutter_zema-v0.1.0
-if [[ ! "$TAG" =~ ^([a-z_]+)-v([0-9]+\.[0-9]+\.[0-9]+(-[a-z0-9.]+)?)$ ]]; then
-  error "Invalid tag format. Use: <package>-v<version>
+# Supports: zema-0.1.0, zema-0.1.0-dev.1, flutter_zema-0.1.0
+if [[ ! "$TAG" =~ ^([a-z_]+)-([0-9]+\.[0-9]+\.[0-9]+(-[a-z0-9.]+)?)$ ]]; then
+  error "Invalid tag format. Use: <package>-<version>
   
 Examples:
-  zema-v0.1.0
-  zema-v0.2.0-dev.1
-  flutter_zema-v0.1.0-beta.2"
+  zema-0.1.0
+  zema-0.2.0-dev.1
+  flutter_zema-0.1.0-beta.2"
 fi
 
 PACKAGE=${BASH_REMATCH[1]}
