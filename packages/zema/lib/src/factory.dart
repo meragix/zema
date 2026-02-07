@@ -2,10 +2,10 @@ import 'package:meta/meta.dart';
 import 'package:zema/src/coercion/coerce.dart';
 import 'package:zema/src/complex/array.dart';
 import 'package:zema/src/complex/object.dart';
+import 'package:zema/src/core/schema.dart';
 import 'package:zema/src/primitives/bool.dart';
 import 'package:zema/src/primitives/number.dart';
 import 'package:zema/src/primitives/string.dart';
-import 'package:zema/zema.dart';
 
 /// Global factory for creating Zema schemas
 ///
