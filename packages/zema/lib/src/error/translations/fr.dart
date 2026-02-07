@@ -16,4 +16,7 @@ final ZemaTranslations frenchTranslations = {
   'custom_error': (p) => (p?['message'] as String?) ?? 'Validation échouée',
   'required': (p) => 'Ce champ est requis',
   'invalid_coercion': (p) => 'Impossible de convertir en ${p?['type']}',
+  'not_positive': (p) => 'Doit être un nombre positif',
+  'not_negative': (p) => 'Doit être un nombre négatif',
+  'not_finite': (p) => 'Doit être un nombre fini',
 };
