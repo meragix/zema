@@ -1,48 +1,153 @@
-import 'package:zema/src/error/exception.dart';
+import 'package:meta/meta.dart';
 import 'package:zema/src/error/issue.dart';
 
-/// Extension type wrapper over (T?, List&lt;ZemaIssue&gt;?) record
+/// Result of a Zema validation.
 ///
-/// Provides utility getters without allocating additional objects.
-/// This is a compile-time only wrapper with ZERO runtime cost.
-extension type ZemaResult<T>._((T?, List<ZemaIssue>?) _record) {
-  /// Create a success result
-  ZemaResult.success(T data) : this._((data, null));
+/// Use pattern matching to handle success/failure:
+/// ```dart
+/// final result = userSchema.parse(json);
+///
+/// switch (result) {
+///   case ZemaSuccess(:final value):
+///     print('Valid user: $value');
+///   case ZemaFailure(:final errors):
+///     print('Errors: $errors');
+/// }
+/// ```
+sealed class ZemaResult<T> {
+  const ZemaResult();
 
-  /// Create a failure result
-  ZemaResult.failure(List<ZemaIssue> issues) : this._((null, issues));
+  /// Whether validation succeeded.
+  bool get isSuccess => this is ZemaSuccess<T>;
 
-  /// The validated data (null if validation failed)
-  T? get data => _record.$1;
+  /// Whether validation failed.
+  bool get isFailure => this is ZemaFailure<T>;
 
-  /// The list of validation issues (null if validation succeeded)
-  List<ZemaIssue>? get issues => _record.$2;
+  /// Get value (throws if failure).
+  T get value => switch (this) {
+        ZemaSuccess(value: final v) => v,
+        ZemaFailure() =>
+          throw StateError('Cannot get value from failed result'),
+      };
 
-  /// Whether validation succeeded
-  bool get isSuccess => _record.$2 == null;
+  /// Get errors (empty list if success).
+  List<ZemaIssue> get errors => switch (this) {
+        ZemaSuccess() => const [],
+        ZemaFailure(errors: final e) => e,
+      };
 
-  /// Whether validation failed
-  bool get isFailure => _record.$2 != null;
-
-  /// Whether there are any issues
-  bool get hasIssues => _record.$2 != null && _record.$2!.isNotEmpty;
-
-  /// Get data or throw exception
-  T get dataOrThrow {
-    if (_record.$2 != null) {
-      throw ZemaException(_record.$2!);
-    }
-    return _record.$1 as T;
+  /// Transform to other type (only for success).
+  ///
+  /// ```dart
+  /// final user = result.mapTo((map) => User.fromJson(map));
+  /// ```
+  ZemaResult<R> mapTo<R>(R Function(Map<String, dynamic>) mapper) {
+    return switch (this) {
+      ZemaSuccess(value: final v) => ZemaSuccess(_mapValue(v, mapper)),
+      ZemaFailure(errors: final e) => ZemaFailure(e),
+    };
   }
 
-  /// Get data or return default value
-  T dataOr(T defaultValue) => _record.$1 ?? defaultValue;
+  R mapToOrElse<R>(
+    R Function(Map<String, dynamic>) mapper, {
+    required R Function(List<ZemaIssue>) onError,
+  }) {
+    return switch (this) {
+      ZemaSuccess(value: final v) => _mapValue(v, mapper),
+      ZemaFailure(errors: final e) => onError(e),
+    };
+  }
 
-  /// Access the underlying record (for pattern matching)
-  (T?, List<ZemaIssue>?) get asRecord => _record;
+  R? mapToOrNull<R>(R Function(Map<String, dynamic>) mapper) {
+    return switch (this) {
+      ZemaSuccess(value: final v) => _mapValue(v, mapper),
+      ZemaFailure() => null,
+    };
+  }
+
+  R _mapValue<R>(dynamic value, R Function(Map<String, dynamic>) mapper) {
+    if (value is Map<String, dynamic>) return mapper(value);
+    if (value is Map) return mapper(Map<String, dynamic>.from(value as Map));
+    throw StateError('Cannot map non-Map value: ${value.runtimeType}');
+  }
+
+  void onSuccess(void Function(T) action) {
+    if (this case ZemaSuccess(value: final v)) action(v);
+  }
+
+  void onError(void Function(List<ZemaIssue>) action) {
+    if (this case ZemaFailure(errors: final e)) action(e);
+  }
+
+  R when<R>({
+    required R Function(T value) success,
+    required R Function(List<ZemaIssue> errors) failure,
+  }) {
+    return switch (this) {
+      ZemaSuccess(value: final v) => success(v),
+      ZemaFailure(errors: final e) => failure(e),
+    };
+  }
+
+  R maybeWhen<R>({
+    required R Function() orElse,
+    R Function(T value)? success,
+    R Function(List<ZemaIssue> errors)? failure,
+  }) {
+    return switch (this) {
+      ZemaSuccess(value: final v) => success?.call(v) ?? orElse(),
+      ZemaFailure(errors: final e) => failure?.call(e) ?? orElse(),
+    };
+  }
 }
 
-// Helpers publics
-ZemaResult<T> success<T>(T data) => ZemaResult.success(data);
-ZemaResult<T> failure<T>(List<ZemaIssue> issues) => ZemaResult.failure(issues);
-ZemaResult<T> singleFailure<T>(ZemaIssue issue) => ZemaResult.failure([issue]);
+/// Success result.
+@immutable
+final class ZemaSuccess<T> extends ZemaResult<T> {
+  @override
+  final T value;
+
+  const ZemaSuccess(this.value);
+
+  @override
+  String toString() => 'ZemaSuccess($value)';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || other is ZemaSuccess<T> && value == other.value;
+
+  @override
+  int get hashCode => value.hashCode;
+}
+
+/// Failure result.
+@immutable
+final class ZemaFailure<T> extends ZemaResult<T> {
+  @override
+  final List<ZemaIssue> errors;
+
+  const ZemaFailure(this.errors);
+
+  /// Create a failure with a single issue.
+  ZemaFailure.single(ZemaIssue issue) : errors = [issue];
+
+  @override
+  String toString() => 'ZemaFailure($errors)';
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is ZemaFailure<T> && errors == other.errors;
+
+  @override
+  int get hashCode => errors.hashCode;
+}
+
+/// Create a success result.
+ZemaResult<T> success<T>(T value) => ZemaSuccess(value);
+
+/// Create a failure result with multiple issues.
+ZemaResult<T> failure<T>(List<ZemaIssue> errors) => ZemaFailure(errors);
+
+/// Create a failure result with a single issue.
+ZemaResult<T> singleFailure<T>(ZemaIssue issue) => ZemaFailure.single(issue);

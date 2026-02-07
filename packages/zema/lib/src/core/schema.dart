@@ -1,4 +1,5 @@
 import 'package:zema/src/core/result.dart';
+import 'package:zema/src/error/exception.dart';
 
 /// Base schema interface with full type propagation
 ///
@@ -13,7 +14,10 @@ abstract class ZemaSchema<Input, Output> {
   /// Throws [ZemaException] containing all validation issues
   Output parse(Input value) {
     final result = safeParse(value);
-    return result.dataOrThrow;
+    return result.mapToOrElse(
+      (v) => v as Output,
+      onError: (errors) => throw ZemaException(errors),
+    );
   }
 
   /// Safe parse returning ZemaResult
