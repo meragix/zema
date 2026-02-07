@@ -35,11 +35,11 @@ class Zema {
   ) =>
       ZemaObject(shape);
 
-  static ZemaObject<T> objectAs<T extends Object>(
-    Map<String, ZemaSchema<dynamic, dynamic>> shape,
-    T Function(Map<String, dynamic>) constructor,
-  ) =>
-      ZemaObject(shape, constructor: constructor);
+  // static ZemaObject<T> objectAs<T extends Object>(
+  //   Map<String, ZemaSchema<dynamic, dynamic>> shape,
+  //   T Function(Map<String, dynamic>) constructor,
+  // ) =>
+  //     ZemaObject(shape, constructor: constructor);
 
   // Coercion
   static const ZemaCoerce coerce = ZemaCoerce();

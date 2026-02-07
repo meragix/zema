@@ -4,7 +4,7 @@ import 'package:zema/zema.dart';
 void main() {
   group('ZemaBool', () {
     test('accepts true', () {
-      final schema = Z.boolean;
+      final schema = z.boolean;
       final result = schema.safeParse(true);
 
       expect(result.$1, isTrue);
@@ -12,7 +12,7 @@ void main() {
     });
 
     test('accepts false', () {
-      final schema = Z.boolean;
+      final schema = z.boolean;
       final result = schema.safeParse(false);
 
       expect(result.$1, isFalse);
@@ -20,7 +20,7 @@ void main() {
     });
 
     test('rejects non-boolean', () {
-      final schema = Z.boolean;
+      final schema = z.boolean;
 
       expect(schema.safeParse(1).$2, isNotNull);
       expect(schema.safeParse('true').$2, isNotNull);
@@ -28,7 +28,7 @@ void main() {
     });
 
     test('error has correct code', () {
-      final schema = Z.boolean;
+      final schema = z.boolean;
       final result = schema.safeParse('true');
 
       expect(result.$2!.first.code, equals('invalid_type'));

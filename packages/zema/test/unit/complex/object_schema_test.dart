@@ -5,9 +5,9 @@ void main() {
   group('ZemaObject', () {
     group('Basic validation', () {
       test('validates valid object', () {
-        final schema = Z.object({
-          'name': Z.string,
-          'age': Z.int,
+        final schema = z.object({
+          'name': z.string,
+          'age': z.int,
         });
 
         final result = schema.safeParse({
@@ -22,7 +22,7 @@ void main() {
       });
 
       test('rejects non-object', () {
-        final schema = Z.object({'name': Z.string});
+        final schema = z.object({'name': z.string});
 
         expect(schema.safeParse('not an object').$2, isNotNull);
         expect(schema.safeParse([1, 2, 3]).$2, isNotNull);
@@ -32,10 +32,10 @@ void main() {
 
     group('Field validation', () {
       test('validates each field', () {
-        final schema = Z.object({
-          'name': Z.string.min(2),
-          'email': Z.string.email(),
-          'age': Z.int.positive(),
+        final schema = z.object({
+          'name': z.string.min(2),
+          'email': z.string.email(),
+          'age': z.int.positive(),
         });
 
         final result = schema.safeParse({
@@ -48,9 +48,9 @@ void main() {
       });
 
       test('allows missing optional fields', () {
-        final schema = Z.object({
-          'name': Z.string,
-          'nickname': Z.string.optional(),
+        final schema = z.object({
+          'name': z.string,
+          'nickname': z.string.optional(),
         });
 
         final result = schema.safeParse({'name': 'Alice'});
@@ -60,10 +60,10 @@ void main() {
 
     group('Error accumulation', () {
       test('collects ALL field errors', () {
-        final schema = Z.object({
-          'name': Z.string.min(5),
-          'email': Z.string.email(),
-          'age': Z.int.gte(18),
+        final schema = z.object({
+          'name': z.string.min(5),
+          'email': z.string.email(),
+          'age': z.int.gte(18),
         });
 
         final result = schema.safeParse({
@@ -82,7 +82,7 @@ void main() {
       });
 
       test('error paths are correct', () {
-        final schema = Z.object({'email': Z.string.email()});
+        final schema = z.object({'email': z.string.email()});
 
         final result = schema.safeParse({'email': 'invalid'});
 
@@ -92,10 +92,10 @@ void main() {
 
     group('Nested objects', () {
       test('validates nested objects', () {
-        final schema = Z.object({
-          'user': Z.object({
-            'name': Z.string,
-            'email': Z.string.email(),
+        final schema = z.object({
+          'user': z.object({
+            'name': z.string,
+            'email': z.string.email(),
           }),
         });
 
@@ -110,10 +110,10 @@ void main() {
       });
 
       test('collects nested errors with correct paths', () {
-        final schema = Z.object({
-          'user': Z.object({
-            'name': Z.string.min(5),
-            'email': Z.string.email(),
+        final schema = z.object({
+          'user': z.object({
+            'name': z.string.min(5),
+            'email': z.string.email(),
           }),
         });
 
@@ -135,10 +135,10 @@ void main() {
 
     group('Custom constructor', () {
       test('transforms to custom class', () {
-        final schema = Z.objectAs<User>(
+        final schema = z.objectAs<User>(
           {
-            'name': Z.string,
-            'age': Z.int,
+            'name': z.string,
+            'age': z.int,
           },
           (map) => User(
             name: map['name'] as String,
@@ -158,8 +158,8 @@ void main() {
       });
 
       test('handles constructor errors', () {
-        final schema = Z.objectAs<User>(
-          {'name': Z.string, 'age': Z.int},
+        final schema = z.objectAs<User>(
+          {'name': z.string, 'age': z.int},
           (map) => throw Exception('Constructor failed'),
         );
 
@@ -175,7 +175,7 @@ void main() {
 
     group('Strict mode', () {
       test('allows unknown keys by default', () {
-        final schema = Z.object({'name': Z.string});
+        final schema = z.object({'name': z.string});
 
         final result = schema.safeParse({
           'name': 'Alice',
@@ -186,7 +186,7 @@ void main() {
       });
 
       test('rejects unknown keys in strict mode', () {
-        final schema = Z.object({'name': Z.string}).makeStrict();
+        final schema = z.object({'name': z.string}).makeStrict();
 
         final result = schema.safeParse({
           'name': 'Alice',
@@ -201,8 +201,8 @@ void main() {
 
     group('Utility methods', () {
       test('extend adds fields', () {
-        final base = Z.object({'name': Z.string});
-        final extended = base.extend({'age': Z.int});
+        final base = z.object({'name': z.string});
+        final extended = base.extend({'age': z.int});
 
         final result = extended.safeParse({
           'name': 'Alice',
@@ -213,10 +213,10 @@ void main() {
       });
 
       test('pick selects fields', () {
-        final schema = Z.object({
-          'name': Z.string,
-          'age': Z.int,
-          'email': Z.string,
+        final schema = z.object({
+          'name': z.string,
+          'age': z.int,
+          'email': z.string,
         }).pick(['name', 'email']);
 
         final result = schema.safeParse({
@@ -228,10 +228,10 @@ void main() {
       });
 
       test('omit excludes fields', () {
-        final schema = Z.object({
-          'name': Z.string,
-          'password': Z.string,
-          'email': Z.string,
+        final schema = z.object({
+          'name': z.string,
+          'password': z.string,
+          'email': z.string,
         }).omit(['password']);
 
         final result = schema.safeParse({

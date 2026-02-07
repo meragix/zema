@@ -4,20 +4,20 @@ import 'package:zema/zema.dart';
 void main() {
   group('Nested Object Validation', () {
     test('validates deeply nested structures', () {
-      final schema = Z.object({
-        'user': Z.object({
-          'profile': Z.object({
-            'name': Z.string.min(2),
-            'email': Z.string.email(),
-            'address': Z.object({
-              'street': Z.string,
-              'city': Z.string,
-              //'zipCode': Z.string.regex(RegExp(r'^\d{5})),
+      final schema = z.object({
+        'user': z.object({
+          'profile': z.object({
+            'name': z.string.min(2),
+            'email': z.string.email(),
+            'address': z.object({
+              'street': z.string,
+              'city': z.string,
+              //'zipCode': z.string.regex(RegExp(r'^\d{5})),
             }),
           }),
-          'preferences': Z.object({
-            'theme': Z.string.oneOf(['light', 'dark']),
-            'notifications': Z.boolean,
+          'preferences': z.object({
+            'theme': z.string.oneOf(['light', 'dark']),
+            'notifications': z.boolean,
           }),
         }),
       });
@@ -45,11 +45,11 @@ void main() {
     });
 
     test('collects errors from all nesting levels', () {
-      final schema = Z.object({
-        'level1': Z.object({
-          'level2': Z.object({
-            'level3': Z.object({
-              'value': Z.int.positive(),
+      final schema = z.object({
+        'level1': z.object({
+          'level2': z.object({
+            'level3': z.object({
+              'value': z.int.positive(),
             }),
           }),
         }),
@@ -75,10 +75,10 @@ void main() {
     });
 
     test('validates arrays of nested objects', () {
-      final schema = Z.object({
-        'users': Z.array(Z.object({
-          'name': Z.string.min(2),
-          'email': Z.string.email(),
+      final schema = z.object({
+        'users': z.array(z.object({
+          'name': z.string.min(2),
+          'email': z.string.email(),
         })),
       });
 

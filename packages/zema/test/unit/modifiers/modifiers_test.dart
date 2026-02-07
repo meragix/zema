@@ -5,7 +5,7 @@ import 'package:zema/zema.dart';
 void main() {
   group('optional()', () {
     test('passes null through', () {
-      final schema = Z.string.optional();
+      final schema = z.string.optional();
       final result = schema.safeParse(null);
 
       expect(result.$1, isNull);
@@ -13,7 +13,7 @@ void main() {
     });
 
     test('validates non-null values', () {
-      final schema = Z.string.min(5).optional();
+      final schema = z.string.min(5).optional();
 
       expect(schema.safeParse('hello').$2, isNull);
       expect(schema.safeParse('hi').$2, isNotNull);
@@ -21,9 +21,9 @@ void main() {
     });
 
     test('works with complex types', () {
-      final schema = Z.object({
-        'name': Z.string,
-        'nickname': Z.string.optional(),
+      final schema = z.object({
+        'name': z.string,
+        'nickname': z.string.optional(),
       });
 
       expect(
@@ -35,7 +35,7 @@ void main() {
 
   group('nullable()', () {
     test('passes null through', () {
-      final schema = Z.string.nullable();
+      final schema = z.string.nullable();
       final result = schema.safeParse(null);
 
       expect(result.$1, isNull);
@@ -43,7 +43,7 @@ void main() {
     });
 
     test('validates non-null values', () {
-      final schema = Z.int.positive().nullable();
+      final schema = z.int.positive().nullable();
 
       expect(schema.safeParse(10).$2, isNull);
       expect(schema.safeParse(-5).$2, isNotNull);
@@ -53,7 +53,7 @@ void main() {
 
   group('withDefault()', () {
     test('returns default for null', () {
-      final schema = Z.string.withDefault('default');
+      final schema = z.string.withDefault('default');
       final result = schema.safeParse(null);
 
       expect(result.$1, equals('default'));
@@ -61,14 +61,14 @@ void main() {
     });
 
     test('returns default on validation error', () {
-      final schema = Z.int.positive().withDefault(0);
+      final schema = z.int.positive().withDefault(0);
 
       expect(schema.safeParse(-5).$1, equals(0));
       expect(schema.safeParse(10).$1, equals(10));
     });
 
     test('works with coercion', () {
-      final schema = Z.coerce.integer().withDefault(100);
+      final schema = z.coerce.integer().withDefault(100);
 
       expect(schema.safeParse(null).$1, equals(100));
       expect(schema.safeParse('50').$1, equals(50));
@@ -78,7 +78,7 @@ void main() {
 
   group('catchError()', () {
     test('catches errors and returns fallback', () {
-      final schema = Z.int.positive().catchError((issues) => 0);
+      final schema = z.int.positive().catchError((issues) => 0);
 
       expect(schema.safeParse(-5).$1, equals(0));
       expect(schema.safeParse(10).$1, equals(10));
@@ -87,7 +87,7 @@ void main() {
     test('handler receives all issues', () {
       List<ZemaIssue>? capturedIssues;
 
-      final schema = Z.string.min(5).email().catchError((issues) {
+      final schema = z.string.min(5).email().catchError((issues) {
         capturedIssues = issues;
         return 'fallback';
       });

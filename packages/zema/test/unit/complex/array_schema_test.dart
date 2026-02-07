@@ -5,7 +5,7 @@ void main() {
   group('ZemaArray', () {
     group('Basic validation', () {
       test('validates valid array', () {
-        final schema = Z.array(Z.int);
+        final schema = z.array(z.int);
         final result = schema.safeParse([1, 2, 3]);
 
         expect(result.$2, isNull);
@@ -13,7 +13,7 @@ void main() {
       });
 
       test('rejects non-array', () {
-        final schema = Z.array(Z.int);
+        final schema = z.array(z.int);
 
         expect(schema.safeParse('not an array').$2, isNotNull);
         expect(schema.safeParse({'a': 1}).$2, isNotNull);
@@ -21,14 +21,14 @@ void main() {
       });
 
       test('accepts empty array', () {
-        final schema = Z.array(Z.int);
+        final schema = z.array(z.int);
         expect(schema.safeParse([]).$2, isNull);
       });
     });
 
     group('Element validation', () {
       test('validates each element', () {
-        final schema = Z.array(Z.string.email());
+        final schema = z.array(z.string.email());
 
         final result = schema.safeParse([
           'test1@example.com',
@@ -39,7 +39,7 @@ void main() {
       });
 
       test('collects ALL element errors', () {
-        final schema = Z.array(Z.string.email());
+        final schema = z.array(z.string.email());
 
         final result = schema.safeParse([
           'valid@example.com',
@@ -59,7 +59,7 @@ void main() {
 
     group('Length validation', () {
       test('validates minimum length', () {
-        final schema = Z.array(Z.int).min(2);
+        final schema = z.array(z.int).min(2);
 
         expect(schema.safeParse([1, 2]).$2, isNull);
         expect(schema.safeParse([1]).$2, isNotNull);
@@ -67,15 +67,16 @@ void main() {
       });
 
       test('validates maximum length', () {
-        final schema = Z.array(Z.int).max(3);
+        final schema = z.array(z.int).max(3);
 
         expect(schema.safeParse([1, 2, 3]).$2, isNull);
         expect(schema.safeParse([1, 2, 3, 4]).$2, isNotNull);
-        expect(schema.safeParse([1, 2, 3, 4]).$2!.first.code, equals('too_big'));
+        expect(
+            schema.safeParse([1, 2, 3, 4]).$2!.first.code, equals('too_big'));
       });
 
       test('validates exact length', () {
-        final schema = Z.array(Z.int).length(3);
+        final schema = z.array(z.int).length(3);
 
         expect(schema.safeParse([1, 2, 3]).$2, isNull);
         expect(schema.safeParse([1, 2]).$2, isNotNull);
@@ -83,7 +84,7 @@ void main() {
       });
 
       test('validates nonempty', () {
-        final schema = Z.array(Z.int).nonempty();
+        final schema = z.array(z.int).nonempty();
 
         expect(schema.safeParse([1]).$2, isNull);
         expect(schema.safeParse([]).$2, isNotNull);
@@ -92,9 +93,9 @@ void main() {
 
     group('Complex element types', () {
       test('validates array of objects', () {
-        final schema = Z.array(Z.object({
-          'name': Z.string,
-          'age': Z.int,
+        final schema = z.array(z.object({
+          'name': z.string,
+          'age': z.int,
         }));
 
         final result = schema.safeParse([
@@ -106,8 +107,8 @@ void main() {
       });
 
       test('collects errors from nested objects', () {
-        final schema = Z.array(Z.object({
-          'email': Z.string.email(),
+        final schema = z.array(z.object({
+          'email': z.string.email(),
         }));
 
         final result = schema.safeParse([

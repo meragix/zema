@@ -1,11 +1,11 @@
 import 'package:test/test.dart';
-import 'package:zema/zema.dart';
+import 'package:zema/src/factory.dart';
 
 void main() {
   group('ZemaInt', () {
     group('Type validation', () {
       test('accepts valid int', () {
-        final schema = Z.int;
+        final schema = z.int;
         final result = schema.safeParse(42);
 
         expect(result.$1, equals(42));
@@ -13,7 +13,7 @@ void main() {
       });
 
       test('rejects non-int', () {
-        final schema = Z.int;
+        final schema = z.int;
 
         expect(schema.safeParse('123').$2, isNotNull);
         expect(schema.safeParse(3.14).$2, isNotNull);
@@ -21,19 +21,19 @@ void main() {
       });
 
       test('accepts negative integers', () {
-        final schema = Z.int;
+        final schema = z.int;
         expect(schema.safeParse(-42).$2, isNull);
       });
 
       test('accepts zero', () {
-        final schema = Z.int;
+        final schema = z.int;
         expect(schema.safeParse(0).$2, isNull);
       });
     });
 
     group('Range validation', () {
       test('validates minimum value', () {
-        final schema = Z.int.gte(0);
+        final schema = z.int.gte(0);
 
         expect(schema.safeParse(0).$2, isNull);
         expect(schema.safeParse(10).$2, isNull);
@@ -42,7 +42,7 @@ void main() {
       });
 
       test('validates maximum value', () {
-        final schema = Z.int.lte(100);
+        final schema = z.int.lte(100);
 
         expect(schema.safeParse(100).$2, isNull);
         expect(schema.safeParse(50).$2, isNull);
@@ -51,7 +51,7 @@ void main() {
       });
 
       test('validates range', () {
-        final schema = Z.int.gte(0).lte(100);
+        final schema = z.int.gte(0).lte(100);
 
         expect(schema.safeParse(50).$2, isNull);
         expect(schema.safeParse(0).$2, isNull);
@@ -63,7 +63,7 @@ void main() {
 
     group('Positive/Negative validation', () {
       test('validates positive numbers', () {
-        final schema = Z.int.positive();
+        final schema = z.int.positive();
 
         expect(schema.safeParse(1).$2, isNull);
         expect(schema.safeParse(100).$2, isNull);
@@ -72,7 +72,7 @@ void main() {
       });
 
       test('validates negative numbers', () {
-        final schema = Z.int.negative();
+        final schema = z.int.negative();
 
         expect(schema.safeParse(-1).$2, isNull);
         expect(schema.safeParse(-100).$2, isNull);
@@ -83,7 +83,7 @@ void main() {
 
     group('Multiple of validation', () {
       test('validates multiples', () {
-        final schema = Z.int.step(5);
+        final schema = z.int.step(5);
 
         expect(schema.safeParse(0).$2, isNull);
         expect(schema.safeParse(5).$2, isNull);
@@ -96,7 +96,7 @@ void main() {
 
     group('Multiple error accumulation', () {
       test('collects multiple validation errors', () {
-        final schema = Z.int.gte(10).lte(20);
+        final schema = z.int.gte(10).lte(20);
         final result = schema.safeParse(5);
 
         expect(result.$2, isNotNull);

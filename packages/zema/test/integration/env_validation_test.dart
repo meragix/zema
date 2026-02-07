@@ -4,18 +4,18 @@ import 'package:zema/zema.dart';
 void main() {
   group('Environment Variable Validation', () {
     test('validates complete environment configuration', () {
-      final envSchema = Z.object({
-        'NODE_ENV': Z.string.oneOf(['development', 'production', 'test']),
-        'PORT': Z.coerce.integer(min: 1, max: 65535),
-        'DB_HOST': Z.string,
-        'DB_PORT': Z.coerce.integer(),
-        'DB_NAME': Z.string.min(1),
-        'DB_USER': Z.string.min(1),
-        'DB_PASSWORD': Z.string.nullable(),
-        'ENABLE_LOGGING': Z.coerce.boolean(),
-        'LOG_LEVEL': Z.string.oneOf(['debug', 'info', 'warn', 'error']),
-        'JWT_SECRET': Z.string.min(32),
-        'MAX_CONNECTIONS': Z.coerce.integer().withDefault(100),
+      final envSchema = z.object({
+        'NODE_ENV': z.string.oneOf(['development', 'production', 'test']),
+        'PORT': z.coerce.integer(min: 1, max: 65535),
+        'DB_HOST': z.string,
+        'DB_PORT': z.coerce.integer(),
+        'DB_NAME': z.string.min(1),
+        'DB_USER': z.string.min(1),
+        'DB_PASSWORD': z.string.nullable(),
+        'ENABLE_LOGGING': z.coerce.boolean(),
+        'LOG_LEVEL': z.string.oneOf(['debug', 'info', 'warn', 'error']),
+        'JWT_SECRET': z.string.min(32),
+        'MAX_CONNECTIONS': z.coerce.integer().withDefault(100),
       });
 
       final envVars = {
@@ -42,10 +42,10 @@ void main() {
     });
 
     test('collects all environment validation errors', () {
-      final envSchema = Z.object({
-        'NODE_ENV': Z.string.oneOf(['development', 'production']),
-        'PORT': Z.coerce.integer(min: 1, max: 65535),
-        'JWT_SECRET': Z.string.min(32),
+      final envSchema = z.object({
+        'NODE_ENV': z.string.oneOf(['development', 'production']),
+        'PORT': z.coerce.integer(min: 1, max: 65535),
+        'JWT_SECRET': z.string.min(32),
       });
 
       final badEnv = {

@@ -4,12 +4,12 @@ import 'package:zema/zema.dart';
 void main() {
   group('API Payload Validation', () {
     test('validates REST API create user payload', () {
-      final createUserSchema = Z.object({
-        'email': Z.string.email(),
-        'password': Z.string.min(8),
-        'name': Z.string.min(2),
-        'age': Z.int.gte(18).lte(120).optional(),
-        'acceptTerms': Z.boolean,
+      final createUserSchema = z.object({
+        'email': z.string.email(),
+        'password': z.string.min(8),
+        'name': z.string.min(2),
+        'age': z.int.gte(18).lte(120).optional(),
+        'acceptTerms': z.boolean,
       });
 
       final payload = {
@@ -25,9 +25,9 @@ void main() {
     });
 
     test('validates with extra fields (non-strict)', () {
-      final schema = Z.object({
-        'id': Z.int,
-        'name': Z.string,
+      final schema = z.object({
+        'id': z.int,
+        'name': z.string,
       });
 
       final payload = {
@@ -41,9 +41,9 @@ void main() {
     });
 
     test('validates strictly when required', () {
-      final schema = Z.object({
-        'id': Z.int,
-        'name': Z.string,
+      final schema = z.object({
+        'id': z.int,
+        'name': z.string,
       }).makeStrict();
 
       final payload = {
