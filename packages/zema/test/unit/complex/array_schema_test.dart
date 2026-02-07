@@ -2,7 +2,7 @@ import 'package:test/test.dart';
 import 'package:zema/zema.dart';
 
 void main() {
-  group('ZArray', () {
+  group('ZemaArray', () {
     group('Basic validation', () {
       test('validates valid array', () {
         final schema = Z.array(Z.int);

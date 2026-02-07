@@ -2,7 +2,7 @@ import 'package:test/test.dart';
 import 'package:zema/zema.dart';
 
 void main() {
-  group('ZObject', () {
+  group('ZemaObject', () {
     group('Basic validation', () {
       test('validates valid object', () {
         final schema = Z.object({
