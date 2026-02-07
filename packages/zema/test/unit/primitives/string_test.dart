@@ -1,5 +1,5 @@
 import 'package:test/test.dart';
-import 'package:zema/src/error/exception.dart';
+import 'package:zema/src/core/exception.dart';
 import 'package:zema/zema.dart';
 
 void main() {
