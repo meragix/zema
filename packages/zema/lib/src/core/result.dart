@@ -67,7 +67,7 @@ sealed class ZemaResult<T> {
 
   R _mapValue<R>(dynamic value, R Function(Map<String, dynamic>) mapper) {
     if (value is Map<String, dynamic>) return mapper(value);
-    if (value is Map) return mapper(Map<String, dynamic>.from(value as Map));
+    if (value is Map) return mapper(Map<String, dynamic>.from(value));
     throw StateError('Cannot map non-Map value: ${value.runtimeType}');
   }
 

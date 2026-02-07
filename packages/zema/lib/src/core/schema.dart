@@ -14,10 +14,10 @@ abstract class ZemaSchema<Input, Output> {
   /// Throws [ZemaException] containing all validation issues
   Output parse(Input value) {
     final result = safeParse(value);
-    return result.mapToOrElse(
-      (v) => v as Output,
-      onError: (errors) => throw ZemaException(errors),
-    );
+    if (result.isFailure) {
+      throw ZemaException(result.errors);
+    }
+    return result.value;
   }
 
   /// Safe parse returning ZemaResult

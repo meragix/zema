@@ -16,4 +16,7 @@ final ZemaTranslations englishTranslations = {
   'custom_error': (p) => (p?['message'] as String?) ?? 'Validation failed',
   'required': (p) => 'This field is required',
   'invalid_coercion': (p) => 'Cannot convert to ${p?['type']}',
+  'not_positive': (p) => 'Must be a positive number',
+  'not_negative': (p) => 'Must be a negative number',
+  'not_finite': (p) => 'Must be a finite number',
 };
