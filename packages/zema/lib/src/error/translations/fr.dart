@@ -10,7 +10,8 @@ final ZemaTranslations frenchTranslations = {
   'invalid_email': (p) => 'Format d\'email invalide',
   'invalid_url': (p) => 'Format d\'URL invalide',
   'invalid_uuid': (p) => 'Format d\'UUID invalide',
-  'invalid_enum': (p) => 'Doit être l\'un de: ${(p?['allowed'] as List?)?.join(', ')}',
+  'invalid_enum': (p) =>
+      'Doit être l\'un de: ${(p?['allowed'] as List?)?.join(', ')}',
   'invalid_format': (p) => 'Format invalide',
   'custom_error': (p) => (p?['message'] as String?) ?? 'Validation échouée',
   'required': (p) => 'Ce champ est requis',

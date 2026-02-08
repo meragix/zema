@@ -59,9 +59,9 @@ final class ZemaObject<T extends Object> extends ZemaSchema<dynamic, T> {
         return success(constructor!(cleaned));
       } catch (e) {
         return singleFailure(
-        ZemaIssue(
-          code: 'transform_error',
-          message: ZemaI18n.translate('transform_error'),
+          ZemaIssue(
+            code: 'transform_error',
+            message: ZemaI18n.translate('transform_error'),
           ),
         );
       }

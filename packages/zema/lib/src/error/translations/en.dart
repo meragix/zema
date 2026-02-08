@@ -10,7 +10,8 @@ final ZemaTranslations englishTranslations = {
   'invalid_email': (p) => 'Invalid email format',
   'invalid_url': (p) => 'Invalid URL format',
   'invalid_uuid': (p) => 'Invalid UUID format',
-  'invalid_enum': (p) => 'Must be one of: ${(p?['allowed'] as List?)?.join(', ')}',
+  'invalid_enum': (p) =>
+      'Must be one of: ${(p?['allowed'] as List?)?.join(', ')}',
   'invalid_format': (p) => 'Invalid format',
   'custom_error': (p) => (p?['message'] as String?) ?? 'Validation failed',
   'required': (p) => 'This field is required',

@@ -23,7 +23,7 @@ final class CoerceDouble extends ZemaSchema<dynamic, double> {
 
     if (parsed == null) {
       return singleFailure(
-         ZemaIssue(
+        ZemaIssue(
           code: 'invalid_coercion',
           message: ZemaI18n.translate(
             'invalid_coercion',
@@ -54,7 +54,7 @@ final class CoerceDouble extends ZemaSchema<dynamic, double> {
 
     if (max != null && parsed > max!) {
       issues.add(
-         ZemaIssue(
+        ZemaIssue(
           code: 'too_big',
           message: ZemaI18n.translate(
             'too_big',

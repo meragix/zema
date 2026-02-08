@@ -4,7 +4,8 @@ import 'package:zema/src/error/i18n.dart';
 import 'package:zema/src/error/issue.dart';
 import 'package:zema/src/extensions/custom_message.dart';
 
-final class ZemaInt extends ZemaSchema<dynamic, int> with ZemaCustomMessage<dynamic, int> {
+final class ZemaInt extends ZemaSchema<dynamic, int>
+    with ZemaCustomMessage<dynamic, int> {
   final int? min;
   final int? max;
   final bool? isPositive;
@@ -170,7 +171,8 @@ final class ZemaInt extends ZemaSchema<dynamic, int> with ZemaCustomMessage<dyna
       );
 }
 
-final class ZemaDouble extends ZemaSchema<dynamic, double> with ZemaCustomMessage<dynamic, double> {
+final class ZemaDouble extends ZemaSchema<dynamic, double>
+    with ZemaCustomMessage<dynamic, double> {
   final double? min;
   final double? max;
   final bool? isPositive;

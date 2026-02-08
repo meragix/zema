@@ -5,7 +5,8 @@ import 'package:zema/src/error/issue.dart';
 import 'package:zema/src/extensions/custom_message.dart';
 import 'package:zema/src/helpers/validators.dart';
 
-final class ZemaString extends ZemaSchema<dynamic, String> with ZemaCustomMessage<dynamic, String> {
+final class ZemaString extends ZemaSchema<dynamic, String>
+    with ZemaCustomMessage<dynamic, String> {
   final int? minLength;
   final int? maxLength;
   final RegExp? pattern;

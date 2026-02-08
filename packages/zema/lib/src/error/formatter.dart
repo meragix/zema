@@ -8,7 +8,7 @@ typedef ZemaFormattedErrors = Map<String, dynamic>;
 /// Extension on List&lt;ZemaIssue&gt; for formatting
 extension ZemaIssueListExtensions on List<ZemaIssue> {
   /// Format issues into nested structure
-  /// 
+  ///
   /// Example:
   /// ```dart
   /// {

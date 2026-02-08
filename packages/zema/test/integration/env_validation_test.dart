@@ -25,7 +25,7 @@ void main() {
         'DB_PORT': '5432',
         'DB_NAME': 'myapp',
         'DB_USER': 'admin',
-       // 'DB_PASSWORD': null,
+        // 'DB_PASSWORD': null,
         'ENABLE_LOGGING': 'true',
         'LOG_LEVEL': 'info',
         'JWT_SECRET': 'this_is_a_very_long_secret_key_for_jwt_tokens',
