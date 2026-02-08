@@ -1,6 +1,35 @@
-/// Zema - Ultra-typed schema validation for Dart 3.5+
+/// Ultra-typed, zero-cost schema validation library for Dart 3.5+
 ///
-/// Inspired by Zod with superior type inference and zero-cost abstractions.
+/// Zema provides a fluent API for defining, validating, and transforming
+/// data with full type safety and minimal runtime overhead.
+///
+/// ## Quick Start
+///
+/// ```dart
+/// import 'package:zema/zema.dart';
+///
+/// // Define a schema
+/// final userSchema = Z.object({
+///   'name': Z.string.min(2),
+///   'age': Z.int.gte(0),
+///   'email': Z.string.email(),
+/// });
+///
+/// // Validate data
+/// final result = userSchema.safeParse({
+///   'name': 'Alice',
+///   'age': 30,
+///   'email': 'alice@example.com',
+/// });
+///
+/// // Pattern match the result
+/// switch (result) {
+///   case (final user?, null):
+///     print('Valid: $user');
+///   case (null, final error?):
+///     print('Invalid: $error');
+/// }
+///```
 // ignore_for_file: directives_ordering
 library;
 
@@ -36,5 +65,5 @@ export 'src/coercion/coerce.dart' show ZemaCoerce;
 // Extensions
 export 'src/extensions/custom_message.dart' show ZemaCustomMessage;
 
-// Factory
-export 'src/factory.dart' show z;
+// Global z factory
+export 'src/factory.dart' show z, zema;

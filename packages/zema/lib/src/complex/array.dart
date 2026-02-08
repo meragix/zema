@@ -1,5 +1,7 @@
 import 'package:zema/src/core/result.dart';
-import 'package:zema/zema.dart';
+import 'package:zema/src/core/schema.dart';
+import 'package:zema/src/error/i18n.dart';
+import 'package:zema/src/error/issue.dart';
 
 final class ZemaArray<T> extends ZemaSchema<dynamic, List<T>> {
   final ZemaSchema<dynamic, T> element;

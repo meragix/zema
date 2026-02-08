@@ -5,106 +5,106 @@ void main() {
   group('ZemaInt', () {
     group('Type validation', () {
       test('accepts valid int', () {
-        final schema = z.int;
+        final schema = z.int();
         final result = schema.safeParse(42);
 
-        expect(result.$1, equals(42));
-        expect(result.$2, isNull);
+        expect(result.value, equals(42));
+        expect(result.errors, isEmpty);
       });
 
       test('rejects non-int', () {
-        final schema = z.int;
+        final schema = z.int();
 
-        expect(schema.safeParse('123').$2, isNotNull);
-        expect(schema.safeParse(3.14).$2, isNotNull);
-        expect(schema.safeParse(true).$2, isNotNull);
+        expect(schema.safeParse('123').errors, isNotEmpty);
+        expect(schema.safeParse(3.14).errors, isNotEmpty);
+        expect(schema.safeParse(true).errors, isNotEmpty);
       });
 
       test('accepts negative integers', () {
-        final schema = z.int;
-        expect(schema.safeParse(-42).$2, isNull);
+        final schema = z.int();
+        expect(schema.safeParse(-42).errors, isEmpty);
       });
 
       test('accepts zero', () {
-        final schema = z.int;
-        expect(schema.safeParse(0).$2, isNull);
+        final schema = z.int();
+        expect(schema.safeParse(0).isFailure, isFalse);
       });
     });
 
     group('Range validation', () {
       test('validates minimum value', () {
-        final schema = z.int.gte(0);
+        final schema = z.int().gte(0);
 
-        expect(schema.safeParse(0).$2, isNull);
-        expect(schema.safeParse(10).$2, isNull);
-        expect(schema.safeParse(-1).$2, isNotNull);
-        expect(schema.safeParse(-1).$2!.first.code, equals('too_small'));
+        expect(schema.safeParse(0).errors, isEmpty);
+        expect(schema.safeParse(10).errors, isEmpty);
+        expect(schema.safeParse(-1).errors, isNotEmpty);
+        expect(schema.safeParse(-1).errors.first.code, equals('too_small'));
       });
 
       test('validates maximum value', () {
-        final schema = z.int.lte(100);
+        final schema = z.int().lte(100);
 
-        expect(schema.safeParse(100).$2, isNull);
-        expect(schema.safeParse(50).$2, isNull);
-        expect(schema.safeParse(101).$2, isNotNull);
-        expect(schema.safeParse(101).$2!.first.code, equals('too_big'));
+        expect(schema.safeParse(100).errors, isEmpty);
+        expect(schema.safeParse(50).errors, isEmpty);
+        expect(schema.safeParse(101).errors, isNotEmpty);
+        expect(schema.safeParse(101).errors.first.code, equals('too_big'));
       });
 
       test('validates range', () {
-        final schema = z.int.gte(0).lte(100);
+        final schema = z.int().gte(0).lte(100);
 
-        expect(schema.safeParse(50).$2, isNull);
-        expect(schema.safeParse(0).$2, isNull);
-        expect(schema.safeParse(100).$2, isNull);
-        expect(schema.safeParse(-1).$2, isNotNull);
-        expect(schema.safeParse(101).$2, isNotNull);
+        expect(schema.safeParse(50).errors, isEmpty);
+        expect(schema.safeParse(0).errors, isEmpty);
+        expect(schema.safeParse(100).errors, isEmpty);
+        expect(schema.safeParse(-1).errors, isNotEmpty);
+        expect(schema.safeParse(101).errors, isNotEmpty);
       });
     });
 
     group('Positive/Negative validation', () {
       test('validates positive numbers', () {
-        final schema = z.int.positive();
+        final schema = z.int().positive();
 
-        expect(schema.safeParse(1).$2, isNull);
-        expect(schema.safeParse(100).$2, isNull);
-        expect(schema.safeParse(0).$2, isNotNull);
-        expect(schema.safeParse(-1).$2, isNotNull);
+        expect(schema.safeParse(1).errors, isEmpty);
+        expect(schema.safeParse(100).errors, isEmpty);
+        expect(schema.safeParse(0).errors, isNotEmpty);
+        expect(schema.safeParse(-1).errors, isNotEmpty);
       });
 
       test('validates negative numbers', () {
-        final schema = z.int.negative();
+        final schema = z.int().negative();
 
-        expect(schema.safeParse(-1).$2, isNull);
-        expect(schema.safeParse(-100).$2, isNull);
-        expect(schema.safeParse(0).$2, isNotNull);
-        expect(schema.safeParse(1).$2, isNotNull);
+        expect(schema.safeParse(-1).errors, isEmpty);
+        expect(schema.safeParse(-100).errors, isEmpty);
+        expect(schema.safeParse(0).errors, isNotEmpty);
+        expect(schema.safeParse(1).errors, isNotEmpty);
       });
     });
 
     group('Multiple of validation', () {
-      test('validates multiples', () {
-        final schema = z.int.step(5);
+      test('validates multiples of 5', () {
+        final schema = z.int().step(5);
 
-        expect(schema.safeParse(0).$2, isNull);
-        expect(schema.safeParse(5).$2, isNull);
-        expect(schema.safeParse(10).$2, isNull);
-        expect(schema.safeParse(-5).$2, isNull);
-        expect(schema.safeParse(3).$2, isNotNull);
-        expect(schema.safeParse(7).$2, isNotNull);
+        expect(schema.safeParse(0).isSuccess, isTrue);
+        expect(schema.safeParse(5).isSuccess, isTrue);
+        expect(schema.safeParse(10).isSuccess, isTrue);
+        expect(schema.safeParse(-5).isSuccess, isTrue);
+        expect(schema.safeParse(3).isSuccess, isFalse);
+        expect(schema.safeParse(7).isSuccess, isFalse);
       });
     });
 
     group('Multiple error accumulation', () {
       test('collects multiple validation errors', () {
-        final schema = z.int.gte(10).lte(20);
+        final schema = z.int().gte(10).lte(20);
         final result = schema.safeParse(5);
 
-        expect(result.$2, isNotNull);
-        expect(result.$2!.length, equals(1));
-        expect(result.$2!.first.code, equals('too_small'));
+        expect(result.errors, isNotEmpty);
+        expect(result.errors.length, equals(1));
+        expect(result.errors.first.code, equals('too_small'));
 
         final result2 = schema.safeParse(25);
-        expect(result2.$2!.first.code, equals('too_big'));
+        expect(result2.errors.first.code, equals('too_big'));
       });
     });
   });

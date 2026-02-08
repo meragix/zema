@@ -2,10 +2,9 @@ import 'package:zema/src/core/result.dart';
 import 'package:zema/src/core/schema.dart';
 import 'package:zema/src/error/i18n.dart';
 import 'package:zema/src/error/issue.dart';
-import 'package:zema/src/utils/custom_message.dart';
+import 'package:zema/src/extensions/custom_message.dart';
 
-final class ZemaInt extends ZemaSchema<dynamic, int>
-    with ZemaCustomMessage<dynamic, int> {
+final class ZemaInt extends ZemaSchema<dynamic, int> with ZemaCustomMessage<dynamic, int> {
   final int? min;
   final int? max;
   final bool? isPositive;
@@ -102,6 +101,25 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
       issues.add(applyCustomMessage(issue));
     }
 
+    if (multipleOf != null && value % multipleOf! != 0) {
+      final issue = ZemaIssue(
+        code: 'not_multiple_of',
+        message: ZemaI18n.translate(
+          'not_multiple_of',
+          params: {'multipleOf': multipleOf},
+        ),
+        receivedValue: value,
+        meta: {
+          'expected': 'multiple of $multipleOf',
+          'received': value,
+        },
+      );
+      issues.add(applyCustomMessage(issue));
+    }
+
+    // if () {
+    //e//rrors.add(ZemaValidationError(message: customMessage ?? 'Must be a multiple of $multipleOf'));
+
     if (issues.isNotEmpty) {
       return failure(issues);
     }
@@ -155,8 +173,7 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
       );
 }
 
-final class ZemaDouble extends ZemaSchema<dynamic, double>
-    with ZemaCustomMessage<dynamic, double> {
+final class ZemaDouble extends ZemaSchema<dynamic, double> with ZemaCustomMessage<dynamic, double> {
   final double? min;
   final double? max;
   final bool? isPositive;

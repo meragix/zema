@@ -8,42 +8,48 @@ import 'package:zema/src/primitives/number.dart';
 import 'package:zema/src/primitives/string.dart';
 
 /// Global factory for creating Zema schemas
-///
-/// Example:
-/// ```dart
-/// final schema = z.object({
-///   'name': z.string.min(2),
-///   'age': z.int.positive(),
-///   'email': z.string.email(),
-/// });
-///
 @immutable
 class Zema {
   const Zema._();
 
+  static const Zema instance = Zema._();
+
   // Primitives schema
-  static const ZemaString string = ZemaString();
-  static const ZemaInt int = ZemaInt();
-  static const ZemaDouble number = ZemaDouble();
-  static const ZemaBool boolean = ZemaBool();
+  ZemaString string() => const ZemaString();
+  ZemaInt int() => const ZemaInt();
+  ZemaDouble double() => const ZemaDouble();
+  ZemaBool boolean() => const ZemaBool();
 
   // Complex types
-  static ZemaArray<T> array<T>(ZemaSchema<dynamic, T> element) =>
-      ZemaArray(element);
-  static ZemaObject<Map<String, dynamic>> object(
+  ZemaArray<T> array<T>(ZemaSchema<dynamic, T> element) => ZemaArray(element);
+  ZemaObject<Map<String, dynamic>> object(
     Map<String, ZemaSchema<dynamic, dynamic>> shape,
   ) =>
       ZemaObject(shape);
 
-  // static ZemaObject<T> objectAs<T extends Object>(
-  //   Map<String, ZemaSchema<dynamic, dynamic>> shape,
-  //   T Function(Map<String, dynamic>) constructor,
-  // ) =>
-  //     ZemaObject(shape, constructor: constructor);
+  /// Create typed object schema with constructor
+  ZemaObject<T> objectAs<T extends Object>(
+    Map<String, ZemaSchema<dynamic, dynamic>> shape,
+    T Function(Map<String, dynamic>) constructor,
+  ) =>
+      ZemaObject(shape, constructor: constructor);
 
   // Coercion
-  static const ZemaCoerce coerce = ZemaCoerce();
+  ZemaCoerce coerce() => const ZemaCoerce();
 }
 
-/// Alias for [Zema] to create schemas with a concise syntax
-const z = Zema._();
+/// The entry point for Zema schema definitions.
+///
+/// Use [z] to create schemas in a concise, readable way.
+///
+/// ```dart
+/// final schema = z.object({
+///   'name': z.string().min(2),
+///   'age': z.int().positive(),
+///   'email': z.string().email(),
+/// });
+/// ```
+const z = Zema.instance;
+
+/// Alias for [z] for developers who prefer a more explicit naming convention.
+const zema = z;

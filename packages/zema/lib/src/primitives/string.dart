@@ -2,10 +2,10 @@ import 'package:zema/src/core/result.dart';
 import 'package:zema/src/core/schema.dart';
 import 'package:zema/src/error/i18n.dart';
 import 'package:zema/src/error/issue.dart';
-import 'package:zema/src/utils/custom_message.dart';
+import 'package:zema/src/extensions/custom_message.dart';
+import 'package:zema/src/helpers/validators.dart';
 
-final class ZemaString extends ZemaSchema<dynamic, String>
-    with ZemaCustomMessage<dynamic, String> {
+final class ZemaString extends ZemaSchema<dynamic, String> with ZemaCustomMessage<dynamic, String> {
   final int? minLength;
   final int? maxLength;
   final RegExp? pattern;
@@ -97,7 +97,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
     }
 
     // Email validation
-    if (isEmail == true && !_emailRegex.hasMatch(str)) {
+    if (isEmail == true && !Validators.emailRegex.hasMatch(str)) {
       final issue = ZemaIssue(
         code: 'invalid_email',
         message: ZemaI18n.translate('invalid_email'),
@@ -107,7 +107,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
     }
 
     // URL validation
-    if (isUrl == true && !_urlRegex.hasMatch(str)) {
+    if (isUrl == true && !Validators.urlRegex.hasMatch(str)) {
       issues.add(
         ZemaIssue(
           code: 'invalid_url',
@@ -118,7 +118,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
     }
 
     // UUID validation
-    if (isUuid == true && !_uuidRegex.hasMatch(str)) {
+    if (isUuid == true && !Validators.uuidRegex.hasMatch(str)) {
       issues.add(
         ZemaIssue(
           code: 'invalid_uuid',
@@ -228,19 +228,4 @@ final class ZemaString extends ZemaSchema<dynamic, String>
         isUrl: isUrl,
         isUuid: isUuid,
       );
-
-  // Cached regex patterns
-  static final _emailRegex = RegExp(
-    r'^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$',
-  );
-
-  static final _urlRegex = RegExp(
-    r'^https?://[^\s/$.?#].[^\s]*$',
-    caseSensitive: false,
-  );
-
-  static final _uuidRegex = RegExp(
-    r'^[0-9a-f]{8}-[0-9a-f]{4}-[1-5][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
-    caseSensitive: false,
-  );
 }
