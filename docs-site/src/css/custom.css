@@ -18,7 +18,7 @@
 }
 
 /* For readability concerns, you should choose a lighter palette in dark mode. */
-[data-theme='dark'] {
+[data-theme="dark"] {
   --ifm-color-primary: #25c2a0;
   --ifm-color-primary-dark: #21af90;
   --ifm-color-primary-darker: #1fa588;
@@ -27,4 +27,61 @@
   --ifm-color-primary-lighter: #32d8b4;
   --ifm-color-primary-lightest: #4fddbf;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
+}
+
+/* Code blocks */
+.theme-code-block {
+  --prism-background-color: #282a36;
+}
+
+/* Dart syntax highlighting */
+code[class*="language-dart"] {
+  font-family: "Fira Code", monospace;
+}
+
+/* Callouts/Admonitions */
+.admonition {
+  margin-bottom: 1em;
+}
+
+/* Landing page hero */
+.hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.hero__title {
+  font-size: 3rem;
+  font-weight: 800;
+}
+
+/* Feature cards */
+.features {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.featureImage {
+  height: 200px;
+  width: 200px;
+}
+
+/* API reference tables */
+.api-table {
+  width: 100%;
+  margin: 1em 0;
+}
+
+.api-table th {
+  background-color: var(--ifm-color-primary);
+  color: white;
+}
+
+/* Mobile responsiveness */
+@media screen and (max-width: 996px) {
+  .hero__title {
+    font-size: 2rem;
+  }
 }

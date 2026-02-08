@@ -177,17 +177,17 @@ const config: Config = {
   } satisfies Preset.ThemeConfig,
 
   // Plugins supplémentaires
-  plugins: [
-    [
-      "@docusaurus/plugin-content-docs",
-      {
-        id: "examples",
-        path: "examples",
-        routeBasePath: "examples",
-        sidebarPath: "./sidebarsExamples.js",
-      },
-    ],
-  ],
+  // plugins: [
+  //   [
+  //     "@docusaurus/plugin-content-docs",
+  //     {
+  //       id: "examples",
+  //       path: "examples",
+  //       routeBasePath: "examples",
+  //       sidebarPath: "./sidebarsExamples.js",
+  //     },
+  //   ],
+  // ],
 };
 
 export default config;
