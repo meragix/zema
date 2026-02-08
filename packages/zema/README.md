@@ -1,17 +1,20 @@
 # Zema
 
 [![pub package](https://img.shields.io/pub/v/zema.svg)](https://pub.dev/packages/zema)
-[![Build Status](https://github.com/meragix/zema/workflows/CI/badge.svg)](https://github.com/meragix/zema/actions)
-[![Coverage](https://img.shields.io/codecov/c/github/meragix/zema)](https://codecov.io/gh/meragix/zema)
+[![package publisher](https://img.shields.io/pub/publisher/zema.svg)](https://pub.dev/packages/zema/publisher)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Zod-like schema validation for Dart. Type-safe runtime validation with a fluent, declarative API.
+Zema is a Dart validation library inspired by [Zod](https://zod.dev), with best-in-class type inference and zero-cost abstractions.
 
-## 📦 Packages
+## Features
 
-This monorepo contains:
-
-- [`zema`](./packages/zema) - Core validation library
+- 🎯 **100% Type-Safe**: Full generic inference, no `dynamic`
+- ⚡ **Zero-Cost Abstractions**: `final class` + const singletons
+- 🔥 **Dart 3.5+ Native**: Records, pattern matching, sealed classes
+- 🌊 **Fluent API**: Chainable like Zod
+- 📊 **Multi-Error Collection**: See all validation errors at once
+- 🔄 **Coercion System**: Parse environment variables effortlessly
+- ⚡ **Async Support**: `refineAsync` for database checks
 
 ## 🚀 Quick Start
 
@@ -36,55 +39,11 @@ final user = userSchema.parse({
 });
 ```
 
-## 🛠️ Development
-
-This project uses [Melos](https://melos.invertase.dev/) to manage the monorepo.
-
-### Setup
-
-```bash
-# Install Melos
-dart pub global activate melos
-
-# Bootstrap the workspace
-melos bootstrap
-```
-
-### Common Commands
-
-```bash
-# Run tests
-melos test
-
-# Run analysis
-melos analyze
-
-# Format code
-melos format
-
-# Check publish readiness
-melos publish:check
-
-# Version packages
-melos version
-```
-
 ## 📚 Documentation
 
 - [Zema Documentation](https://zema.meragix.dev)
 - [API Reference](https://pub.dev/documentation/zema/latest/)
 
-## 🤝 Contributing
-
-See [CONTRIBUTING.md](CONTRIBUTING.md)
-
 ## 📄 License
 
 MIT License - see [LICENSE](LICENSE)
-
-## 🔗 Links
-
-- [Website](https://meragix.dev)
-- [Documentation](https://zema.meragix.dev)
-- [GitHub](https://github.com/meragix/zema)
-- [pub.dev](https://pub.dev/packages/zema)

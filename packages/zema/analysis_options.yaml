@@ -48,7 +48,7 @@ linter:
     - prefer_single_quotes
     - require_trailing_commas
     - slash_for_doc_comments
-    - sort_constructors_first
+    # - sort_constructors_first
     - type_annotate_public_apis
     - unnecessary_await_in_return
     - unnecessary_const
