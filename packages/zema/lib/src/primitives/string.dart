@@ -75,10 +75,13 @@ final class ZemaString extends ZemaSchema<dynamic, String> with ZemaCustomMessag
     if (maxLength != null && str.length > maxLength!) {
       final issue = ZemaIssue(
         code: 'too_long',
-        message: ZemaI18n.translate('too_long', params: {
-          'max': maxLength,
-          'actual': str.length,
-        }),
+        message: ZemaI18n.translate(
+          'too_long',
+          params: {
+            'max': maxLength,
+            'actual': str.length,
+          },
+        ),
         receivedValue: str,
         meta: {'max': maxLength, 'actual': str.length},
       );

@@ -117,9 +117,6 @@ final class ZemaInt extends ZemaSchema<dynamic, int> with ZemaCustomMessage<dyna
       issues.add(applyCustomMessage(issue));
     }
 
-    // if () {
-    //e//rrors.add(ZemaValidationError(message: customMessage ?? 'Must be a multiple of $multipleOf'));
-
     if (issues.isNotEmpty) {
       return failure(issues);
     }
@@ -242,10 +239,13 @@ final class ZemaDouble extends ZemaSchema<dynamic, double> with ZemaCustomMessag
     if (max != null && value > max!) {
       final issue = ZemaIssue(
         code: 'too_big',
-        message: ZemaI18n.translate('too_big', params: {
-          'max': max,
-          'actual': value,
-        }),
+        message: ZemaI18n.translate(
+          'too_big',
+          params: {
+            'max': max,
+            'actual': value,
+          },
+        ),
         receivedValue: value,
         meta: {'max': max, 'actual': value},
       );

@@ -79,10 +79,12 @@ void main() {
 
     test('validates arrays of nested objects', () {
       final schema = z.object({
-        'users': z.array(z.object({
-          'name': z.string().min(2),
-          'email': z.string().email(),
-        })),
+        'users': z.array(
+          z.object({
+            'name': z.string().min(2),
+            'email': z.string().email(),
+          }),
+        ),
       });
 
       final data = {

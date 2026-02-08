@@ -25,7 +25,7 @@ final class ZemaObject<T extends Object> extends ZemaSchema<dynamic, T> {
           receivedValue: value,
           meta: {
             'expected': 'object',
-            'received': value.runtimeType.toString()
+            'received': value.runtimeType.toString(),
           },
         ),
       );

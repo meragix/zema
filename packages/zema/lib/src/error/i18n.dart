@@ -14,7 +14,9 @@ class ZemaI18n {
 
   /// Register custom translations for a locale
   static void registerTranslations(
-      String locale, ZemaTranslations translations) {
+    String locale,
+    ZemaTranslations translations,
+  ) {
     _translations[locale] = translations;
   }
 
