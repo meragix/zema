@@ -484,7 +484,7 @@ if (status.isValid) {
 }
 ```
 
-[→ Learn more](/docs/migration/overview#phase-1-add-validation)
+<!-- [→ Learn more](/docs/migration/overview#phase-1-add-validation) -->
 
 ---
 
@@ -496,7 +496,7 @@ Use `mapTo()` to validate and transform to existing classes:
 final user = userSchema.parse(data).mapTo((map) => User.fromJson(map));
 ```
 
-[→ Learn more](/docs/migration/overview#phase-2-replace-manual-mapping)
+<!-- [→ Learn more](/docs/migration/overview#phase-2-replace-manual-mapping) -->
 
 ---
 
@@ -541,10 +541,10 @@ Apply schemas to your entire stack:
 
 ---
 
-### Real Examples
+<!-- ### Real Examples
 
 See Zema in production apps:
 
 - [Migration Guide](/docs/migration/overview) - Add to existing apps
-- [Recipes](/docs/recipes/architecture/repository-pattern) - Best practices
-- [Examples](/examples) - Complete applications
+- [Recipes](/docs/recipes/architecture/repository-pattern) - Best practices -->
+<!-- - [Examples](/examples) - Complete applications -->

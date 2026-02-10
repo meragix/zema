@@ -281,7 +281,7 @@ Add validation to your entire stack:
 
 ---
 
-### Real-World Examples
+<!-- ### Real-World Examples
 
 See complete apps using Zema:
 
@@ -289,7 +289,7 @@ See complete apps using Zema:
 - [E-commerce](/examples/e-commerce) - API validation + Firestore
 - [Settings Manager](/examples/settings-app) - Reactive settings
 
----
+--- -->
 
 ## Full Code
 
@@ -357,5 +357,5 @@ void main() async {
 ## Next Steps
 
 - [Core Concepts →](./core-concepts) - Deep dive into schemas
-- [HTTP Plugin →](/docs/plugins/zema_http/overview) - Validate APIs
-- [Migration Guide →](/docs/migration/overview) - Add Zema to existing apps
+<!-- - [HTTP Plugin →](/docs/plugins/zema_http/overview) - Validate APIs -->
+<!-- - [Migration Guide →](/docs/migration/overview) - Add Zema to existing apps -->

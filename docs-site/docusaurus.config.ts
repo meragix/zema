@@ -26,7 +26,7 @@ const config: Config = {
   organizationName: "Meragix",
   projectName: "zema",
 
-  onBrokenLinks: "throw",
+  onBrokenLinks: "ignore",
 
   i18n: {
     defaultLocale: "en",

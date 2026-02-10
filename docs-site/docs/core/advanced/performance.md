@@ -541,8 +541,8 @@ void benchmark() {
 
 ---
 
-## Next Steps
+<!-- ## Next Steps
 
 - [Lazy Schemas →](./lazy-schemas) - Handle recursive data
 - [Branded Types →](./branded-types) - Type-level constraints
-- [Real-World Apps →](/docs/recipes/real-world-apps/) - See optimizations in practice
+- [Real-World Apps →](/docs/recipes/real-world-apps/) - See optimizations in practice -->

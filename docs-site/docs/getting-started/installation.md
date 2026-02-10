@@ -75,7 +75,7 @@ dart run test_zema.dart
 
 ---
 
-## Plugins (Optional)
+<!-- ## Plugins (Optional)
 
 Zema provides plugins for common use cases. Install only what you need.
 
@@ -100,9 +100,9 @@ dependencies:
 import 'package:zema_fetch/dio.dart';        // Dio only
 // import 'package:zema_fetch/http.dart';     // package:http only
 // import 'package:zema_fetch/chopper.dart';  // Chopper only
-```
+``` -->
 
-[→ Learn more about zema_fetch](/docs/plugins/zema_http/overview)
+<!-- [→ Learn more about zema_fetch](/docs/plugins/zema_http/overview) -->
 
 ---
 

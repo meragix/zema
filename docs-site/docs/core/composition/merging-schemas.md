@@ -441,4 +441,4 @@ Combines two schemas. **Second schema fields override first.**
 
 - [Picking & Omitting →](./picking-omitting) - Select specific fields
 - [Discriminated Unions →](./discriminated-unions) - Type-based composition
-- [Lazy Schemas →](/docs/core/advanced/lazy-schemas) - Recursive schemas
+<!-- - [Lazy Schemas →](/docs/core/advanced/lazy-schemas) - Recursive schemas -->

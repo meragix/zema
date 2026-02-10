@@ -532,4 +532,4 @@ Returns new schema **without** the specified fields.
 
 - [Merging Schemas →](./merging-schemas) - Combine schemas
 - [Discriminated Unions →](./discriminated-unions) - Type-safe unions
-- [Partial →](/docs/core/schemas/optional-nullable#partial) - Make all fields optional
+<!-- - [Partial →](/docs/core/schemas/optional-nullable#partial) - Make all fields optional -->

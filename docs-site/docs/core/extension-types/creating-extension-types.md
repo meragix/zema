@@ -592,4 +592,4 @@ String get processedContent {
 
 - [Extension Types vs Classes →](./vs-classes) - When to use which
 - [Best Practices →](./best-practices) - Patterns and anti-patterns
-- [Real-World Examples →](/docs/recipes/real-world-apps/) - Complete apps
+<!-- - [Real-World Examples →](/docs/recipes/real-world-apps/) - Complete apps -->
