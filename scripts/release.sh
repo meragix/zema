@@ -64,7 +64,7 @@ success "Working directory clean"
 
 # 2. Run tests
 info "Running tests..."
-melos test --scope="$PACKAGE" --no-select || error "Tests failed"
+melos test --no-select || error "Tests failed"
 success "Tests passed"
 
 # 3. Update pubspec.yaml
