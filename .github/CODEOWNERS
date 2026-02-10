@@ -1,0 +1,15 @@
+# Global owners (reviewed for all changes)
+
+* @donfreddy
+
+# Package-specific
+
+/packages/zema/ @donfreddy
+
+# Docs
+
+/docs-site/ @donfreddy
+
+# CI/CD
+
+/.github/ @donfreddy
