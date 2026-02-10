@@ -1,0 +1,9 @@
+{
+  "label": "Recipes",
+  "position": 4,
+  "link": {
+    "type": "generated-index",
+    "description": "Explore practical examples and recipes for using Zema to solve common data validation and transformation challenges.",
+    "slug": "/recipes"
+  }
+}

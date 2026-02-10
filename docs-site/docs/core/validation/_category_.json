@@ -1,0 +1,9 @@
+{
+  "label": "Validation",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "Learn how to use Zema's powerful validation features to ensure your data is correct and reliable.",
+    "slug": "/validation"
+  }
+}

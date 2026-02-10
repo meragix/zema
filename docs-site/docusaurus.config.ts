@@ -6,13 +6,15 @@ import type * as Preset from "@docusaurus/preset-classic";
 
 const config: Config = {
   title: "Zema",
-  tagline: "Schema-first validation for Dart & Flutter",
+  tagline:
+    "Type-safe, composable, and zero-cost abstraction. Designed for high-performance Flutter and Server-side apps.",
   favicon: "img/favicon.ico",
 
   // Future flags, see https://docusaurus.io/docs/api/docusaurus-config#future
   future: {
-    v4: true, // Improve compatibility with the upcoming Docusaurus v4
-    experimental_faster: true, // Enable experimental optimizations for faster builds
+    // Turns Docusaurus v4 future flags on to make it easier to upgrade later
+    v4: true,
+    // experimental_faster: true, // Enable experimental optimizations for faster builds
   },
 
   // GitHub Pages deployment config
@@ -21,7 +23,7 @@ const config: Config = {
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "meragix",
+  organizationName: "Meragix",
   projectName: "zema",
 
   onBrokenLinks: "throw",
@@ -31,13 +33,33 @@ const config: Config = {
     locales: ["en"],
   },
 
+  headTags: [
+    {
+      tagName: "script",
+      attributes: {
+        type: "application/ld+json",
+      },
+      innerHTML: JSON.stringify({
+        "@context": "https://schema.org/",
+        "@type": "WebPage",
+        "@id": "https://zema.meragix.dev/",
+        url: "https://zema.meragix.dev/",
+        name: "Zema - Type-safe validation for Dart and Flutter",
+        description:
+          "Zema is a Dart package that provides type-safe, composable, and zero-cost validation for Flutter and server-side applications.",
+        logo: "https://zema.meragix.dev/img/pwa/manifest-icon-192.png",
+        inLanguage: "en-US",
+      }),
+    },
+  ],
+
   presets: [
     [
       "classic",
       {
         docs: {
           sidebarPath: "./sidebars.ts",
-          editUrl: "https://github.com/your-org/zema/tree/main/docs-site/",
+          editUrl: "https://github.com/meragix/zema/tree/main/docs-site/",
           showLastUpdateAuthor: true,
           showLastUpdateTime: true,
         },
@@ -47,7 +69,7 @@ const config: Config = {
             type: ["rss", "atom"],
             xslt: true,
           },
-          editUrl: "https://github.com/your-org/zema/tree/main/docs-site/",
+          editUrl: "https://github.com/meragix/zema/tree/main/docs-site/",
           onInlineTags: "warn",
           onInlineAuthors: "warn",
           onUntruncatedBlogPosts: "warn",
@@ -77,25 +99,29 @@ const config: Config = {
           position: "left",
           label: "Docs",
         },
-        {
-          to: "/docs/plugins/overview",
-          label: "Plugins",
-          position: "left",
-        },
-        {
-          to: "/blog",
-          label: "Blog",
-          position: "left",
-        },
+        // {
+        //   to: "/docs/plugins/overview",
+        //   label: "Plugins",
+        //   position: "left",
+        // },
+        // {
+        //   to: "/blog",
+        //   label: "Blog",
+        //   position: "left",
+        // },
         {
           href: "https://pub.dev/packages/zema",
-          label: "pub.dev",
+          className: "header-pubdev-link",
+          "aria-label": "Pub.dev registry",
           position: "right",
+          title: "Zema on Pub.dev",
         },
         {
           href: "https://github.com/meragix/zema",
-          label: "GitHub",
+          className: "header-github-link",
+          "aria-label": "GitHub repository",
           position: "right",
+          title: "Zema on GitHub",
         },
       ],
     },
@@ -156,25 +182,34 @@ const config: Config = {
           ],
         },
       ],
-      copyright: `Copyright © ${new Date().getFullYear()} Meragix. Built with Docusaurus.`,
+      copyright: `
+  <div class="footer__custom">
+    <div class="footer__brand">
+      <strong>Zema</strong> by <a href="https://meragix.dev" target="_blank" rel="noopener noreferrer">Meragix</a>
+    </div>
+    <div class="footer__copy">
+      Copyright © ${new Date().getFullYear()} — Built with passion for the Dart ecosystem.
+    </div>
+  </div>
+`,
     },
 
     // Prism syntax highlighting
     prism: {
       theme: prismThemes.github,
       darkTheme: prismThemes.dracula,
-      //additionalLanguages: ["dart", "yaml", "json", "bash"],
+      additionalLanguages: ["dart", "yaml", "json", "bash"],
     },
 
     // Announcement bar
-    announcementBar: {
-      id: "support_us",
-      content:
-        '⭐️ If you like Zema, give it a star on <a target="_blank" rel="noopener noreferrer" href="https://github.com/meragix/zema">GitHub</a>!',
-      backgroundColor: "#fafbfc",
-      textColor: "#091E42",
-      isCloseable: false,
-    },
+    // announcementBar: {
+    //   id: "support_us",
+    //   content:
+    //     '⭐️ If you like Zema, give it a star on <a target="_blank" rel="noopener noreferrer" href="https://github.com/meragix/zema">GitHub</a>!',
+    //   backgroundColor: "#fafbfc",
+    //   textColor: "#091E42",
+    //   isCloseable: false,
+    // },
   } satisfies Preset.ThemeConfig,
 
   // Plugins supplémentaires

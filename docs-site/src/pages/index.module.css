@@ -3,7 +3,7 @@
  * and scoped locally.
  */
 
-.heroBanner {
+/* .heroBanner {
   padding: 4rem 0;
   text-align: center;
   position: relative;
@@ -14,10 +14,205 @@
   .heroBanner {
     padding: 2rem;
   }
+} */
+
+.heroZema {
+  padding: 8rem 1rem 5rem;
 }
 
-.buttons {
-  display: flex;
+@media (min-width: 640px) {
+  .heroZema {
+    padding-left: 1.5rem;
+    padding-right: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .heroZema {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
+}
+
+.heroZema__grid {
+  max-width: 80rem;
+  margin: 0 auto;
+  display: grid;
+  gap: 3rem;
   align-items: center;
+}
+
+@media (min-width: 1024px) {
+  .heroZema__grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.heroZema__gradient {
+  background: linear-gradient(
+    90deg,
+    var(--ifm-color-primary),
+    var(--ifm-color-primary-light)
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.heroZema h1 {
+  font-size: 3rem;
+  line-height: 1.1;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+
+@media (min-width: 640px) {
+  .heroZema h1 {
+    font-size: 3.75rem;
+  }
+}
+
+.heroZema p {
+  font-size: 1.25rem;
+  color: var(--ifm-color-content-secondary);
+  max-width: 36rem;
+}
+
+.heroZema__actions {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+/* GitHub Button in Hero Section todo: rename the all hero to index for consistency */
+.indexCtasGitHubButtonWrapper {
+  display: flex;
+}
+
+.indexCtasGitHubButton {
+  overflow: hidden;
+}
+
+@media only screen and (max-width: 768px) {
+  .indexCtasGitHubButton {
+    display: none;
+  }
+}
+
+.heroZema__code {
+  border-radius: 0.75rem;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  background: color-mix(in srgb, var(--ifm-background-color), transparent 30%);
+  backdrop-filter: blur(8px);
+  padding: 1.5rem;
+  overflow: hidden;
+}
+
+.heroZema__codeHeader {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+}
+
+.heroZema__dot {
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 999px;
+}
+
+.heroZema__dot--red {
+  background: #ef4444;
+}
+.heroZema__dot--yellow {
+  background: #facc15;
+}
+.heroZema__dot--green {
+  background: #22c55e;
+}
+
+.heroZema__code pre {
+  margin: 0;
+  font-family: var(--ifm-font-family-monospace);
+  font-size: 0.875rem;
+  overflow-x: auto;
+}
+
+.heroZema__code code {
+  color: var(--ifm-color-primary);
+}
+
+/* Live Demo Section */
+
+.liveDemo {
+  padding: 5rem 0;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  background: color-mix(
+    in srgb,
+    var(--ifm-background-color),
+    var(--ifm-color-emphasis-100) 30%
+  );
+}
+
+.liveDemoHeader {
+  text-align: center;
+  margin-bottom: 3rem;
+}
+
+.liveDemoHeader h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.liveDemoHeader p {
+  font-size: 1.125rem;
+  color: var(--ifm-color-content-secondary);
+}
+
+/* CTA Section */
+
+.cta {
+  padding: 5rem 0;
+  text-align: center;
+}
+
+.ctaTitle {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+@media (min-width: 640px) {
+  .ctaTitle {
+    font-size: 3rem;
+  }
+}
+
+.ctaSubtitle {
+  font-size: 1.25rem;
+  color: var(--ifm-color-content-secondary);
+  max-width: 48rem;
+  margin: 0 auto 2.5rem;
+}
+
+.ctaActions {
+  display: flex;
+  gap: 1rem;
   justify-content: center;
+  flex-wrap: wrap;
+}
+
+.ctaTerminal {
+  margin-top: 3rem;
+  display: inline-block;
+}
+
+.ctaTerminal pre {
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 12px;
+  font-size: 0.9rem;
 }
