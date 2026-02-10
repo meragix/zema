@@ -1,0 +1,391 @@
+/* Zema Validation Theme */
+
+:root {
+  /* Primary: Blue Authority - Évoque confiance et stabilité technique */
+  --ifm-color-primary: #0969da;
+  --ifm-color-primary-dark: #0860ca;
+  --ifm-color-primary-darker: #075bbe;
+  --ifm-color-primary-darkest: #064c9d;
+  --ifm-color-primary-light: #1f7ce6;
+  --ifm-color-primary-lighter: #2e86eb;
+  --ifm-color-primary-lightest: #54a3f7;
+
+  /* Success accent - Pour les exemples de validation réussie */
+  --ifm-color-success: #0d8050;
+  --ifm-color-success-dark: #0b6d44;
+  --ifm-color-success-light: #0f9d63;
+
+  /* Error accent - Pour les exemples d'échec de validation */
+  --ifm-color-danger: #cf222e;
+  --ifm-color-danger-dark: #a40e26;
+  --ifm-color-danger-light: #d73a49;
+
+  /* Code blocks - Fond légèrement teinté pour lisibilité */
+  --ifm-code-font-size: 95%;
+  --docusaurus-highlighted-code-line-bg: rgba(9, 105, 218, 0.08);
+
+  /* Typography - Police monospace pour cohérence avec code */
+  --ifm-font-family-monospace:
+    "JetBrains Mono", "Fira Code", "Consolas", monospace;
+}
+
+/* For readability concerns, you should choose a lighter palette in dark mode. */
+[data-theme="dark"] {
+  /* Primary: Bleu clair maintenu pour contraste optimal */
+  --ifm-color-primary: #58a6ff;
+  --ifm-color-primary-dark: #3d8fff;
+  --ifm-color-primary-darker: #2e83ff;
+  --ifm-color-primary-darkest: #0969da;
+  --ifm-color-primary-light: #73b4ff;
+  --ifm-color-primary-lighter: #88bdff;
+  --ifm-color-primary-lightest: #b8daff;
+
+  /* Success - Plus lumineux en dark mode */
+  --ifm-color-success: #3fb950;
+  --ifm-color-success-dark: #2ea043;
+  --ifm-color-success-light: #56d364;
+
+  /* Error - Rouge ajusté pour dark mode */
+  --ifm-color-danger: #f85149;
+  --ifm-color-danger-dark: #da3633;
+  --ifm-color-danger-light: #ff7b72;
+
+  /* Code blocks - Fond subtil sur dark */
+  --docusaurus-highlighted-code-line-bg: rgba(88, 166, 255, 0.12);
+
+  /* Background adjustments pour réduire fatigue oculaire */
+  --ifm-background-color: #0d1117;
+  --ifm-background-surface-color: #161b22;
+}
+
+/* Amélioration des code blocks pour schémas */
+.theme-code-block {
+  border-radius: 10px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+}
+
+.badge--success {
+  background-color: var(--ifm-color-success);
+}
+
+.badge--danger {
+  background-color: var(--ifm-color-danger);
+}
+
+/* Callouts pour exemples de validation */
+.alert--success {
+  border-left-color: var(--ifm-color-success);
+}
+
+.alert--danger {
+  border-left-color: var(--ifm-color-danger);
+}
+
+/* Code blocks */
+.theme-code-block {
+  --prism-background-color: #282a36;
+}
+
+/* Dart syntax highlighting */
+/* code[class*="language-dart"] {
+  font-family: "Fira Code", monospace;
+} */
+
+/* Callouts/Admonitions */
+.admonition {
+  margin-bottom: 1em;
+}
+
+/* Landing page hero */
+.hero {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+}
+
+.hero__title {
+  font-size: 3rem;
+  font-weight: 800;
+}
+
+/* Feature cards */
+.features {
+  display: flex;
+  align-items: center;
+  padding: 2rem 0;
+  width: 100%;
+}
+
+.featureImage {
+  height: 200px;
+  width: 200px;
+}
+
+/* API reference tables */
+.api-table {
+  width: 100%;
+  margin: 1em 0;
+}
+
+.api-table th {
+  background-color: var(--ifm-color-primary);
+  color: white;
+}
+
+/* Mobile responsiveness */
+@media screen and (max-width: 996px) {
+  .hero__title {
+    font-size: 2rem;
+  }
+}
+
+/* Footer */
+.footer__custom {
+  padding-top: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+}
+
+.footer__brand a {
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.footer__copy {
+  font-size: 0.9rem;
+  opacity: 0.8;
+}
+
+/* Navbar links */
+
+.header-github-link::before {
+  content: "";
+  width: 24px;
+  height: 24px;
+  display: flex;
+  background-color: var(--ifm-navbar-link-color);
+  mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12'/%3E%3C/svg%3E");
+  transition: background-color var(--ifm-transition-fast)
+    var(--ifm-transition-timing-default);
+}
+
+.header-github-link:hover::before {
+  background-color: var(--ifm-navbar-link-hover-color);
+}
+
+.header-pubdev-link::before {
+  content: "";
+  width: 24px;
+  height: 24px;
+  display: flex;
+  background-color: var(--ifm-navbar-link-color);
+  mask-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 24 24' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M4.105 4.105S9.158 1.58 11.684.316a3.079 3.079 0 0 1 1.481-.315c.766.047 1.677.788 1.677.788L24 9.948v9.789h-4.263V24H9.789l-9-9C.303 14.5 0 13.795 0 13.105c0-.319.18-.818.316-1.105l3.789-7.895zm.679.679v11.787c.002.543.021 1.024.498 1.508L10.204 23h8.533v-4.263L4.784 4.784zm12.055-.678c-.899-.896-1.809-1.78-2.74-2.643-.302-.267-.567-.468-1.07-.462-.37.014-.87.195-.87.195L6.341 4.105l10.498.001z' fill='black'/%3E%3C/svg%3E");
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  transition: background-color var(--ifm-transition-fast)
+    var(--ifm-transition-timing-default);
+}
+
+.header-pubdev-link:hover::before {
+  background-color: var(--ifm-navbar-link-hover-color);
+}
+
+/* Ecosystem Section todo: This should be moved to a dedicated CSS file for the home page, but for simplicity, it's included here. */
+.zemaEcosystem {
+  padding: 5rem 0;
+}
+
+.zemaEcosystem__header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.zemaEcosystem__header h2 {
+  font-size: 2.25rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.zemaEcosystem__header p {
+  font-size: 1.125rem;
+  color: var(--ifm-color-content-secondary);
+}
+
+/* Grid */
+.zemaEcosystem__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+@media (max-width: 996px) {
+  .zemaEcosystem__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Card */
+.zemaEcosystem__card {
+  padding: 2rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 12px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  background: var(--ifm-background-surface-color);
+  transition:
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.zemaEcosystem__icon {
+  width: 60px;
+  height: 60px;
+  display: flex;
+  padding: 0.5rem;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+  color: var(--ifm-color-primary);
+  background: rgba(0, 229, 255, 0.1);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+}
+
+.zemaEcosystem__card:hover {
+  border-color: var(--ifm-color-primary);
+  transform: translateY(-2px);
+}
+
+.zemaEcosystem__card:hover .zemaEcosystem__icon {
+  border-color: var(--ifm-color-primary);
+  transform: scale(1.1) rotate(-5deg);
+  box-shadow: 0 0 20px rgba(0, 229, 255, 0.4)
+}
+
+.zemaEcosystem__card h3 {
+  font-size: 1.25rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.zemaEcosystem__card p {
+  font-size: 0.95rem;
+  color: var(--ifm-color-content-secondary);
+}
+
+/* Zero-Cost Section todo: This should also be moved to a dedicated CSS file for the home page. */
+.zemaZeroCost {
+  padding: 5rem 0;
+}
+
+.zemaZeroCost__header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.zemaZeroCost__header h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 1rem;
+}
+
+.zemaZeroCost__highlight {
+  color: var(--ifm-color-primary);
+}
+
+.zemaZeroCost__header p {
+  max-width: 640px;
+  margin: 0 auto;
+  font-size: 1.125rem;
+  color: var(--ifm-color-content-secondary);
+}
+
+/* Grid */
+.zemaZeroCost__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 2rem;
+}
+
+@media (max-width: 996px) {
+  .zemaZeroCost__grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Card */
+.zemaZeroCost__card {
+  position: relative;
+  padding: 2rem;
+  border-radius: 14px;
+  border: 1px solid var(--ifm-color-emphasis-200);
+  background: var(--ifm-background-surface-color);
+}
+
+.zemaZeroCost__card h3 {
+  font-size: 1.5rem;
+  font-weight: 600;
+  margin-bottom: 1.5rem;
+}
+
+/* Highlight card */
+.zemaZeroCost__card--highlight {
+  border-color: var(--ifm-color-primary);
+  overflow: hidden;
+}
+
+.zemaZeroCost__glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at top left,
+    color-mix(in srgb, var(--ifm-color-primary), transparent 80%),
+    transparent 60%
+  );
+  pointer-events: none;
+}
+
+/* List */
+.zemaZeroCost__list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.zemaZeroCost__list li {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.zemaZeroCost__list strong {
+  display: block;
+  font-weight: 600;
+}
+
+.zemaZeroCost__list p {
+  margin: 0;
+  font-size: 0.9rem;
+  color: var(--ifm-color-content-secondary);
+}
+
+/* Dots */
+.zemaZeroCost__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  margin-top: 0.6rem;
+  flex-shrink: 0;
+}
+
+.zemaZeroCost__dot--bad {
+  background: #ef4444;
+}
+
+.zemaZeroCost__dot--good {
+  background: var(--ifm-color-primary);
+}

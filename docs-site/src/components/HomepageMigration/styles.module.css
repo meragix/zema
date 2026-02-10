@@ -1,0 +1,45 @@
+.migration {
+  padding: 5rem 0;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  background: color-mix(
+    in srgb,
+    var(--ifm-background-color),
+    var(--ifm-color-emphasis-100) 30%
+  );
+}
+
+.migrationHeader {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.migrationHeader h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+}
+
+.migrationHeader p {
+  font-size: 1.125rem;
+  color: var(--ifm-color-content-secondary);
+}
+
+.migrationCodeCard {
+ margin-bottom: 1rem;
+}
+
+.migrationCodeCard pre {
+  border: 1px solid var(--ifm-color-emphasis-200);
+  border-radius: 12px;
+  font-size: 0.9rem;
+}
+
+.migrationCodeCard--highlight pre {
+  border-color: var(--ifm-color-primary);
+  background: color-mix(
+    in srgb,
+    var(--ifm-color-primary),
+    var(--ifm-background-color) 90%
+  );
+}

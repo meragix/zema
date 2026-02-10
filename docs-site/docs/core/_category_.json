@@ -1,0 +1,9 @@
+{
+  "label": "Core",
+  "position": 2,
+  "link": {
+    "type": "generated-index",
+    "description": "Explore Zema's core features, including schema definitions, validation, transformations, and advanced techniques.",
+    "slug": "/core"
+  }
+}

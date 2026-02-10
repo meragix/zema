@@ -1,0 +1,9 @@
+{
+  "label": "Advanced",
+  "position": 6,
+  "link": {
+    "type": "generated-index",
+    "description": "Explore advanced techniques and features in Zema for complex validation scenarios, custom validators, and performance optimization.",
+    "slug": "/advanced"
+  }
+}

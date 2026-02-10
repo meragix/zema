@@ -1,0 +1,9 @@
+{
+  "label": "Plugins",
+  "position": 3,
+  "link": {
+    "type": "generated-index",
+    "description": "Discover how to create and use plugins in Zema to extend its functionality and integrate with other tools.",
+    "slug": "/plugins"
+  }
+}

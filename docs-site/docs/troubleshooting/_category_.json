@@ -1,0 +1,9 @@
+{
+  "label": "Troubleshooting",
+  "position": 7,
+  "link": {
+    "type": "generated-index",
+    "description": "Find solutions to common issues and troubleshooting tips for using Zema effectively.",
+    "slug": "/troubleshooting"
+  }
+}

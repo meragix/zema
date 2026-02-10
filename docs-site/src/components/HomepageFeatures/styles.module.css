@@ -1,0 +1,22 @@
+.feature {
+  display: flex;
+  align-items: center;
+  padding: 4rem 0;
+  width: 100%;
+}
+
+.features {
+  padding: 5rem 0;
+  border-top: 1px solid var(--ifm-color-emphasis-200);
+  border-bottom: 1px solid var(--ifm-color-emphasis-200);
+  background: color-mix(
+    in srgb,
+    var(--ifm-background-color),
+    var(--ifm-color-emphasis-100) 30%
+  );
+}
+
+.featureSvg {
+  //height: 200px;
+  width: 350px;
+}

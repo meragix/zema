@@ -1,0 +1,9 @@
+{
+  "label": "Migration",
+  "position": 5,
+  "link": {
+    "type": "generated-index",
+    "description": "Guides and tips for migrating from other validation libraries to Zema.",
+    "slug": "/migration"
+  }
+}
