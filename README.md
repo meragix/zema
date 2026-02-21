@@ -26,7 +26,7 @@ import 'package:zema/zema.dart';
 final userSchema = z.object({
   'name': z.string().min(2),
   'email': z.string().email(),
-  'age': z.number().positive().optional(),
+  'age': z.int().positive().optional(),
 });
 
 final user = userSchema.parse({
