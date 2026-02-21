@@ -6,8 +6,13 @@ import 'package:zema/src/error/issue.dart';
 final class ZemaObject<T extends Object> extends ZemaSchema<dynamic, T> {
   final Map<String, ZemaSchema<dynamic, dynamic>> shape;
   final T Function(Map<String, dynamic>)? constructor;
+  final bool strict; // Disallow unknown keys
 
-  const ZemaObject(this.shape, {this.constructor});
+  const ZemaObject(
+    this.shape, {
+    this.constructor,
+    this.strict = false,
+  });
 
   @override
   ZemaResult<T> safeParse(dynamic value) {
@@ -50,6 +55,19 @@ final class ZemaObject<T extends Object> extends ZemaSchema<dynamic, T> {
       }
     }
 
+    // Strict mode: check for unknown keys
+    if (strict) {
+      for (final key in value.keys) {
+        if (!shape.containsKey(key)) {
+          allIssues.add(ZemaIssue(
+            code: 'unknown_key',
+            message: 'Unknown key: $key',
+            path: [key.toString()],
+          ));
+        }
+      }
+    }
+
     if (allIssues.isNotEmpty) {
       return failure(allIssues);
     }
@@ -71,5 +89,37 @@ final class ZemaObject<T extends Object> extends ZemaSchema<dynamic, T> {
   }
 
   /// Type-safe transformation to custom class
-  // ZemaSchema<dynamic, R> map<R>(R Function(T) mapper) => transform(mapper);
+  ZemaSchema<dynamic, R> map<R>(R Function(T) mapper) => transform(mapper);
+
+  /// Make this schema strict (reject unknown keys)
+  ZemaObject<T> makeStrict() => ZemaObject(
+        shape,
+        constructor: constructor,
+        strict: true,
+      );
+
+  /// Extend this schema with additional fields
+  ZemaObject<Map<String, dynamic>> extend(Map<String, ZemaSchema<dynamic, dynamic>> additionalShape) {
+    return ZemaObject({...shape, ...additionalShape});
+  }
+
+  /// Pick specific fields
+  ZemaObject<Map<String, dynamic>> pick(List<String> keys) {
+    final pickedShape = <String, ZemaSchema<dynamic, dynamic>>{};
+    for (final key in keys) {
+      if (shape.containsKey(key)) {
+        pickedShape[key] = shape[key]!;
+      }
+    }
+    return ZemaObject(pickedShape);
+  }
+
+  /// Omit specific fields
+  ZemaObject<Map<String, dynamic>> omit(List<String> keys) {
+    final omittedShape = Map<String, ZemaSchema<dynamic, dynamic>>.from(shape);
+    for (final key in keys) {
+      omittedShape.remove(key);
+    }
+    return ZemaObject(omittedShape);
+  }
 }

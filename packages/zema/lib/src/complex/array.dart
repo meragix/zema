@@ -5,7 +5,10 @@ import 'package:zema/src/error/issue.dart';
 
 final class ZemaArray<T> extends ZemaSchema<dynamic, List<T>> {
   final ZemaSchema<dynamic, T> element;
-  const ZemaArray(this.element);
+  final int? minLength;
+  final int? maxLength;
+
+  const ZemaArray(this.element, {this.minLength, this.maxLength});
 
   @override
   ZemaResult<List<T>> safeParse(dynamic value) {
@@ -22,6 +25,40 @@ final class ZemaArray<T> extends ZemaSchema<dynamic, List<T>> {
           ),
           receivedValue: value,
           meta: {'expected': 'array', 'received': value.runtimeType.toString()},
+        ),
+      );
+    }
+
+    if (minLength != null && value.length < minLength!) {
+      return singleFailure(
+        ZemaIssue(
+          code: 'too_small',
+          message: ZemaI18n.translate(
+            'too_small',
+            params: {
+              'min': minLength,
+              'actual': value.length,
+            },
+          ),
+          receivedValue: value.length,
+          meta: {'min': minLength, 'actual': value.length},
+        ),
+      );
+    }
+
+    if (maxLength != null && value.length > maxLength!) {
+      return singleFailure(
+        ZemaIssue(
+          code: 'too_big',
+          message: ZemaI18n.translate(
+            'too_big',
+            params: {
+              'max': maxLength,
+              'actual': value.length,
+            },
+          ),
+          receivedValue: value.length,
+          meta: {'max': maxLength, 'actual': value.length},
         ),
       );
     }
@@ -46,4 +83,9 @@ final class ZemaArray<T> extends ZemaSchema<dynamic, List<T>> {
 
     return success(parsed);
   }
+
+  ZemaArray<T> min(int length) => ZemaArray(element, minLength: length, maxLength: maxLength);
+  ZemaArray<T> max(int length) => ZemaArray(element, minLength: minLength, maxLength: length);
+  ZemaArray<T> length(int exact) => ZemaArray(element, minLength: exact, maxLength: exact);
+  ZemaArray<T> nonempty() => ZemaArray(element, minLength: 1, maxLength: maxLength);
 }
