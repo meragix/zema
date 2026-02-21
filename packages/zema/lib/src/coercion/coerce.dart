@@ -16,9 +16,10 @@ class ZemaCoerce {
   ZemaSchema<dynamic, bool> boolean() => const CoerceBool();
 
   /// Coerce to double from string or number
-  ZemaSchema<dynamic, double> number({double? min, double? max}) =>
+  ZemaSchema<dynamic, double> float({double? min, double? max}) =>
       CoerceDouble(min: min, max: max);
 
   /// Coerce to string from any value
   ZemaSchema<dynamic, String> string() => const CoerceString();
 }
+ 

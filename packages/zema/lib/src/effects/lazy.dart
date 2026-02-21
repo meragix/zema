@@ -1,7 +1,6 @@
 import 'package:zema/src/core/result.dart';
 import 'package:zema/src/core/schema.dart';
 
-/// Lazy schema for recursive/self-referencing types
 final class LazySchema<I, O> extends ZemaSchema<I, O> {
   final ZemaSchema<I, O> Function() _fn;
   ZemaSchema<I, O>? _cached;

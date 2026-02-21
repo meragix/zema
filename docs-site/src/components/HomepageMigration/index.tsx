@@ -77,8 +77,11 @@ final userSchema = z.object({
   'age': z.int().min(18),
 });
 
-// Automatic inference: The Holy Grail of DX
-typedef User = z.infer<typeof userSchema>; 
+extension type User(Map<String, dynamic> _)  {
+  String get name => _['name'];
+  String get email => _['email'];
+  String get age => _['age'];
+}
 
 void main() {
   final result = userSchema.safeParse(json);

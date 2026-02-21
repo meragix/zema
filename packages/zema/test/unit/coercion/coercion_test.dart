@@ -95,19 +95,19 @@ void main() {
 
   group('z.coerce().number', () {
     test('passes through double', () {
-      final schema = z.coerce().number();
+      final schema = z.coerce().float();
 
       expect(schema.safeParse(3.14).value, equals(3.14));
     });
 
     test('coerces int to double', () {
-      final schema = z.coerce().number();
+      final schema = z.coerce().float();
 
       expect(schema.safeParse(42).value, equals(42.0));
     });
 
     test('coerces string to double', () {
-      final schema = z.coerce().number();
+      final schema = z.coerce().float();
 
       expect(schema.safeParse('3.14').value, equals(3.14));
       expect(schema.safeParse('  42  ').value, equals(42.0));
@@ -115,14 +115,14 @@ void main() {
     });
 
     test('rejects invalid string', () {
-      final schema = z.coerce().number();
+      final schema = z.coerce().float();
 
       expect(schema.safeParse('not a number').isSuccess, isFalse);
       expect(schema.safeParse('12.34.56').isSuccess, isFalse);
     });
 
     test('validates range after coercion', () {
-      final schema = z.coerce().number(min: 0, max: 100);
+      final schema = z.coerce().float(min: 0, max: 100);
 
       expect(schema.safeParse('50.5').isSuccess, isTrue);
       expect(schema.safeParse('-10').isSuccess, isFalse);
