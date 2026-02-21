@@ -31,7 +31,9 @@ void main() {
 
       expect(schema.safeParse(3.14).isFailure, isTrue);
       expect(
-          schema.safeParse(3.14).errors.first.code, equals('invalid_coercion'));
+        schema.safeParse(3.14).errors.first.code,
+        equals('invalid_coercion'),
+      );
     });
 
     test('rejects invalid string', () {

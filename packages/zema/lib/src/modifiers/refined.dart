@@ -86,10 +86,12 @@ final class _AsyncRefinedSchema<I, O> extends ZemaSchema<I, O> {
       }
       return success(output);
     } catch (e) {
-      return singleFailure(ZemaIssue(
-        code: 'async_refinement_error',
-        message: 'Async validation failed: $e',
-      ));
+      return singleFailure(
+        ZemaIssue(
+          code: 'async_refinement_error',
+          message: 'Async validation failed: $e',
+        ),
+      );
     }
   }
 }

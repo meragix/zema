@@ -84,8 +84,12 @@ final class ZemaArray<T> extends ZemaSchema<dynamic, List<T>> {
     return success(parsed);
   }
 
-  ZemaArray<T> min(int length) => ZemaArray(element, minLength: length, maxLength: maxLength);
-  ZemaArray<T> max(int length) => ZemaArray(element, minLength: minLength, maxLength: length);
-  ZemaArray<T> length(int exact) => ZemaArray(element, minLength: exact, maxLength: exact);
-  ZemaArray<T> nonempty() => ZemaArray(element, minLength: 1, maxLength: maxLength);
+  ZemaArray<T> min(int length) =>
+      ZemaArray(element, minLength: length, maxLength: maxLength);
+  ZemaArray<T> max(int length) =>
+      ZemaArray(element, minLength: minLength, maxLength: length);
+  ZemaArray<T> length(int exact) =>
+      ZemaArray(element, minLength: exact, maxLength: exact);
+  ZemaArray<T> nonempty() =>
+      ZemaArray(element, minLength: 1, maxLength: maxLength);
 }

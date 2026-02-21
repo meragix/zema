@@ -47,8 +47,10 @@ void main() {
 
         expect(schema.safeParse('hello').isSuccess, isTrue);
         expect(schema.safeParse('hello world').isSuccess, isFalse);
-        expect(schema.safeParse('hello world').errors.first.code,
-            equals('too_long'));
+        expect(
+          schema.safeParse('hello world').errors.first.code,
+          equals('too_long'),
+        );
       });
 
       test('validates min and max together', () {

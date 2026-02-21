@@ -43,7 +43,8 @@ class Zema {
   ZemaCoerce coerce() => const ZemaCoerce();
 
   // Create a union type (discriminated or not)
-  ZemaUnion<T> union<T>(List<ZemaSchema<dynamic, T>> schemas) => ZemaUnion(schemas);
+  ZemaUnion<T> union<T>(List<ZemaSchema<dynamic, T>> schemas) =>
+      ZemaUnion(schemas);
 
   // Lazy schema for recursive types
   ZemaSchema<I, O> lazy<I, O>(ZemaSchema<I, O> Function() fn) => LazySchema(fn);

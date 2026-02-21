@@ -22,4 +22,3 @@ class ZemaCoerce {
   /// Coerce to string from any value
   ZemaSchema<dynamic, String> string() => const CoerceString();
 }
- 

@@ -59,11 +59,13 @@ final class ZemaObject<T extends Object> extends ZemaSchema<dynamic, T> {
     if (strict) {
       for (final key in value.keys) {
         if (!shape.containsKey(key)) {
-          allIssues.add(ZemaIssue(
-            code: 'unknown_key',
-            message: 'Unknown key: $key',
-            path: [key.toString()],
-          ));
+          allIssues.add(
+            ZemaIssue(
+              code: 'unknown_key',
+              message: 'Unknown key: $key',
+              path: [key.toString()],
+            ),
+          );
         }
       }
     }
@@ -99,7 +101,8 @@ final class ZemaObject<T extends Object> extends ZemaSchema<dynamic, T> {
       );
 
   /// Extend this schema with additional fields
-  ZemaObject<Map<String, dynamic>> extend(Map<String, ZemaSchema<dynamic, dynamic>> additionalShape) {
+  ZemaObject<Map<String, dynamic>> extend(
+      Map<String, ZemaSchema<dynamic, dynamic>> additionalShape) {
     return ZemaObject({...shape, ...additionalShape});
   }
 

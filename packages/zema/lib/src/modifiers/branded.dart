@@ -16,7 +16,9 @@ final class Branded<T, Brand> {
   String toString() => value.toString();
 
   @override
-  bool operator ==(Object other) => identical(this, other) || (other is Branded<T, Brand> && value == other.value);
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      (other is Branded<T, Brand> && value == other.value);
 
   @override
   int get hashCode => value.hashCode;

@@ -43,7 +43,10 @@ final class ZemaDateTime extends ZemaSchema<dynamic, DateTime> {
             },
           ),
           receivedValue: date.toIso8601String(),
-          meta: {'min': min!.toIso8601String(), 'actual': date.toIso8601String()},
+          meta: {
+            'min': min!.toIso8601String(),
+            'actual': date.toIso8601String()
+          },
         ),
       );
     }
@@ -60,7 +63,10 @@ final class ZemaDateTime extends ZemaSchema<dynamic, DateTime> {
             },
           ),
           receivedValue: date.toIso8601String(),
-          meta: {'max': max!.toIso8601String(), 'actual': date.toIso8601String()},
+          meta: {
+            'max': max!.toIso8601String(),
+            'actual': date.toIso8601String()
+          },
         ),
       );
     }
@@ -70,5 +76,6 @@ final class ZemaDateTime extends ZemaSchema<dynamic, DateTime> {
 
   ZemaDateTime after(DateTime date) => ZemaDateTime(min: date, max: max);
   ZemaDateTime before(DateTime date) => ZemaDateTime(min: min, max: date);
-  ZemaDateTime between(DateTime start, DateTime end) => ZemaDateTime(min: start, max: end);
+  ZemaDateTime between(DateTime start, DateTime end) =>
+      ZemaDateTime(min: start, max: end);
 }

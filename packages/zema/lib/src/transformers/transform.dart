@@ -16,7 +16,8 @@ final class TransformedSchema<I, O, T> extends ZemaSchema<I, T> {
     try {
       return success(transformer(result.value));
     } catch (e) {
-      return singleFailure(ZemaIssue(code: 'transform_error', message: 'Transform failed: $e'));
+      return singleFailure(
+          ZemaIssue(code: 'transform_error', message: 'Transform failed: $e'));
     }
   }
 
@@ -28,7 +29,8 @@ final class TransformedSchema<I, O, T> extends ZemaSchema<I, T> {
     try {
       return success(transformer(result.value));
     } catch (e) {
-      return singleFailure(ZemaIssue(code: 'transform_error', message: 'Transform failed: $e'));
+      return singleFailure(
+          ZemaIssue(code: 'transform_error', message: 'Transform failed: $e'));
     }
   }
 }

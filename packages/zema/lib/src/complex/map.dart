@@ -105,6 +105,8 @@ final class ZemaMap<K, V> extends ZemaSchema<dynamic, Map<K, V>> {
     return success(parsed);
   }
 
-  ZemaMap<K, V> min(int size) => ZemaMap(keySchema, valueSchema, minSize: size, maxSize: maxSize);
-  ZemaMap<K, V> max(int size) => ZemaMap(keySchema, valueSchema, minSize: minSize, maxSize: size);
+  ZemaMap<K, V> min(int size) =>
+      ZemaMap(keySchema, valueSchema, minSize: size, maxSize: maxSize);
+  ZemaMap<K, V> max(int size) =>
+      ZemaMap(keySchema, valueSchema, minSize: minSize, maxSize: size);
 }

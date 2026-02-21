@@ -55,13 +55,16 @@ abstract class ZemaSchema<Input, Output> {
   // ===========================================================================
 
   /// Transform output to another type with full type safety
-  ZemaSchema<Input, T> transform<T>(T Function(Output) fn) => TransformedSchema(this, fn);
+  ZemaSchema<Input, T> transform<T>(T Function(Output) fn) =>
+      TransformedSchema(this, fn);
 
   /// Pipe into another schema
-  ZemaSchema<Input, T> pipe<T>(ZemaSchema<Output, T> next) => PipedSchema(this, next);
+  ZemaSchema<Input, T> pipe<T>(ZemaSchema<Output, T> next) =>
+      PipedSchema(this, next);
 
   /// Preprocess input before validation
-  ZemaSchema<I, Output> preprocess<I>(Input Function(I) fn) => PreprocessedSchema<I, Input, Output>(fn, this);
+  ZemaSchema<I, Output> preprocess<I>(Input Function(I) fn) =>
+      PreprocessedSchema<I, Input, Output>(fn, this);
 
   // ===========================================================================
   // MODIFIER METHODS
@@ -74,8 +77,11 @@ abstract class ZemaSchema<Input, Output> {
   ZemaSchema<Input?, Output?> nullable() => NullableSchema(this);
 
   /// Default value on error or null
-  ZemaSchema<Input?, Output> withDefault(Output defaultValue) => DefaultSchema(this, defaultValue);
+  ZemaSchema<Input?, Output> withDefault(Output defaultValue) =>
+      DefaultSchema(this, defaultValue);
 
   /// Catch errors and provide fallback
-  ZemaSchema<Input, Output> catchError(Output Function(List<ZemaIssue>) handler) => CatchSchema(this, handler);
+  ZemaSchema<Input, Output> catchError(
+          Output Function(List<ZemaIssue>) handler) =>
+      CatchSchema(this, handler);
 }

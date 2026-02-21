@@ -51,10 +51,12 @@ export 'src/error/error.dart'
         ZemaIssue;
 
 // Primitive schemas
-export 'src/primitives/primitives.dart' show ZemaString, ZemaInt, ZemaDouble, ZemaBool, ZemaDateTime, ZemaLiteral;
+export 'src/primitives/primitives.dart'
+    show ZemaString, ZemaInt, ZemaDouble, ZemaBool, ZemaDateTime, ZemaLiteral;
 
 // Complex schemas
-export 'src/complex/complex.dart' show ZemaObject, ZemaArray, ZemaUnion, ZemaMap;
+export 'src/complex/complex.dart'
+    show ZemaObject, ZemaArray, ZemaUnion, ZemaMap;
 
 // Coercion
 export 'src/coercion/coerce.dart' show ZemaCoerce;
