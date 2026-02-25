@@ -4,12 +4,58 @@ import 'package:zema/src/error/i18n.dart';
 import 'package:zema/src/error/issue.dart';
 import 'package:zema/src/extensions/custom_message.dart';
 
+/// A schema that validates Dart `int` values.
+///
+/// Construct via `z.int()` — do not instantiate directly.
+///
+/// Only accepts Dart `int`s. `double` values (even whole-number ones like
+/// `42.0`) and numeric strings are rejected with an `invalid_type` issue.
+/// Use `z.coerce().integer()` when the input may be a string or double.
+///
+/// ## Constraints
+///
+/// All active constraints are evaluated after the type check; all failures
+/// are returned together as a single [ZemaFailure]:
+///
+/// | Method | Condition | Issue code |
+/// |---|---|---|
+/// | [gte] | value >= min | `too_small` |
+/// | [lte] | value <= max | `too_big` |
+/// | [positive] | value > 0 | `not_positive` |
+/// | [negative] | value < 0 | `not_negative` |
+/// | [step] | value % n == 0 | `not_multiple_of` |
+///
+/// ## Examples
+///
+/// ```dart
+/// z.int()                          // any integer
+/// z.int().gte(0)                   // >= 0
+/// z.int().lte(100)                 // <= 100
+/// z.int().gte(1).lte(5)            // 1..5 inclusive
+/// z.int().positive()               // > 0
+/// z.int().negative()               // < 0
+/// z.int().step(5)                  // 0, 5, 10, 15, …
+/// z.int().positive().step(2)       // positive even numbers
+/// ```
+///
+/// See also:
+/// - [ZemaDouble] — for `double` values.
+/// - `z.coerce().integer()` — coerces strings/doubles to `int` first.
 final class ZemaInt extends ZemaSchema<dynamic, int>
     with ZemaCustomMessage<dynamic, int> {
+  /// Lower bound (inclusive). `null` means no lower limit.
   final int? min;
+
+  /// Upper bound (inclusive). `null` means no upper limit.
   final int? max;
+
+  /// When `true`, value must be strictly greater than zero.
   final bool? isPositive;
+
+  /// When `true`, value must be strictly less than zero.
   final bool? isNegative;
+
+  /// When set, value must be evenly divisible by this number.
   final int? multipleOf;
 
   @override
@@ -125,6 +171,18 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
     return success(value);
   }
 
+  // ===========================================================================
+  // Fluent API
+  // ===========================================================================
+
+  /// Requires the value to be greater than or equal to [value].
+  ///
+  /// Produces a `too_small` issue on failure.
+  ///
+  /// ```dart
+  /// z.int().gte(0)                          // non-negative
+  /// z.int().gte(1, message: 'Must be >= 1')
+  /// ```
   ZemaInt gte(int value, {String? message}) => ZemaInt(
         min: value,
         max: max,
@@ -134,6 +192,14 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
         customMessage: message,
       );
 
+  /// Requires the value to be less than or equal to [value].
+  ///
+  /// Produces a `too_big` issue on failure.
+  ///
+  /// ```dart
+  /// z.int().lte(100)
+  /// z.int().gte(0).lte(255)   // byte range
+  /// ```
   ZemaInt lte(int value, {String? message}) => ZemaInt(
         min: min,
         max: value,
@@ -143,6 +209,15 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
         customMessage: message,
       );
 
+  /// Requires the value to be strictly greater than zero (`value > 0`).
+  ///
+  /// Produces a `not_positive` issue on failure. Note that `0` is **not**
+  /// positive — use [gte]`(0)` if you want to include zero.
+  ///
+  /// ```dart
+  /// z.int().positive()
+  /// z.int().positive(message: 'Quantity must be positive.')
+  /// ```
   ZemaInt positive({String? message}) => ZemaInt(
         min: min,
         max: max,
@@ -152,6 +227,14 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
         customMessage: message,
       );
 
+  /// Requires the value to be strictly less than zero (`value < 0`).
+  ///
+  /// Produces a `not_negative` issue on failure. Note that `0` is **not**
+  /// negative — use [lte]`(-1)` if you need to exclude zero explicitly.
+  ///
+  /// ```dart
+  /// z.int().negative()
+  /// ```
   ZemaInt negative({String? message}) => ZemaInt(
         min: min,
         max: max,
@@ -161,6 +244,14 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
         customMessage: message,
       );
 
+  /// Requires the value to be a multiple of [value] (`value % n == 0`).
+  ///
+  /// Produces a `not_multiple_of` issue on failure.
+  ///
+  /// ```dart
+  /// z.int().step(5)    // 0, 5, 10, 15, …
+  /// z.int().step(2)    // even numbers
+  /// ```
   ZemaInt step(int value, {String? message}) => ZemaInt(
         min: min,
         max: max,
@@ -171,12 +262,56 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
       );
 }
 
+/// A schema that validates Dart `double` values.
+///
+/// Construct via `z.double()` — do not instantiate directly.
+///
+/// Only accepts Dart `double`s. `int` values and numeric strings are rejected
+/// with an `invalid_type` issue. Use `z.coerce().float()` when the input may
+/// be an integer or string.
+///
+/// ## Constraints
+///
+/// All active constraints are evaluated after the type check. The finiteness
+/// check runs first among constraints so that `NaN` and `Infinity` don't
+/// produce misleading range errors:
+///
+/// | Method | Condition | Issue code |
+/// |---|---|---|
+/// | [finite] | !value.isNaN && !value.isInfinite | `not_finite` |
+/// | [gte] | value >= min | `too_small` |
+/// | [lte] | value <= max | `too_big` |
+/// | [positive] | value > 0.0 | `not_positive` |
+///
+/// ## Examples
+///
+/// ```dart
+/// z.double()                  // any double
+/// z.double().gte(0.0)         // non-negative
+/// z.double().gte(0.0).lte(1.0) // probability range [0, 1]
+/// z.double().positive()       // > 0.0
+/// z.double().finite()         // rejects NaN, Infinity, -Infinity
+/// z.double().finite().gte(0.0)
+/// ```
+///
+/// See also:
+/// - [ZemaInt] — for integer values.
+/// - `z.coerce().float()` — coerces strings/ints to `double` first.
 final class ZemaDouble extends ZemaSchema<dynamic, double>
     with ZemaCustomMessage<dynamic, double> {
+  /// Lower bound (inclusive). `null` means no lower limit.
   final double? min;
+
+  /// Upper bound (inclusive). `null` means no upper limit.
   final double? max;
+
+  /// When `true`, value must be strictly greater than zero.
   final bool? isPositive;
+
+  /// When `true`, value must be strictly less than zero.
   final bool? isNegative;
+
+  /// When `true`, value must not be `NaN`, `Infinity`, or `-Infinity`.
   final bool? isFinite;
 
   @override
@@ -287,6 +422,18 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
     return success(value);
   }
 
+  // ===========================================================================
+  // Fluent API
+  // ===========================================================================
+
+  /// Requires the value to be greater than or equal to [value].
+  ///
+  /// Produces a `too_small` issue on failure.
+  ///
+  /// ```dart
+  /// z.double().gte(0.0)              // non-negative
+  /// z.double().gte(0.0, message: 'Must be >= 0.')
+  /// ```
   ZemaDouble gte(double value, {String? message}) => ZemaDouble(
         min: value,
         max: max,
@@ -296,6 +443,14 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
         customMessage: message,
       );
 
+  /// Requires the value to be less than or equal to [value].
+  ///
+  /// Produces a `too_big` issue on failure.
+  ///
+  /// ```dart
+  /// z.double().lte(1.0)
+  /// z.double().gte(0.0).lte(1.0)   // probability: [0.0, 1.0]
+  /// ```
   ZemaDouble lte(double value, {String? message}) => ZemaDouble(
         min: min,
         max: value,
@@ -305,6 +460,14 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
         customMessage: message,
       );
 
+  /// Requires the value to be strictly greater than zero (`value > 0.0`).
+  ///
+  /// Produces a `not_positive` issue on failure. Note that `0.0` is **not**
+  /// positive — use [gte]`(0.0)` if you want to include zero.
+  ///
+  /// ```dart
+  /// z.double().positive()
+  /// ```
   ZemaDouble positive() => ZemaDouble(
         min: min,
         max: max,
@@ -313,6 +476,16 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
         isFinite: isFinite,
       );
 
+  /// Requires the value to be a finite number — not `NaN`, `Infinity`, or
+  /// `-Infinity`.
+  ///
+  /// Produces a `not_finite` issue on failure. Chain with range constraints
+  /// to combine finiteness and bounds checks:
+  ///
+  /// ```dart
+  /// z.double().finite()
+  /// z.double().finite().gte(0.0)   // finite and non-negative
+  /// ```
   ZemaDouble finite() => ZemaDouble(
         min: min,
         max: max,
