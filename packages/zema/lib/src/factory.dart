@@ -202,7 +202,7 @@ class Zema {
   ///
   /// See also:
   /// - [object] — produces `Map<String, dynamic>` without a constructor.
-  ZemaObject<T> objectAs<T extends Object>(
+  ZemaObject<T> objectAs<T>(
     Map<String, ZemaSchema<dynamic, dynamic>> shape,
     T Function(Map<String, dynamic>) constructor,
   ) =>

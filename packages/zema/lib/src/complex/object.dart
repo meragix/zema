@@ -62,7 +62,7 @@ import 'package:zema/src/error/issue.dart';
 /// See also:
 /// - [ZemaMap] — for maps with a dynamic set of keys validated uniformly.
 /// - `z.object` / `z.objectAs` — factory methods in [Zema].
-final class ZemaObject<T extends Object> extends ZemaSchema<dynamic, T> {
+final class ZemaObject<T> extends ZemaSchema<dynamic, T> {
   /// The field definitions. Each key maps to the schema that validates it.
   final Map<String, ZemaSchema<dynamic, dynamic>> shape;
 

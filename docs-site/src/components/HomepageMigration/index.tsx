@@ -71,17 +71,20 @@ class User {
             >
               <CodeBlock language="dart" showLineNumbers>
                 {`
-final userSchema = z.object({
-  'name': z.string().min(1),
-  'email': z.string().email(),
-  'age': z.int().min(18),
-});
-
 extension type User(Map<String, dynamic> _)  {
-  String get name => _['name'];
-  String get email => _['email'];
-  String get age => _['age'];
+  String get name => _['name'] as String;
+  String get email => _['email'] as String;
+  int get age => _['age'] as int;
 }
+
+final userSchema = z.objectAs<User>(
+  {
+    'name': z.string().min(1),
+    'email': z.string().email(),
+    'age': z.int().gte(18, message: 'User must be an adult'),
+  },
+  (map) => User(map),
+);
 
 void main() {
   final result = userSchema.safeParse(json);

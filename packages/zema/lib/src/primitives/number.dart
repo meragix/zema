@@ -180,7 +180,7 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
   /// Produces a `too_small` issue on failure.
   ///
   /// ```dart
-  /// z.int().gte(0)                          // non-negative
+  /// z.int().gte(0) // non-negative
   /// z.int().gte(1, message: 'Must be >= 1')
   /// ```
   ZemaInt gte(int value, {String? message}) => ZemaInt(
