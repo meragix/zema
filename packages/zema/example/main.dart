@@ -1,37 +1,54 @@
 // ignore_for_file: avoid_print
 
+import 'dart:convert';
+
 import 'package:zema/zema.dart';
 
-void main() {
-  // Simple validation
-  final emailSchema = z.string().trim().email().min(5);
-  final result = emailSchema.safeParse('  test@example.com  ');
-  print(result.value); // test@example.com
+extension type User(Map<String, dynamic> _) {
+  int get id => _['id'] as int;
+  String get name => _['name'] as String;
+  String get email => _['email'] as String;
+  int? get age => _['age'] as int?;
+}
 
-  // Object with transformation
-  final userSchema = z.object({
-    'name': z.string().min(2),
-    'age': z.int().gte(0),
+final userSchema = z.objectAs<User>(
+  {
+    'id': z.integer(),
+    'name': z.string().min(1),
     'email': z.string().email(),
+    'age': z.integer().gte(18, message: 'Must be 18 or older').optional(),
+  },
+  (map) => User(map),
+);
+
+void main() {
+  // Fetch data
+  final response = jsonEncode({
+    'id': 1,
+    'name': 'Leanne Graham',
+    'email': 'sincere@april.biz',
+    //'age': 16,
   });
 
-  final userData = {
-    'name': 'Alice',
-    'age': 30,
-    'email': 'alice@example.com',
-  };
+  // Decode JSON
+  final json = jsonDecode(response);
 
-  final userResult = userSchema.safeParse(userData);
-  if (userResult.isSuccess) {
-    print('Valid user: ${userResult.value}');
+  // Validate with Zema
+  final result = userSchema.safeParse(json);
+
+  // Handle result
+  if (result.isSuccess) {
+    final user = result.value;
+
+    print('✅ Valid user:');
+    print('   ID: ${user.id}');
+    print('   Name: ${user.name}');
+    print('   Email: ${user.email}');
+  } else {
+    print('❌ Validation failed:');
+    for (final error in result.errors) {
+      final field = error.path.isEmpty ? 'root' : error.path.join('.');
+      print('   $field: ${error.message}');
+    }
   }
-
-  // Array validation
-  final numbersSchema = z.array(z.int().positive()).min(1);
-  print(numbersSchema.safeParse([1, 2, 3]).value); // [1, 2, 3]
-
-  // Coercion for env vars
-  final portSchema = z.coerce().integer(min: 1, max: 65535).withDefault(3000);
-  print(portSchema.safeParse('8080').value); // 8080
-  print(portSchema.safeParse(null).value); // 3000 (default)
 }
