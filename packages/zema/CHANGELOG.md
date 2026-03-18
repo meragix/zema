@@ -7,6 +7,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Added
+
+- `ZemaInt.nonNegative()` — accepts zero and positive integers (`value >= 0`)
+- `ZemaDouble.nonNegative()` — accepts zero and positive doubles (`value >= 0.0`)
+- `ZemaObject.merge()` — merges fields from another `ZemaObject` instance (fields from the argument win on conflict)
+- `ZemaUnion.discriminatedBy()` — fast-path validation using a named literal field to select the matching schema directly
+
+### Tests
+
+- Rewrote `object_schema_test.dart`: full coverage of `ZemaObject` including `extend()`, `merge()`, `pick()`, `omit()`, `makeStrict()`, `objectAs()`, and nested error paths
+- Rewrote `array_schema_test.dart`: full coverage of `ZemaArray` including length constraints and nested object errors
+- Rewrote `modifiers_test.dart`: full coverage of `optional()`, `nullable()`, `withDefault()`, `catchError()`, and `brand()`
+- Added `union_test.dart`: covers linear scan, `discriminatedBy()` fast-path, and error meta fields
+- Added `double_test.dart`: covers type validation, range constraints, `positive()`, `negative()`, `nonNegative()`, and `finite()`
+- Extended `int_test.dart` with `nonNegative()` tests
+
 ## [0.3.0] - 2026-02-21
 
 ### Added
