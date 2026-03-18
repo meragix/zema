@@ -18,13 +18,13 @@ const config: Config = {
   },
 
   // GitHub Pages deployment config
-  url: "https://meragix.github.io",
-  baseUrl: "/zema/",
+  url: "https://zema.meragix.dev",
+  baseUrl: "/",
 
   // GitHub pages deployment config.
   // If you aren't using GitHub pages, you don't need these.
-  organizationName: "Meragix",
-  projectName: "zema",
+  // organizationName: "Meragix",
+  // projectName: "zema",
 
   onBrokenLinks: "ignore",
 
@@ -160,7 +160,7 @@ const config: Config = {
             },
             {
               label: "GitHub Discussions",
-              href: "https://github.com/meragix/zema/discussions",
+              href: "https://github.com/orgs/meragix/discussions",
             },
           ],
         },
