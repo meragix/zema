@@ -23,7 +23,7 @@ import 'package:zema/zema.dart';
 /// // Accept either a UUID string or a positive integer ID
 /// final idSchema = z.union([
 ///   z.string().uuid(),
-///   z.int().positive(),
+///   z.integer().positive(),
 /// ]);
 ///
 /// idSchema.parse('550e8400-e29b-41d4-a716-446655440000'); // string UUID

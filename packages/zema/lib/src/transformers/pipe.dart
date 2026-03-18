@@ -34,7 +34,7 @@ import 'package:zema/src/core/schema.dart';
 /// // Parse a string, coerce to int, then apply range validation
 /// z.string()
 ///     .transform(int.parse)         // String → int (or transform_error)
-///     .pipe(z.int().gte(0).lte(100));
+///     .pipe(z.integer().gte(0).lte(100));
 ///
 /// // Validate a raw string is a number string, then parse it
 /// z.string().regex(RegExp(r'^\d+$'))

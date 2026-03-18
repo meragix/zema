@@ -29,8 +29,8 @@ import 'package:zema/src/core/schema.dart';
 ///
 /// // Useful for config fields with well-known defaults
 /// final configSchema = z.object({
-///   'timeout': z.int().withDefault(30),
-///   'retries': z.int().withDefault(3),
+///   'timeout': z.integer().withDefault(30),
+///   'retries': z.integer().withDefault(3),
 ///   'debug':   z.boolean().withDefault(false),
 /// });
 ///
@@ -47,10 +47,10 @@ import 'package:zema/src/core/schema.dart';
 ///
 /// ```dart
 /// // withDefault: errors discarded silently
-/// z.int().withDefault(-1).parse('oops');   // -1, no diagnostics
+/// z.integer().withDefault(-1).parse('oops');   // -1, no diagnostics
 ///
 /// // catchError: errors visible before fallback
-/// z.int().catchError((issues) {
+/// z.integer().catchError((issues) {
 ///   logger.warn(issues);
 ///   return -1;
 /// }).parse('oops');                         // -1, with logging

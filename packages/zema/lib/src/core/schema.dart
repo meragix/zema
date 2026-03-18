@@ -264,7 +264,7 @@ abstract class ZemaSchema<Input, Output> {
   /// schema.parse('  hey '); // succeeds: 'hey'
   ///
   /// // Coerce a number from a JSON field that may arrive as a string
-  /// final ageSchema = z.int()
+  /// final ageSchema = z.integer()
   ///     .gte(0)
   ///     .preprocess<dynamic>((v) => v is String ? int.tryParse(v) ?? v : v);
   /// ```

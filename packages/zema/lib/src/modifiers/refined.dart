@@ -35,13 +35,16 @@ extension ZemaSchemaRefinement<I, O> on ZemaSchema<I, O> {
   ///
   /// // Compound rule on an object
   /// final rangeSchema = z.object({
-  ///   'min': z.int(),
-  ///   'max': z.int(),
+  ///   'min': z.integer(),
+  ///   'max': z.integer(),
   /// }).refine(
   ///   (m) => (m['min'] as int) < (m['max'] as int),
   ///   message: 'min must be less than max',
   /// );
   /// ```
+  ///
+  /// Note: chained `.refine()` calls are sequential — the first failure stops
+  /// the chain. To collect multiple issues in a single pass, use [superRefine].
   ///
   /// See also:
   /// - [refineAsync] — for predicates that require async I/O.
