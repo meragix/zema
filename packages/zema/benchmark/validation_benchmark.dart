@@ -31,16 +31,16 @@ class IntegerBenchmark extends BenchmarkBase {
 
 class FlatObjectBenchmark extends BenchmarkBase {
   static final _schema = z.object({
-    'name':   z.string().min(2),
-    'email':  z.string().email(),
-    'age':    z.integer().gte(0).lte(120),
+    'name': z.string().min(2),
+    'email': z.string().email(),
+    'age': z.integer().gte(0).lte(120),
     'active': z.boolean(),
   });
 
   static final _data = {
-    'name':   'Alice',
-    'email':  'alice@example.com',
-    'age':    30,
+    'name': 'Alice',
+    'email': 'alice@example.com',
+    'age': 30,
     'active': true,
   };
 
@@ -56,8 +56,9 @@ class FlatObjectBenchmark extends BenchmarkBase {
 
 class NestedObjectBenchmark extends BenchmarkBase {
   static final _coordinates = z.object({'lat': z.double(), 'lng': z.double()});
-  static final _address = z.object({'city': z.string(), 'coordinates': _coordinates});
-  static final _schema  = z.object({'name': z.string(), 'address': _address});
+  static final _address =
+      z.object({'city': z.string(), 'coordinates': _coordinates});
+  static final _schema = z.object({'name': z.string(), 'address': _address});
 
   static final _data = {
     'name': 'Alice',
@@ -89,7 +90,7 @@ class ArrayBenchmark extends BenchmarkBase {
 
 class ArrayOfObjectsBenchmark extends BenchmarkBase {
   static final _item = z.object({
-    'id':    z.integer().positive(),
+    'id': z.integer().positive(),
     'email': z.string().email(),
   });
   static final _schema = z.array(_item);
@@ -131,14 +132,14 @@ class UnionLinearBenchmark extends BenchmarkBase {
 
 class UnionDiscriminatedBenchmark extends BenchmarkBase {
   static final _schema = z.union([
-    z.object({'type': z.literal('click'),    'x': z.integer(), 'y': z.integer()}),
+    z.object({'type': z.literal('click'), 'x': z.integer(), 'y': z.integer()}),
     z.object({'type': z.literal('keypress'), 'key': z.string()}),
-    z.object({'type': z.literal('scroll'),   'delta': z.double()}),
+    z.object({'type': z.literal('scroll'), 'delta': z.double()}),
   ]).discriminatedBy('type');
 
-  static final _click    = {'type': 'click',    'x': 100, 'y': 200};
+  static final _click = {'type': 'click', 'x': 100, 'y': 200};
   static final _keypress = {'type': 'keypress', 'key': 'Enter'};
-  static final _scroll   = {'type': 'scroll',   'delta': 3.5};
+  static final _scroll = {'type': 'scroll', 'delta': 3.5};
 
   UnionDiscriminatedBenchmark() : super('Union.discriminated(3 schemas)');
 
@@ -155,7 +156,8 @@ class UnionDiscriminatedBenchmark extends BenchmarkBase {
 // ---------------------------------------------------------------------------
 
 // Correct: schema defined once at top level (what the benchmark measures)
-final _reuseSchema = z.object({'email': z.string().email(), 'age': z.integer()});
+final _reuseSchema =
+    z.object({'email': z.string().email(), 'age': z.integer()});
 
 class SchemaReuseBenchmark extends BenchmarkBase {
   static final _data = {'email': 'x@example.com', 'age': 25};
@@ -175,7 +177,8 @@ class SchemaInlineBenchmark extends BenchmarkBase {
   void run() {
     // Intentionally recreates the schema on every iteration.
     // This benchmark exists to quantify the construction overhead.
-    z.object({'email': z.string().email(), 'age': z.integer()}).safeParse(_data);
+    z.object({'email': z.string().email(), 'age': z.integer()}).safeParse(
+        _data);
   }
 }
 
@@ -185,9 +188,9 @@ class SchemaInlineBenchmark extends BenchmarkBase {
 
 class FailureBenchmark extends BenchmarkBase {
   static final _schema = z.object({
-    'name':  z.string().min(2),
+    'name': z.string().min(2),
     'email': z.string().email(),
-    'age':   z.integer().gte(18),
+    'age': z.integer().gte(18),
   });
 
   // All three fields fail
