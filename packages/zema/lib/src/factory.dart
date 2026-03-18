@@ -313,8 +313,7 @@ class Zema {
   ///   'children': z.array(z.lazy(() => nodeSchema)).optional(),
   /// });
   /// ```
-  ZemaSchema<I, O> lazy<I, O>(ZemaSchema<I, O> Function() fn) =>
-      LazySchema(fn);
+  ZemaSchema<I, O> lazy<I, O>(ZemaSchema<I, O> Function() fn) => LazySchema(fn);
 
   /// Creates a schema backed by an arbitrary predicate function.
   ///
