@@ -1,124 +1,157 @@
-// import 'package:test/test.dart';
-// import 'package:zema/zema.dart';
+import 'package:test/test.dart';
+import 'package:zema/src/factory.dart';
 
 void main() {
-  // group('ZemaArray', () {
-  //   group('Basic validation', () {
-  //     test('validates valid array', () {
-  //       final schema = z.array(z.int);
-  //       final result = schema.safeParse([1, 2, 3]);
+  group('ZemaArray', () {
+    group('Type validation', () {
+      test('accepts valid list', () {
+        final schema = z.array(z.int());
+        final result = schema.safeParse([1, 2, 3]);
 
-  //       expect(result.$2, isNull);
-  //       expect(result.$1, equals([1, 2, 3]));
-  //     });
+        expect(result.isSuccess, isTrue);
+        expect(result.value, equals([1, 2, 3]));
+      });
 
-  //     test('rejects non-array', () {
-  //       final schema = z.array(z.int);
+      test('rejects non-list: string', () {
+        final schema = z.array(z.int());
+        final result = schema.safeParse('not a list');
 
-  //       expect(schema.safeParse('not an array').$2, isNotNull);
-  //       expect(schema.safeParse({'a': 1}).$2, isNotNull);
-  //       expect(schema.safeParse(null).$2, isNotNull);
-  //     });
+        expect(result.isFailure, isTrue);
+        expect(result.errors.first.code, equals('invalid_type'));
+      });
 
-  //     test('accepts empty array', () {
-  //       final schema = z.array(z.int);
-  //       expect(schema.safeParse([]).$2, isNull);
-  //     });
-  //   });
+      test('rejects non-list: map', () {
+        final schema = z.array(z.int());
+        expect(schema.safeParse({'a': 1}).isFailure, isTrue);
+      });
 
-  //   group('Element validation', () {
-  //     test('validates each element', () {
-  //       final schema = z.array(z.string.email());
+      test('rejects non-list: null', () {
+        final schema = z.array(z.int());
+        expect(schema.safeParse(null).isFailure, isTrue);
+      });
 
-  //       final result = schema.safeParse([
-  //         'test1@example.com',
-  //         'test2@example.com',
-  //       ]);
+      test('accepts empty list', () {
+        final schema = z.array(z.int());
+        expect(schema.safeParse(<int>[]).isSuccess, isTrue);
+      });
+    });
 
-  //       expect(result.$2, isNull);
-  //     });
+    group('Element validation', () {
+      test('validates each element', () {
+        final schema = z.array(z.string().email());
+        final result = schema.safeParse([
+          'test1@example.com',
+          'test2@example.com',
+        ]);
 
-  //     test('collects ALL element errors', () {
-  //       final schema = z.array(z.string.email());
+        expect(result.isSuccess, isTrue);
+      });
 
-  //       final result = schema.safeParse([
-  //         'valid@example.com',
-  //         'invalid1',
-  //         'valid2@example.com',
-  //         'invalid2',
-  //       ]);
+      test('fails when any element is invalid', () {
+        final schema = z.array(z.string().email());
+        final result = schema.safeParse(['valid@example.com', 'invalid']);
 
-  //       expect(result.$2, isNotNull);
-  //       expect(result.$2!.length, equals(2));
+        expect(result.isFailure, isTrue);
+      });
 
-  //       final paths = result.$2!.map((e) => e.path.join('.')).toList();
-  //       expect(paths, contains('[1]'));
-  //       expect(paths, contains('[3]'));
-  //     });
-  //   });
+      test('collects all element errors in a single pass', () {
+        final schema = z.array(z.string().email());
+        final result = schema.safeParse([
+          'valid@example.com',
+          'invalid1',
+          'valid2@example.com',
+          'invalid2',
+        ]);
 
-  //   group('Length validation', () {
-  //     test('validates minimum length', () {
-  //       final schema = z.array(z.int).min(2);
+        expect(result.isFailure, isTrue);
+        expect(result.errors.length, equals(2));
+      });
 
-  //       expect(schema.safeParse([1, 2]).$2, isNull);
-  //       expect(schema.safeParse([1]).$2, isNotNull);
-  //       expect(schema.safeParse([1]).$2!.first.code, equals('too_small'));
-  //     });
+      test('error path contains integer index of failing element', () {
+        final schema = z.array(z.string().email());
+        final result = schema.safeParse(['valid@example.com', 'bad']);
 
-  //     test('validates maximum length', () {
-  //       final schema = z.array(z.int).max(3);
+        expect(result.errors.first.path.first, equals(1));
+      });
+    });
 
-  //       expect(schema.safeParse([1, 2, 3]).$2, isNull);
-  //       expect(schema.safeParse([1, 2, 3, 4]).$2, isNotNull);
-  //       expect(
-  //           schema.safeParse([1, 2, 3, 4]).$2!.first.code, equals('too_big'));
-  //     });
+    group('Length constraints', () {
+      test('min() rejects list shorter than minimum', () {
+        final schema = z.array(z.int()).min(2);
 
-  //     test('validates exact length', () {
-  //       final schema = z.array(z.int).length(3);
+        expect(schema.safeParse([1, 2]).isSuccess, isTrue);
+        expect(schema.safeParse([1]).isFailure, isTrue);
+        expect(schema.safeParse([1]).errors.first.code, equals('too_small'));
+      });
 
-  //       expect(schema.safeParse([1, 2, 3]).$2, isNull);
-  //       expect(schema.safeParse([1, 2]).$2, isNotNull);
-  //       expect(schema.safeParse([1, 2, 3, 4]).$2, isNotNull);
-  //     });
+      test('min() skips element validation when length check fails', () {
+        // element schema would fail on strings, but length check fires first
+        final schema = z.array(z.int()).min(3);
+        final result = schema.safeParse([1]);
 
-  //     test('validates nonempty', () {
-  //       final schema = z.array(z.int).nonempty();
+        expect(result.errors.length, equals(1));
+        expect(result.errors.first.code, equals('too_small'));
+      });
 
-  //       expect(schema.safeParse([1]).$2, isNull);
-  //       expect(schema.safeParse([]).$2, isNotNull);
-  //     });
-  //   });
+      test('max() rejects list longer than maximum', () {
+        final schema = z.array(z.int()).max(3);
 
-  //   group('Complex element types', () {
-  //     test('validates array of objects', () {
-  //       final schema = z.array(z.object({
-  //         'name': z.string,
-  //         'age': z.int,
-  //       }));
+        expect(schema.safeParse([1, 2, 3]).isSuccess, isTrue);
+        expect(schema.safeParse([1, 2, 3, 4]).isFailure, isTrue);
+        expect(
+          schema.safeParse([1, 2, 3, 4]).errors.first.code,
+          equals('too_big'),
+        );
+      });
 
-  //       final result = schema.safeParse([
-  //         {'name': 'Alice', 'age': 30},
-  //         {'name': 'Bob', 'age': 25},
-  //       ]);
+      test('length() requires exactly n elements', () {
+        final schema = z.array(z.int()).length(3);
 
-  //       expect(result.$2, isNull);
-  //     });
+        expect(schema.safeParse([1, 2, 3]).isSuccess, isTrue);
+        expect(schema.safeParse([1, 2]).isFailure, isTrue);
+        expect(schema.safeParse([1, 2, 3, 4]).isFailure, isTrue);
+      });
 
-  //     test('collects errors from nested objects', () {
-  //       final schema = z.array(z.object({
-  //         'email': z.string.email(),
-  //       }));
+      test('nonEmpty() rejects empty list', () {
+        final schema = z.array(z.int()).nonEmpty();
 
-  //       final result = schema.safeParse([
-  //         {'email': 'valid@example.com'},
-  //         {'email': 'invalid'},
-  //       ]);
+        expect(schema.safeParse([1]).isSuccess, isTrue);
+        expect(schema.safeParse(<int>[]).isFailure, isTrue);
+        expect(
+          schema.safeParse(<int>[]).errors.first.code,
+          equals('too_small'),
+        );
+      });
+    });
 
-  //       expect(result.$2, isNotNull);
-  //       expect(result.$2!.first.path, equals(['[1]', 'email']));
-  //     });
-  //   });
-  // });
+    group('Array of objects', () {
+      test('validates each object element', () {
+        final schema = z.array(
+          z.object({'name': z.string(), 'age': z.int()}),
+        );
+
+        final result = schema.safeParse([
+          {'name': 'Alice', 'age': 30},
+          {'name': 'Bob', 'age': 25},
+        ]);
+
+        expect(result.isSuccess, isTrue);
+        expect(result.value.length, equals(2));
+      });
+
+      test('collects errors from nested object with index in path', () {
+        final schema = z.array(z.object({'email': z.string().email()}));
+
+        final result = schema.safeParse([
+          {'email': 'valid@example.com'},
+          {'email': 'invalid'},
+        ]);
+
+        expect(result.isFailure, isTrue);
+        // path is built bottom-up: [childSegment, parentIndex]
+        expect(result.errors.first.path.first, equals('email'));
+        expect(result.errors.first.path.last, equals(1));
+      });
+    });
+  });
 }

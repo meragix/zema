@@ -94,6 +94,34 @@ void main() {
       });
     });
 
+    group('nonNegative() validation', () {
+      test('accepts zero', () {
+        final schema = z.int().nonNegative();
+        expect(schema.safeParse(0).isSuccess, isTrue);
+      });
+
+      test('accepts positive integers', () {
+        final schema = z.int().nonNegative();
+        expect(schema.safeParse(1).isSuccess, isTrue);
+        expect(schema.safeParse(100).isSuccess, isTrue);
+      });
+
+      test('rejects negative integers', () {
+        final schema = z.int().nonNegative();
+        final result = schema.safeParse(-1);
+
+        expect(result.isFailure, isTrue);
+        expect(result.errors.first.code, equals('too_small'));
+      });
+
+      test('custom message is used on failure', () {
+        final schema = z.int().nonNegative(message: 'Must be >= 0');
+        final result = schema.safeParse(-5);
+
+        expect(result.errors.first.message, equals('Must be >= 0'));
+      });
+    });
+
     group('Multiple error accumulation', () {
       test('collects multiple validation errors', () {
         final schema = z.int().gte(10).lte(20);
