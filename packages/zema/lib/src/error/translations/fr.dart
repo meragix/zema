@@ -29,4 +29,7 @@ final ZemaTranslations frenchTranslations = {
   'invalid_date': (p) => 'Date/heure attendue, chaîne ISO 8601 ou horodatage',
   'date_too_early': (p) => 'La date doit être postérieure à ${p?['min']}',
   'date_too_late': (p) => 'La date doit être antérieure à ${p?['max']}',
+  'too_small_exclusive': (p) => 'Doit être > ${p?['min']}',
+  'too_big_exclusive': (p) => 'Doit être < ${p?['max']}',
+  'wrong_length': (p) => 'Doit contenir exactement ${p?['length']} caractères',
 };

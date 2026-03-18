@@ -56,6 +56,9 @@ final class ZemaString extends ZemaSchema<dynamic, String>
   /// Maximum allowed length (inclusive). `null` means no upper bound.
   final int? maxLength;
 
+  /// Exact required length. `null` means no exact-length constraint.
+  final int? exactLength;
+
   /// Custom regex the string must fully match. `null` means no pattern check.
   final RegExp? pattern;
 
@@ -80,6 +83,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
   const ZemaString({
     this.minLength,
     this.maxLength,
+    this.exactLength,
     this.pattern,
     this.shouldTrim = false,
     this.enumValues,
@@ -143,6 +147,19 @@ final class ZemaString extends ZemaSchema<dynamic, String>
         ),
         receivedValue: str,
         meta: {'max': maxLength, 'actual': str.length},
+      );
+      issues.add(applyCustomMessage(issue));
+    }
+
+    if (exactLength != null && str.length != exactLength!) {
+      final issue = ZemaIssue(
+        code: 'wrong_length',
+        message: ZemaI18n.translate(
+          'wrong_length',
+          params: {'length': exactLength, 'actual': str.length},
+        ),
+        receivedValue: str,
+        meta: {'length': exactLength, 'actual': str.length},
       );
       issues.add(applyCustomMessage(issue));
     }
@@ -230,6 +247,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
   ZemaString trim() => ZemaString(
         minLength: minLength,
         maxLength: maxLength,
+        exactLength: exactLength,
         pattern: pattern,
         shouldTrim: true,
         enumValues: enumValues,
@@ -250,12 +268,14 @@ final class ZemaString extends ZemaSchema<dynamic, String>
   ZemaString min(int length, {String? message}) => ZemaString(
         minLength: length,
         maxLength: maxLength,
+        exactLength: exactLength,
         pattern: pattern,
         shouldTrim: shouldTrim,
         enumValues: enumValues,
         isEmail: isEmail,
         isUrl: isUrl,
         isUuid: isUuid,
+        customMessage: message,
       );
 
   /// Requires the string to have at most [length] characters.
@@ -270,12 +290,14 @@ final class ZemaString extends ZemaSchema<dynamic, String>
   ZemaString max(int length, {String? message}) => ZemaString(
         minLength: minLength,
         maxLength: length,
+        exactLength: exactLength,
         pattern: pattern,
         shouldTrim: shouldTrim,
         enumValues: enumValues,
         isEmail: isEmail,
         isUrl: isUrl,
         isUuid: isUuid,
+        customMessage: message,
       );
 
   /// Requires the string to be a syntactically valid email address.
@@ -290,12 +312,14 @@ final class ZemaString extends ZemaSchema<dynamic, String>
   ZemaString email({String? message}) => ZemaString(
         minLength: minLength,
         maxLength: maxLength,
+        exactLength: exactLength,
         pattern: pattern,
         shouldTrim: shouldTrim,
         enumValues: enumValues,
         isEmail: true,
         isUrl: isUrl,
         isUuid: isUuid,
+        customMessage: message,
       );
 
   /// Requires the string to be a syntactically valid URL.
@@ -309,6 +333,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
   ZemaString url() => ZemaString(
         minLength: minLength,
         maxLength: maxLength,
+        exactLength: exactLength,
         pattern: pattern,
         shouldTrim: shouldTrim,
         enumValues: enumValues,
@@ -330,6 +355,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
   ZemaString uuid() => ZemaString(
         minLength: minLength,
         maxLength: maxLength,
+        exactLength: exactLength,
         pattern: pattern,
         shouldTrim: shouldTrim,
         enumValues: enumValues,
@@ -352,11 +378,59 @@ final class ZemaString extends ZemaSchema<dynamic, String>
   ZemaString oneOf(List<String> values) => ZemaString(
         minLength: minLength,
         maxLength: maxLength,
+        exactLength: exactLength,
         pattern: pattern,
         shouldTrim: shouldTrim,
         enumValues: values.toSet(),
         isEmail: isEmail,
         isUrl: isUrl,
         isUuid: isUuid,
+      );
+
+  /// Requires the string to have exactly [length] characters.
+  ///
+  /// The check is applied **after** trimming if [trim] was called.
+  /// Produces a `wrong_length` issue on failure.
+  ///
+  /// ```dart
+  /// z.string().length(5)                          // exactly 5 chars
+  /// z.string().length(8, message: 'Must be 8.')   // custom message
+  /// ```
+  ZemaString length(int length, {String? message}) => ZemaString(
+        minLength: minLength,
+        maxLength: maxLength,
+        exactLength: length,
+        pattern: pattern,
+        shouldTrim: shouldTrim,
+        enumValues: enumValues,
+        isEmail: isEmail,
+        isUrl: isUrl,
+        isUuid: isUuid,
+        customMessage: message,
+      );
+
+  /// Requires the string to fully match [pattern].
+  ///
+  /// The regex is tested against the (possibly trimmed) string after all length
+  /// checks. Produces an `invalid_format` issue on failure.
+  ///
+  /// ```dart
+  /// z.string().regex(RegExp(r'^\d{5}$'))   // exactly 5 digits
+  /// z.string().regex(
+  ///   RegExp(r'^[a-zA-Z0-9_]+$'),
+  ///   message: 'Only letters, numbers, and underscores.',
+  /// )
+  /// ```
+  ZemaString regex(RegExp re, {String? message}) => ZemaString(
+        minLength: minLength,
+        maxLength: maxLength,
+        exactLength: exactLength,
+        pattern: re,
+        shouldTrim: shouldTrim,
+        enumValues: enumValues,
+        isEmail: isEmail,
+        isUrl: isUrl,
+        isUuid: isUuid,
+        customMessage: message,
       );
 }

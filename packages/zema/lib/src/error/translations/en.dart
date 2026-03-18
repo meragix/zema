@@ -29,4 +29,7 @@ final ZemaTranslations englishTranslations = {
   'invalid_date': (p) => 'Expected DateTime, ISO 8601 string, or timestamp',
   'date_too_early': (p) => 'Date must be after ${p?['min']}',
   'date_too_late': (p) => 'Date must be before ${p?['max']}',
+  'too_small_exclusive': (p) => 'Must be > ${p?['min']}',
+  'too_big_exclusive': (p) => 'Must be < ${p?['max']}',
+  'wrong_length': (p) => 'Must be exactly ${p?['length']} characters',
 };

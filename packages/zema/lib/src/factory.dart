@@ -17,7 +17,7 @@ import 'package:zema/src/primitives/primitives.dart';
 /// final schema = z.object({
 ///   'name':  z.string().min(2),
 ///   'email': z.string().email(),
-///   'age':   z.int().gte(0).optional(),
+///   'age':   z.integer().gte(0).optional(),
 /// });
 /// ```
 ///
@@ -26,7 +26,7 @@ import 'package:zema/src/primitives/primitives.dart';
 /// | Factory method | Schema type | Output type |
 /// |---|---|---|
 /// | [string] | [ZemaString] | `String` |
-/// | [int] | [ZemaInt] | `int` |
+/// | [integer] | [ZemaInt] | `int` |
 /// | [double] | [ZemaDouble] | `double` |
 /// | [boolean] | [ZemaBool] | `bool` |
 /// | [array] | [ZemaArray] | `List<T>` |
@@ -77,31 +77,24 @@ class Zema {
   /// strings. Chain constraint methods to add range or sign checks:
   ///
   /// ```dart
-  /// z.int()              // any integer
-  /// z.int().gte(0)       // >= 0
-  /// z.int().lte(100)     // <= 100
-  /// z.int().positive()   // > 0
-  /// z.int().negative()   // < 0
-  /// z.int().step(5)      // must be a multiple of 5
+  /// z.integer()              // any integer
+  /// z.integer().gte(0)       // >= 0
+  /// z.integer().lte(100)     // <= 100
+  /// z.integer().positive()   // > 0
+  /// z.integer().negative()   // < 0
+  /// z.integer().step(5)      // must be a multiple of 5
   /// ```
   ///
   /// To accept a wider set of numeric inputs (strings, doubles), use
   /// [coerce] instead: `z.coerce().integer()`.
   ///
   /// Non-integer input produces an `invalid_type` issue.
-  ZemaInt int() => const ZemaInt();
-
-  /// Alias for [int]. Creates a [ZemaInt] schema that validates `int` values.
-  ///
-  /// Identical to [int] in every way. Prefer [integer] in application code
-  /// for readability.
-  ///
-  /// ```dart
-  /// z.integer()              // any integer
-  /// z.integer().gte(0)       // >= 0
-  /// z.integer().positive()   // > 0
-  /// ```
   ZemaInt integer() => const ZemaInt();
+
+  /// Alias for [integer].
+  ///
+  /// Identical to [integer] in every way. Prefer [integer] in application code.
+  ZemaInt int() => const ZemaInt();
 
   /// Creates a [ZemaDateTime] schema that validates and coerces date/time values.
   ///
@@ -160,11 +153,11 @@ class Zema {
   /// exhaustive — all element failures are collected before returning.
   ///
   /// ```dart
-  /// z.array(z.string())           // List of strings
-  /// z.array(z.int().positive())   // List of positive integers
+  /// z.array(z.string())                // List of strings
+  /// z.array(z.integer().positive())    // List of positive integers
   ///
   /// z.array(z.object({
-  ///   'id':   z.int(),
+  ///   'id':   z.integer(),
   ///   'name': z.string(),
   /// }));
   /// ```
@@ -187,7 +180,7 @@ class Zema {
   /// final userSchema = z.object({
   ///   'name':  z.string().min(2),
   ///   'email': z.string().email(),
-  ///   'age':   z.int().gte(0).optional(),
+  ///   'age':   z.integer().gte(0).optional(),
   /// });
   ///
   /// final result = userSchema.safeParse(json);
@@ -245,8 +238,8 @@ class Zema {
   /// ```dart
   /// // { 'user_123': 42, 'user_456': 7 }
   /// final scoreSchema = z.map(
-  ///   z.string(),      // key must be a string
-  ///   z.int().gte(0),  // value must be a non-negative int
+  ///   z.string(),           // key must be a string
+  ///   z.integer().gte(0),   // value must be a non-negative int
   /// );
   /// ```
   ///
@@ -267,7 +260,7 @@ class Zema {
   ///
   /// ```dart
   /// // Accept either a UUID string or an integer ID
-  /// final idSchema = z.union([z.string().uuid(), z.int().positive()]);
+  /// final idSchema = z.union([z.string().uuid(), z.integer().positive()]);
   ///
   /// idSchema.parse('550e8400-e29b-41d4-a716-446655440000'); // string UUID
   /// idSchema.parse(42);                                      // int
@@ -316,7 +309,7 @@ class Zema {
   /// late final ZemaSchema<dynamic, dynamic> nodeSchema;
   ///
   /// nodeSchema = z.object({
-  ///   'value':    z.int(),
+  ///   'value':    z.integer(),
   ///   'children': z.array(z.lazy(() => nodeSchema)).optional(),
   /// });
   /// ```

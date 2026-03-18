@@ -6,7 +6,7 @@ import 'package:zema/src/extensions/custom_message.dart';
 
 /// A schema that validates Dart `int` values.
 ///
-/// Construct via `z.int()` — do not instantiate directly.
+/// Construct via `z.integer()` — do not instantiate directly.
 ///
 /// Only accepts Dart `int`s. `double` values (even whole-number ones like
 /// `42.0`) and numeric strings are rejected with an `invalid_type` issue.
@@ -28,14 +28,14 @@ import 'package:zema/src/extensions/custom_message.dart';
 /// ## Examples
 ///
 /// ```dart
-/// z.int()                          // any integer
-/// z.int().gte(0)                   // >= 0
-/// z.int().lte(100)                 // <= 100
-/// z.int().gte(1).lte(5)            // 1..5 inclusive
-/// z.int().positive()               // > 0
-/// z.int().negative()               // < 0
-/// z.int().step(5)                  // 0, 5, 10, 15, …
-/// z.int().positive().step(2)       // positive even numbers
+/// z.integer()                          // any integer
+/// z.integer().gte(0)                   // >= 0
+/// z.integer().lte(100)                 // <= 100
+/// z.integer().gte(1).lte(5)            // 1..5 inclusive
+/// z.integer().positive()               // > 0
+/// z.integer().negative()               // < 0
+/// z.integer().step(5)                  // 0, 5, 10, 15, …
+/// z.integer().positive().step(2)       // positive even numbers
 /// ```
 ///
 /// See also:
@@ -58,6 +58,12 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
   /// When set, value must be evenly divisible by this number.
   final int? multipleOf;
 
+  /// Exclusive lower bound. `null` means no exclusive lower limit.
+  final int? exclusiveMin;
+
+  /// Exclusive upper bound. `null` means no exclusive upper limit.
+  final int? exclusiveMax;
+
   @override
   final String? customMessage;
 
@@ -67,6 +73,8 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
     this.isPositive,
     this.isNegative,
     this.multipleOf,
+    this.exclusiveMin,
+    this.exclusiveMax,
     this.customMessage,
   });
 
@@ -118,6 +126,32 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
         ),
         receivedValue: value,
         meta: {'max': max, 'actual': value},
+      );
+      issues.add(applyCustomMessage(issue));
+    }
+
+    if (exclusiveMin != null && value <= exclusiveMin!) {
+      final issue = ZemaIssue(
+        code: 'too_small_exclusive',
+        message: ZemaI18n.translate(
+          'too_small_exclusive',
+          params: {'min': exclusiveMin, 'actual': value},
+        ),
+        receivedValue: value,
+        meta: {'min': exclusiveMin, 'actual': value},
+      );
+      issues.add(applyCustomMessage(issue));
+    }
+
+    if (exclusiveMax != null && value >= exclusiveMax!) {
+      final issue = ZemaIssue(
+        code: 'too_big_exclusive',
+        message: ZemaI18n.translate(
+          'too_big_exclusive',
+          params: {'max': exclusiveMax, 'actual': value},
+        ),
+        receivedValue: value,
+        meta: {'max': exclusiveMax, 'actual': value},
       );
       issues.add(applyCustomMessage(issue));
     }
@@ -180,12 +214,14 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
   /// Produces a `too_small` issue on failure.
   ///
   /// ```dart
-  /// z.int().gte(0) // non-negative
-  /// z.int().gte(1, message: 'Must be >= 1')
+  /// z.integer().gte(0) // non-negative
+  /// z.integer().gte(1, message: 'Must be >= 1')
   /// ```
   ZemaInt gte(int value, {String? message}) => ZemaInt(
         min: value,
         max: max,
+        exclusiveMin: exclusiveMin,
+        exclusiveMax: exclusiveMax,
         isPositive: isPositive,
         isNegative: isNegative,
         multipleOf: multipleOf,
@@ -197,12 +233,14 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
   /// Produces a `too_big` issue on failure.
   ///
   /// ```dart
-  /// z.int().lte(100)
-  /// z.int().gte(0).lte(255)   // byte range
+  /// z.integer().lte(100)
+  /// z.integer().gte(0).lte(255)   // byte range
   /// ```
   ZemaInt lte(int value, {String? message}) => ZemaInt(
         min: min,
         max: value,
+        exclusiveMin: exclusiveMin,
+        exclusiveMax: exclusiveMax,
         isPositive: isPositive,
         isNegative: isNegative,
         multipleOf: multipleOf,
@@ -215,12 +253,14 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
   /// positive — use [gte]`(0)` if you want to include zero.
   ///
   /// ```dart
-  /// z.int().positive()
-  /// z.int().positive(message: 'Quantity must be positive.')
+  /// z.integer().positive()
+  /// z.integer().positive(message: 'Quantity must be positive.')
   /// ```
   ZemaInt positive({String? message}) => ZemaInt(
         min: min,
         max: max,
+        exclusiveMin: exclusiveMin,
+        exclusiveMax: exclusiveMax,
         isPositive: true,
         isNegative: isNegative,
         multipleOf: multipleOf,
@@ -233,11 +273,13 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
   /// negative — use [lte]`(-1)` if you need to exclude zero explicitly.
   ///
   /// ```dart
-  /// z.int().negative()
+  /// z.integer().negative()
   /// ```
   ZemaInt negative({String? message}) => ZemaInt(
         min: min,
         max: max,
+        exclusiveMin: exclusiveMin,
+        exclusiveMax: exclusiveMax,
         isPositive: isPositive,
         isNegative: true,
         multipleOf: multipleOf,
@@ -249,15 +291,57 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
   /// Produces a `not_multiple_of` issue on failure.
   ///
   /// ```dart
-  /// z.int().step(5)    // 0, 5, 10, 15, …
-  /// z.int().step(2)    // even numbers
+  /// z.integer().step(5)    // 0, 5, 10, 15, …
+  /// z.integer().step(2)    // even numbers
   /// ```
   ZemaInt step(int value, {String? message}) => ZemaInt(
         min: min,
         max: max,
+        exclusiveMin: exclusiveMin,
+        exclusiveMax: exclusiveMax,
         isPositive: isPositive,
         isNegative: isNegative,
         multipleOf: value,
+        customMessage: message,
+      );
+
+  /// Requires the value to be strictly greater than [value] (`value > n`).
+  ///
+  /// Produces a `too_small_exclusive` issue on failure. Differs from [gte]
+  /// in that the bound itself is not valid.
+  ///
+  /// ```dart
+  /// z.integer().gt(0)   // 1, 2, 3, … (0 is rejected)
+  /// z.integer().gt(18)  // strictly older than 18
+  /// ```
+  ZemaInt gt(int value, {String? message}) => ZemaInt(
+        min: min,
+        max: max,
+        exclusiveMin: value,
+        exclusiveMax: exclusiveMax,
+        isPositive: isPositive,
+        isNegative: isNegative,
+        multipleOf: multipleOf,
+        customMessage: message,
+      );
+
+  /// Requires the value to be strictly less than [value] (`value < n`).
+  ///
+  /// Produces a `too_big_exclusive` issue on failure. Differs from [lte]
+  /// in that the bound itself is not valid.
+  ///
+  /// ```dart
+  /// z.integer().lt(100)   // …, 97, 98, 99 (100 is rejected)
+  /// z.integer().lt(0)     // strictly negative
+  /// ```
+  ZemaInt lt(int value, {String? message}) => ZemaInt(
+        min: min,
+        max: max,
+        exclusiveMin: exclusiveMin,
+        exclusiveMax: value,
+        isPositive: isPositive,
+        isNegative: isNegative,
+        multipleOf: multipleOf,
         customMessage: message,
       );
 }
@@ -314,6 +398,12 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
   /// When `true`, value must not be `NaN`, `Infinity`, or `-Infinity`.
   final bool? isFinite;
 
+  /// Exclusive lower bound. `null` means no exclusive lower limit.
+  final double? exclusiveMin;
+
+  /// Exclusive upper bound. `null` means no exclusive upper limit.
+  final double? exclusiveMax;
+
   @override
   final String? customMessage;
 
@@ -323,6 +413,8 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
     this.isPositive,
     this.isNegative,
     this.isFinite,
+    this.exclusiveMin,
+    this.exclusiveMax,
     this.customMessage,
   });
 
@@ -415,6 +507,32 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
       issues.add(applyCustomMessage(issue));
     }
 
+    if (exclusiveMin != null && value <= exclusiveMin!) {
+      final issue = ZemaIssue(
+        code: 'too_small_exclusive',
+        message: ZemaI18n.translate(
+          'too_small_exclusive',
+          params: {'min': exclusiveMin, 'actual': value},
+        ),
+        receivedValue: value,
+        meta: {'min': exclusiveMin, 'actual': value},
+      );
+      issues.add(applyCustomMessage(issue));
+    }
+
+    if (exclusiveMax != null && value >= exclusiveMax!) {
+      final issue = ZemaIssue(
+        code: 'too_big_exclusive',
+        message: ZemaI18n.translate(
+          'too_big_exclusive',
+          params: {'max': exclusiveMax, 'actual': value},
+        ),
+        receivedValue: value,
+        meta: {'max': exclusiveMax, 'actual': value},
+      );
+      issues.add(applyCustomMessage(issue));
+    }
+
     if (issues.isNotEmpty) {
       return failure(issues);
     }
@@ -437,6 +555,8 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
   ZemaDouble gte(double value, {String? message}) => ZemaDouble(
         min: value,
         max: max,
+        exclusiveMin: exclusiveMin,
+        exclusiveMax: exclusiveMax,
         isPositive: isPositive,
         isNegative: isNegative,
         isFinite: isFinite,
@@ -454,6 +574,8 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
   ZemaDouble lte(double value, {String? message}) => ZemaDouble(
         min: min,
         max: value,
+        exclusiveMin: exclusiveMin,
+        exclusiveMax: exclusiveMax,
         isPositive: isPositive,
         isNegative: isNegative,
         isFinite: isFinite,
@@ -471,6 +593,8 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
   ZemaDouble positive() => ZemaDouble(
         min: min,
         max: max,
+        exclusiveMin: exclusiveMin,
+        exclusiveMax: exclusiveMax,
         isPositive: true,
         isNegative: isNegative,
         isFinite: isFinite,
@@ -489,8 +613,68 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
   ZemaDouble finite() => ZemaDouble(
         min: min,
         max: max,
+        exclusiveMin: exclusiveMin,
+        exclusiveMax: exclusiveMax,
         isPositive: isPositive,
         isNegative: isNegative,
         isFinite: true,
+      );
+
+  /// Requires the value to be strictly greater than [value] (`value > n`).
+  ///
+  /// Produces a `too_small_exclusive` issue on failure.
+  ///
+  /// ```dart
+  /// z.double().gt(0.0)          // strictly positive
+  /// z.double().gt(0.0).lt(1.0)  // open interval (0.0, 1.0)
+  /// ```
+  ZemaDouble gt(double value, {String? message}) => ZemaDouble(
+        min: min,
+        max: max,
+        exclusiveMin: value,
+        exclusiveMax: exclusiveMax,
+        isPositive: isPositive,
+        isNegative: isNegative,
+        isFinite: isFinite,
+        customMessage: message,
+      );
+
+  /// Requires the value to be strictly less than [value] (`value < n`).
+  ///
+  /// Produces a `too_big_exclusive` issue on failure.
+  ///
+  /// ```dart
+  /// z.double().lt(1.0)          // strictly less than 1
+  /// z.double().gt(0.0).lt(1.0)  // open interval (0.0, 1.0)
+  /// ```
+  ZemaDouble lt(double value, {String? message}) => ZemaDouble(
+        min: min,
+        max: max,
+        exclusiveMin: exclusiveMin,
+        exclusiveMax: value,
+        isPositive: isPositive,
+        isNegative: isNegative,
+        isFinite: isFinite,
+        customMessage: message,
+      );
+
+  /// Requires the value to be strictly less than zero (`value < 0.0`).
+  ///
+  /// Produces a `not_negative` issue on failure. Note that `0.0` is **not**
+  /// negative — use [lte]`(0.0)` or [lt]`(0.0)` to include zero.
+  ///
+  /// ```dart
+  /// z.double().negative()
+  /// z.double().negative(message: 'Must be a loss value.')
+  /// ```
+  ZemaDouble negative({String? message}) => ZemaDouble(
+        min: min,
+        max: max,
+        exclusiveMin: exclusiveMin,
+        exclusiveMax: exclusiveMax,
+        isPositive: isPositive,
+        isNegative: true,
+        isFinite: isFinite,
+        customMessage: message,
       );
 }
