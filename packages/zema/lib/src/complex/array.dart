@@ -29,14 +29,14 @@ import 'package:zema/src/error/issue.dart';
 ///
 /// ```dart
 /// z.array(z.string())              // List of any strings
-/// z.array(z.int().positive())      // List of positive integers
+/// z.array(z.integer().positive())  // List of positive integers
 /// z.array(z.string()).min(1)       // non-empty list
 /// z.array(z.string()).max(10)      // at most 10 elements
 /// z.array(z.string()).length(3)    // exactly 3 elements
-/// z.array(z.string()).nonempty()   // shorthand for .min(1)
+/// z.array(z.string()).nonEmpty()   // shorthand for .min(1)
 ///
 /// z.array(z.object({
-///   'id':   z.int(),
+///   'id':   z.integer(),
 ///   'name': z.string().min(2),
 /// }));
 /// ```
@@ -171,8 +171,8 @@ final class ZemaArray<T> extends ZemaSchema<dynamic, List<T>> {
   /// Shorthand for `.min(1)`. Produces a `too_small` issue on an empty list.
   ///
   /// ```dart
-  /// z.array(z.string()).nonempty()
+  /// z.array(z.string()).nonEmpty()
   /// ```
-  ZemaArray<T> nonempty() =>
+  ZemaArray<T> nonEmpty() =>
       ZemaArray(element, minLength: 1, maxLength: maxLength);
 }

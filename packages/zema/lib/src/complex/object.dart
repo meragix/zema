@@ -198,7 +198,7 @@ final class ZemaObject<T> extends ZemaSchema<dynamic, T> {
   ///
   /// ```dart
   /// final base = z.object({'name': z.string()});
-  /// final extended = base.extend({'age': z.int().gte(0)});
+  /// final extended = base.extend({'age': z.integer().gte(0)});
   /// // extended validates both 'name' and 'age'
   /// ```
   ZemaObject<Map<String, dynamic>> extend(
@@ -214,7 +214,7 @@ final class ZemaObject<T> extends ZemaSchema<dynamic, T> {
   ///
   /// ```dart
   /// final full = z.object({
-  ///   'id':    z.int(),
+  ///   'id':    z.integer(),
   ///   'name':  z.string(),
   ///   'email': z.string().email(),
   /// });
@@ -238,7 +238,7 @@ final class ZemaObject<T> extends ZemaSchema<dynamic, T> {
   ///
   /// ```dart
   /// final full = z.object({
-  ///   'id':       z.int(),
+  ///   'id':       z.integer(),
   ///   'name':     z.string(),
   ///   'password': z.string(),
   /// });

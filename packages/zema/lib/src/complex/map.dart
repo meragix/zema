@@ -32,7 +32,7 @@ import 'package:zema/src/error/issue.dart';
 /// // Map from string keys to non-negative integer scores
 /// final scoreSchema = z.map(
 ///   z.string(),
-///   z.int().gte(0),
+///   z.integer().gte(0),
 /// );
 ///
 /// scoreSchema.parse({'alice': 95, 'bob': 87}); // Map<String, int>
@@ -44,8 +44,8 @@ import 'package:zema/src/error/issue.dart';
 /// );
 ///
 /// // Size constraints
-/// z.map(z.string(), z.int()).min(1)    // at least one entry
-/// z.map(z.string(), z.int()).max(100)  // at most 100 entries
+/// z.map(z.string(), z.integer()).min(1)    // at least one entry
+/// z.map(z.string(), z.integer()).max(100)  // at most 100 entries
 /// ```
 ///
 /// See also:
@@ -170,7 +170,7 @@ final class ZemaMap<K, V> extends ZemaSchema<dynamic, Map<K, V>> {
   /// when this check fails.
   ///
   /// ```dart
-  /// z.map(z.string(), z.int()).min(1)  // non-empty map
+  /// z.map(z.string(), z.integer()).min(1)  // non-empty map
   /// ```
   ZemaMap<K, V> min(int size) =>
       ZemaMap(keySchema, valueSchema, minSize: size, maxSize: maxSize);
