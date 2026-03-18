@@ -252,4 +252,22 @@ final class ZemaObject<T> extends ZemaSchema<dynamic, T> {
     }
     return ZemaObject(omittedShape);
   }
+
+  /// Returns a new schema with the fields of [other] merged into this schema.
+  ///
+  /// Fields from [other] override fields with the same key in this schema.
+  /// The returned schema always has output type `Map<String, dynamic>`.
+  ///
+  /// Equivalent to `extend(other.shape)`. Use [merge] when you have a
+  /// [ZemaObject] instance rather than a raw shape map.
+  ///
+  /// ```dart
+  /// final base     = z.object({'name': z.string(), 'age': z.integer()});
+  /// final override = z.object({'age': z.integer().gte(18), 'email': z.string().email()});
+  /// final merged   = base.merge(override);
+  /// // merged validates: name (base), age (override — gte(18)), email (override)
+  /// ```
+  ZemaObject<Map<String, dynamic>> merge(ZemaObject<dynamic> other) {
+    return ZemaObject({...shape, ...other.shape});
+  }
 }

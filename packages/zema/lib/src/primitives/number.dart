@@ -23,6 +23,7 @@ import 'package:zema/src/extensions/custom_message.dart';
 /// | [lte] | value <= max | `too_big` |
 /// | [positive] | value > 0 | `not_positive` |
 /// | [negative] | value < 0 | `not_negative` |
+/// | [nonNegative] | value >= 0 | `too_small` |
 /// | [step] | value % n == 0 | `not_multiple_of` |
 ///
 /// ## Examples
@@ -344,6 +345,25 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
         multipleOf: multipleOf,
         customMessage: message,
       );
+
+  /// Requires the value to be greater than or equal to zero (`value >= 0`).
+  ///
+  /// Produces a `too_small` issue on failure. Equivalent to [gte]`(0)`.
+  ///
+  /// ```dart
+  /// z.integer().nonNegative()
+  /// z.integer().nonNegative(message: 'Stock cannot be negative.')
+  /// ```
+  ZemaInt nonNegative({String? message}) => ZemaInt(
+        min: 0,
+        max: max,
+        exclusiveMin: exclusiveMin,
+        exclusiveMax: exclusiveMax,
+        isPositive: isPositive,
+        isNegative: isNegative,
+        multipleOf: multipleOf,
+        customMessage: message,
+      );
 }
 
 /// A schema that validates Dart `double` values.
@@ -366,6 +386,7 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
 /// | [gte] | value >= min | `too_small` |
 /// | [lte] | value <= max | `too_big` |
 /// | [positive] | value > 0.0 | `not_positive` |
+/// | [nonNegative] | value >= 0.0 | `too_small` |
 ///
 /// ## Examples
 ///
@@ -674,6 +695,25 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
         exclusiveMax: exclusiveMax,
         isPositive: isPositive,
         isNegative: true,
+        isFinite: isFinite,
+        customMessage: message,
+      );
+
+  /// Requires the value to be greater than or equal to zero (`value >= 0.0`).
+  ///
+  /// Produces a `too_small` issue on failure. Equivalent to [gte]`(0.0)`.
+  ///
+  /// ```dart
+  /// z.double().nonNegative()
+  /// z.double().nonNegative(message: 'Price cannot be negative.')
+  /// ```
+  ZemaDouble nonNegative({String? message}) => ZemaDouble(
+        min: 0.0,
+        max: max,
+        exclusiveMin: exclusiveMin,
+        exclusiveMax: exclusiveMax,
+        isPositive: isPositive,
+        isNegative: isNegative,
         isFinite: isFinite,
         customMessage: message,
       );

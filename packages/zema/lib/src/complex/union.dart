@@ -44,12 +44,22 @@ import 'package:zema/zema.dart';
 /// broader ones. For example, put `z.literal('admin')` before `z.string()`
 /// if you want the literal to be matched with a distinct output type.
 ///
-/// ## Discriminated unions (future)
+/// ## Discriminated unions
 ///
-/// The [discriminator] field is reserved for a future optimisation where a
-/// known key in the input map is used to select the matching schema directly,
-/// avoiding a linear scan. It is not yet fully implemented — all schemas are
-/// still tried in order regardless.
+/// Call [discriminatedBy] to name a field whose [ZemaLiteral] value is used
+/// to select the matching [ZemaObject] schema directly, skipping the linear
+/// scan. Each schema in [schemas] must be a [ZemaObject] with a [ZemaLiteral]
+/// at the named field.
+///
+/// ```dart
+/// final schema = z.union([
+///   z.object({'type': z.literal('click'),    'x': z.integer(), 'y': z.integer()}),
+///   z.object({'type': z.literal('keypress'), 'key': z.string()}),
+/// ]).discriminatedBy('type');
+///
+/// schema.parse({'type': 'click',    'x': 100, 'y': 200}); // validated directly
+/// schema.parse({'type': 'keypress', 'key': 'Enter'});      // validated directly
+/// ```
 ///
 /// See also:
 /// - `z.union` — factory method in [Zema].
@@ -58,26 +68,42 @@ final class ZemaUnion<T> extends ZemaSchema<dynamic, T> {
   /// The candidate schemas, tried in order until one succeeds.
   final List<ZemaSchema<dynamic, T>> schemas;
 
-  /// Reserved for future discriminated-union optimisation. Has no effect yet.
+  /// When set, names a field whose [ZemaLiteral] value selects the matching
+  /// [ZemaObject] schema directly. Set via [discriminatedBy].
   final String? discriminator;
 
   const ZemaUnion(this.schemas, {this.discriminator});
 
   @override
   ZemaResult<T> safeParse(dynamic value) {
-    final unionErrors = <List<ZemaIssue>>[];
-
-    // If discriminated union, try to fast-path
-    // Fast path discriminated union (to be implemented properly later)
+    // Discriminated union fast-path: use the discriminator field value to
+    // select the matching ZemaObject schema directly.
     if (discriminator != null && value is Map) {
       final discValue = value[discriminator];
-      if (discValue != null) {
-        // Try to match discriminator-specific schema first
-        // (would need schema metadata for this optimization)
+      // Iterate as dynamic so the is-check narrows to ZemaObject<dynamic>.
+      for (final dynamic schema in schemas) {
+        if (schema is ZemaObject<dynamic>) {
+          final discSchema = schema.shape[discriminator!];
+          if (discSchema is ZemaLiteral && discSchema.value == discValue) {
+            return schema.safeParse(value) as ZemaResult<T>;
+          }
+        }
       }
+      // No schema matched the discriminator value.
+      return singleFailure(
+        ZemaIssue(
+          code: 'invalid_union',
+          message: ZemaI18n.translate('invalid_union'),
+          meta: {
+            'discriminator': discriminator,
+            'receivedType': value.runtimeType.toString(),
+          },
+        ),
+      );
     }
 
-    // Try each schema until one succeeds
+    // Linear scan: try each schema until one succeeds.
+    final unionErrors = <List<ZemaIssue>>[];
     for (final schema in schemas) {
       final result = schema.safeParse(value);
       if (result.isSuccess) {
@@ -86,7 +112,7 @@ final class ZemaUnion<T> extends ZemaSchema<dynamic, T> {
       unionErrors.add(result.errors);
     }
 
-    // All schemas failed — return a single issue with full diagnostics
+    // All schemas failed — return a single issue with full diagnostics.
     return singleFailure(
       ZemaIssue(
         code: 'invalid_union',
@@ -94,10 +120,33 @@ final class ZemaUnion<T> extends ZemaSchema<dynamic, T> {
         meta: {
           'unionErrors': unionErrors,
           'schemaCount': schemas.length,
-          if (discriminator != null) 'discriminator': discriminator,
           'receivedType': value.runtimeType.toString(),
         },
       ),
     );
   }
+
+  /// Returns a new schema that uses [field] as a discriminator key to select
+  /// the matching [ZemaObject] schema directly, skipping the linear scan.
+  ///
+  /// Every schema in [schemas] must be a [ZemaObject] with a [ZemaLiteral]
+  /// at [field]. On parse, the value at [field] is compared against each
+  /// schema's literal until a match is found. Only the matching schema is
+  /// validated.
+  ///
+  /// If no schema's literal matches the input's discriminator value, an
+  /// `invalid_union` issue is returned without trying any schema.
+  ///
+  /// ```dart
+  /// final schema = z.union([
+  ///   z.object({'type': z.literal('click'),    'x': z.integer(), 'y': z.integer()}),
+  ///   z.object({'type': z.literal('keypress'), 'key': z.string()}),
+  /// ]).discriminatedBy('type');
+  ///
+  /// schema.parse({'type': 'click',    'x': 100, 'y': 200});
+  /// schema.parse({'type': 'keypress', 'key': 'Enter'});
+  /// schema.parse({'type': 'unknown'});  // fails — invalid_union
+  /// ```
+  ZemaUnion<T> discriminatedBy(String field) =>
+      ZemaUnion(schemas, discriminator: field);
 }
