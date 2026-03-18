@@ -1,15 +1,15 @@
 ---
 seo:
-  title: Authyra | Authentication Framework for Dart & Flutter
-  description: Type-safe, modular authentication for Dart and Flutter. Pure Dart core, OAuth2 with PKCE, multi-account sessions, and reactive state — no black-box SDK.
+  title: Zema — Schema Validation for Dart
+  description: Type-safe schema validation for Dart and Flutter. Define schemas once, collect all errors in a single pass, and validate anywhere.
 ---
 
 ::u-page-hero
 #title
-Auth done right. [No black box.]{.text-primary}
+Schema validation for Dart. [Define once, validate anywhere.]{.text-primary}
 
 #description
-Authyra is a modular authentication framework for Dart and Flutter. A pure Dart core you can unit-test anywhere, OAuth2 providers you wire in one call, and a reactive `Stream<AuthState>` that plugs into any UI framework.
+Zema is a schema validation library for Dart inspired by Zod. A fluent chainable API, exhaustive error collection, and a sealed result type that never throws unless you want it to.
 
 #links
   :::u-button
@@ -27,7 +27,7 @@ Authyra is a modular authentication framework for Dart and Flutter. A pure Dart 
   color: neutral
   icon: simple-icons-github
   size: xl
-  to: https://github.com/meragix/authyra
+  to: "https://github.com/meragix/zema"
   variant: outline
   ---
   Star on GitHub
@@ -36,74 +36,72 @@ Authyra is a modular authentication framework for Dart and Flutter. A pure Dart 
 
 ::u-page-section
 #title
-Built for developers who own their auth
+Everything you need to validate data in Dart
 
 #features
   :::u-page-feature
   ---
-  icon: i-lucide-box
+  icon: i-lucide-layers
   ---
   #title
-  [Pure Dart]{.text-primary} core
+  [Fluent]{.text-primary} chainable API
 
   #description
-  Zero Flutter dependency in `authyra`. Run the same auth logic in your mobile app, a Dart Frog backend, and a CLI tool — with a single `dart test` for all of it.
+  Build schemas by chaining constraints: `z.string().min(2).email()`. Every method returns a new immutable schema instance — no mutation, no side effects.
   :::
 
   :::u-page-feature
   ---
-  icon: i-lucide-plug
+  icon: i-lucide-list-checks
   ---
-
   #title
-  [Pluggable]{.text-primary} everywhere
+  [Exhaustive]{.text-primary} error collection
 
   #description
-  `AuthProvider` and `AuthStorage` are interfaces. Swap Google for SAML, `flutter_secure_storage` for Redis, or mock everything in tests — no subclasses required.
+  Every failing field is reported in a single parse call. No silent failures, no early exits. Each issue carries a code, a human-readable message, and a path to the exact location in the input.
   :::
 
   :::u-page-feature
   ---
-  icon: i-lucide-users-round
+  icon: i-lucide-shield
   ---
   #title
-  [Multi-account]{.text-primary} built in
+  [Sealed]{.text-primary} result type
 
   #description
-  `AccountManager` ships in the core — not as an add-on. Switch between work and personal accounts, sign out selectively, and clean expired sessions in one call.
+  `safeParse()` returns `ZemaSuccess<T>` or `ZemaFailure<T>` — never throws. Use Dart 3 pattern matching to handle both cases. Call `parse()` when you prefer an exception on failure.
   :::
 
   :::u-page-feature
   ---
-  icon: i-lucide-refresh-cw
+  icon: i-lucide-blocks
   ---
   #title
-  Silent [token refresh]{.text-primary}
+  [Composable]{.text-primary} object schemas
 
   #description
-  Providers that set `supportsRefresh: true` get automatic background renewal. When the refresh token expires, the session is cleared and `authStateChanges` emits — no surprises.
+  Build complex schemas from simple ones. `extend()`, `merge()`, `pick()`, and `omit()` let you derive new schemas from existing ones without repetition.
   :::
 
   :::u-page-feature
   ---
-  icon: i-lucide-shield-check
+  icon: i-lucide-zap
   ---
-
   #title
-  OAuth2 with [PKCE]{.text-primary}
+  [Discriminated]{.text-primary} unions
 
   #description
-  `OAuth2Provider` (in `authyra_flutter`) implements the full Authorization Code + PKCE flow. Prebuilt providers for Google, GitHub, Apple, and a proxy mode for keeping client secrets server-side.
+  `discriminatedBy()` selects the matching schema directly from a literal field — O(1) instead of a linear scan. No unnecessary validation of non-matching schemas.
   :::
 
   :::u-page-feature
   ---
-  icon: i-lucide-code-2
+  icon: i-lucide-repeat
   ---
   #title
-  [Reactive]{.text-primary} by default
+  [Coercion]{.text-primary} for raw inputs
 
   #description
-  `authStateChanges` is a broadcast `Stream<AuthState>` with `Equatable` deduplication. Wire it to `StreamBuilder`, Riverpod, Bloc, or GoRouter — zero boilerplate.
+  `z.coerce()` converts strings from environment variables, query parameters, and form inputs into the correct Dart type before validation runs.
   :::
 ::
