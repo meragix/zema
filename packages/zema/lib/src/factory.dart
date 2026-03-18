@@ -91,6 +91,33 @@ class Zema {
   /// Non-integer input produces an `invalid_type` issue.
   ZemaInt int() => const ZemaInt();
 
+  /// Alias for [int]. Creates a [ZemaInt] schema that validates `int` values.
+  ///
+  /// Identical to [int] in every way. Prefer [integer] in application code
+  /// for readability.
+  ///
+  /// ```dart
+  /// z.integer()              // any integer
+  /// z.integer().gte(0)       // >= 0
+  /// z.integer().positive()   // > 0
+  /// ```
+  ZemaInt integer() => const ZemaInt();
+
+  /// Creates a [ZemaDateTime] schema that validates and coerces date/time values.
+  ///
+  /// Accepts [DateTime], ISO 8601 strings, and Unix millisecond timestamps.
+  /// Use range constraints to restrict the allowed period:
+  ///
+  /// ```dart
+  /// z.dateTime()                              // any parseable date/time
+  /// z.dateTime().after(DateTime(2000))        // on or after 2000-01-01
+  /// z.dateTime().before(DateTime.now())       // in the past
+  /// z.dateTime().between(start, end)          // inclusive range
+  /// ```
+  ///
+  /// Non-parseable input produces an `invalid_date` issue.
+  ZemaDateTime dateTime() => const ZemaDateTime();
+
   /// Creates a [ZemaDouble] schema that validates `double` values.
   ///
   /// The returned schema accepts Dart `double`s only. Chain constraint methods
