@@ -7,9 +7,14 @@ environment:
   sdk: ^3.10.8
   flutter: ">=1.17.0"
 
+resolution: workspace
+
 dependencies:
   flutter:
     sdk: flutter
+
+  zema:
+    path: ../zema
 
 dev_dependencies:
   flutter_test:

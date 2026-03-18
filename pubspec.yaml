@@ -8,6 +8,7 @@ environment:
 
 workspace:
   - packages/zema
+  - packages/zema_forms
 
 dev_dependencies:
   melos: ^7.4.0
