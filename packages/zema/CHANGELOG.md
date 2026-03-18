@@ -77,7 +77,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial project setup
 - Monorepo structure with Melos 7.x
 
-[unreleased]: https://github.com/meragix/zema/compare/v0.2.0...HEAD
-[0.2.0]: https://github.com/meragix/zema/releases/tag/zema-v0.2.0
-[0.1.0]: https://github.com/meragix/zema/releases/tag/zema-v0.1.0
-[0.0.1-dev.1]: https://github.com/meragix/zema/releases/tag/zema-v0.0.1-dev.1
+[unreleased]: https://github.com/meragix/zema/compare/0.2.0...HEAD
+[0.2.0]: https://github.com/meragix/zema/releases/tag/zema-0.2.0
+[0.1.0]: https://github.com/meragix/zema/releases/tag/zema-0.1.0
+[0.0.1-dev.1]: https://github.com/meragix/zema/releases/tag/zema-0.0.1-dev.1
