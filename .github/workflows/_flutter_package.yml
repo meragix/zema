@@ -31,9 +31,9 @@ jobs:
         working-directory: ${{ inputs.package }}
         run: melos format
 
-      # - name: Analyze
-      #   working-directory: ${{ inputs.package }}
-      #   run: melos analyze
+      - name: Analyze
+        working-directory: ${{ inputs.package }}
+        run: flutter analyze --fatal-infos
 
       # - name: Test
       #   working-directory: ${{ inputs.package }}
