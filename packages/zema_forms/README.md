@@ -1,39 +1,149 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# zema_forms
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+Flutter form widgets backed by [Zema](https://pub.dev/packages/zema) schemas.
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+- Surgical per-field rebuilds: only the field in error rebuilds on each keystroke.
+- "First contact" UX: errors appear after the field loses focus or the form is submitted — never on the first character.
+- Auto-focus: failed `submit()` moves focus to the first field in error automatically.
+- Form-level error banner via `submitErrors` for hidden or conditional fields.
+- Works with Flutter's native `Form` widget (zero migration cost).
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+## Installation
 
-## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
-
-## Usage
-
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
-```dart
-const like = 'sample';
+```yaml
+dependencies:
+  zema: ^0.4.0
+  zema_forms: ^0.1.0
 ```
 
-## Additional information
+## Quick start
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+```dart
+import 'package:zema/zema.dart';
+import 'package:zema_forms/zema_forms.dart';
+
+final _schema = z.object({
+  'email': z.string().email(),
+  'password': z.string().min(8),
+});
+
+class LoginForm extends StatefulWidget {
+  const LoginForm({super.key});
+
+  @override
+  State<LoginForm> createState() => _LoginFormState();
+}
+
+class _LoginFormState extends State<LoginForm> {
+  late final _ctrl = ZemaFormController(schema: _schema);
+
+  @override
+  void dispose() {
+    _ctrl.dispose();
+    super.dispose();
+  }
+
+  void _onSubmit() {
+    final data = _ctrl.submit();
+    if (data != null) {
+      // data is Map<String, dynamic> with validated values
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return ZemaForm(
+      controller: _ctrl,
+      child: Column(
+        children: [
+          ZemaTextField(
+            field: 'email',
+            decoration: const InputDecoration(labelText: 'Email'),
+            keyboardType: TextInputType.emailAddress,
+          ),
+          ZemaTextField(
+            field: 'password',
+            decoration: const InputDecoration(labelText: 'Password'),
+            obscureText: true,
+          ),
+          ElevatedButton(
+            onPressed: _onSubmit,
+            child: const Text('Sign in'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+```
+
+## Error visibility
+
+Errors are validated on every keystroke but shown only when:
+
+- The field has lost focus at least once (`isTouched`), or
+- `submit()` has been called (`isSubmitted`).
+
+This prevents showing "Email invalide" after the user types the first character.
+
+## Form-level error banner
+
+When a form has conditional or hidden fields, pair `submit()` with a banner that reads `submitErrors`:
+
+```dart
+ValueListenableBuilder<List<ZemaIssue>>(
+  valueListenable: _ctrl.submitErrors,
+  builder: (context, issues, _) {
+    if (issues.isEmpty) return const SizedBox.shrink();
+    return Text('${issues.length} field(s) require attention.');
+  },
+)
+```
+
+## Native Form bridge
+
+```dart
+TextFormField(
+  controller: _ctrl.controllerFor('email'),
+  validator: _ctrl.validatorFor('email'),
+)
+```
+
+## Numeric fields
+
+`TextField` always produces a `String`. Use the coercion layer for numeric fields:
+
+```dart
+z.object({
+  'age': z.coerce().integer(min: 0, max: 150),
+  'price': z.coerce().decimal(),
+})
+```
+
+## API reference
+
+| Member                        | Description                                                         |
+| ----------------------------- | ------------------------------------------------------------------- |
+| `ZemaFormController(schema:)` | Create a controller for the given `ZemaObject`                      |
+| `controllerFor(field)`        | `TextEditingController` for the field                               |
+| `errorsFor(field)`            | `ValueNotifier<List<ZemaIssue>>` for per-field errors               |
+| `touchedFor(field)`           | `ValueNotifier<bool>` — `true` after field loses focus              |
+| `markTouched(field)`          | Force-mark a field as touched                                       |
+| `isSubmitted`                 | `ValueNotifier<bool>` — `true` after first `submit()`               |
+| `submitErrors`                | Issues from the last failed `submit()` call; empty on success       |
+| `submit()`                    | Validate, auto-focus first error, return typed output or `null`     |
+| `validatorFor(field)`         | `String? Function(String?)` for `TextFormField.validator`           |
+| `setValue(field, value)`      | Set field text programmatically                                     |
+| `hasErrors`                   | `true` when any field has active errors                             |
+| `reset()`                     | Clear all text, errors, and state                                   |
+| `dispose()`                   | Release all resources                                               |
+
+## Requirements
+
+- Dart `>=3.5.0`
+- Flutter `>=3.18.0`
+- `zema: ^0.4.0`
+
+## License
+
+MIT
