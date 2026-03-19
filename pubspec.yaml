@@ -26,7 +26,7 @@ melos:
     # Analysis
     analyze:
       description: Run static analysis on all packages
-      run: melos exec -- dart analyze .
+      run: melos exec -- dart analyze --fatal-infos .
 
     # Formatting
     format:
@@ -34,19 +34,33 @@ melos:
       run: melos exec -- dart format .
 
     format:check:
-      description: Check formatting
+      description: Check formatting (CI)
       run: melos exec -- dart format --output=none --set-exit-if-changed .
 
     # Testing
     test:
-      description: Run all tests
+      description: Run all tests (dart packages + flutter packages)
+      run: melos run test:dart && melos run test:flutter
+
+    test:dart:
+      description: Run tests for pure Dart packages
       run: melos exec --fail-fast -- dart test --coverage=coverage
+      packageFilters:
+        flutter: false
+
+    test:flutter:
+      description: Run tests for Flutter packages
+      run: melos exec --fail-fast -- flutter test --coverage
+      packageFilters:
+        flutter: true
 
     test:coverage:
-      description: Generate coverage report
+      description: Generate coverage report (dart packages only)
       run: |
-        melos exec -- dart test --coverage=coverage
+        melos exec --fail-fast -- dart test --coverage=coverage
         melos exec -- dart run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --report-on=lib
+      packageFilters:
+        flutter: false
 
     # Publishing
     publish:check:
