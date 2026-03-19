@@ -1,0 +1,21 @@
+name: zema
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packages/zema/**"
+      - ".github/workflows/zema.yml"
+      - ".github/workflows/_dart_package.yml"
+  pull_request:
+    paths:
+      - "packages/zema/**"
+      - ".github/workflows/zema.yml"
+      - ".github/workflows/_dart_package.yml"
+
+jobs:
+  ci:
+    uses: ./.github/workflows/_dart_package.yml
+    with:
+      package: packages/zema
+    secrets: inherit

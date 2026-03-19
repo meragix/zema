@@ -1,0 +1,46 @@
+name: Flutter Package CI
+
+on:
+  workflow_call:
+    inputs:
+      package:
+        required: true
+        type: string
+        description: "Path to the package (e.g. packages/zema_forms)"
+
+jobs:
+  ci:
+    name: "${{ inputs.package }}"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install Melos
+        run: dart pub global activate melos 7.4.0
+
+      - name: Bootstrap
+        run: melos bootstrap
+
+      - name: Format
+        working-directory: ${{ inputs.package }}
+        run: melos format
+
+      - name: Analyze
+        working-directory: ${{ inputs.package }}
+        run: melos analyze
+
+      - name: Test
+        working-directory: ${{ inputs.package }}
+        run: melos test:flutter
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          directory: ${{ inputs.package }}/coverage/lcov.info
+          fail_ci_if_error: false

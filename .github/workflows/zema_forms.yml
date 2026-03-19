@@ -1,0 +1,21 @@
+name: zema_forms
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packages/zema_forms/**"
+      - ".github/workflows/zema_forms.yml"
+      - ".github/workflows/_flutter_package.yml"
+  pull_request:
+    paths:
+      - "packages/zema_forms/**"
+      - ".github/workflows/zema_forms.yml"
+      - ".github/workflows/_flutter_package.yml"
+
+jobs:
+  ci:
+    uses: ./.github/workflows/_flutter_package.yml
+    with:
+      package: packages/zema_forms
+    secrets: inherit

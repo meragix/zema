@@ -1,0 +1,54 @@
+name: Dart Package CI
+
+on:
+  workflow_call:
+    inputs:
+      package:
+        required: true
+        type: string
+        description: "Path to the package (e.g. packages/zema)"
+      min-sdk:
+        required: false
+        type: string
+        default: "3.5.0"
+
+jobs:
+  ci:
+    name: "${{ inputs.package }}"
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: dart-lang/setup-dart@v1
+        with:
+          sdk: stable
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Install Melos
+        run: dart pub global activate melos 7.4.0
+
+      - name: Bootstrap
+        run: melos bootstrap
+
+      - name: Format
+        working-directory: ${{ inputs.package }}
+        run: melos format:check
+
+      - name: Analyze
+        working-directory: ${{ inputs.package }}
+        run: dmelos analyze
+
+      - name: Test
+        working-directory: ${{ inputs.package }}
+        run: melos test:dart
+
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          directory: ${{ inputs.package }}/coverage/lcov.info
+          fail_ci_if_error: false

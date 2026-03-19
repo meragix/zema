@@ -12,144 +12,16 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  # ─────────────────────────────────────────────────────────────────────────────
-  # Analyze + format check (pure Dart — no Flutter needed)
-  # ─────────────────────────────────────────────────────────────────────────────
-  analyze:
-    name: Analyze & format
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
 
-      - uses: dart-lang/setup-dart@v1
-        with:
-          sdk: stable
+  zema:
+    uses: ./.github/workflows/_dart_package.yml
+    with:
+      package: packages/zema
+    secrets: inherit
 
-      - name: Cache pub
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: pub-dart-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: pub-dart-${{ runner.os }}-
-
-      - name: Install Melos
-        run: dart pub global activate melos
-
-      - name: Bootstrap
-        run: melos bootstrap
-
-      - name: Analyze
-        run: melos analyze
-
-      - name: Check formatting
-        run: melos format:check
-
-  # ─────────────────────────────────────────────────────────────────────────────
-  # Tests: pure Dart packages (packages/zema)
-  # ─────────────────────────────────────────────────────────────────────────────
-  test-dart:
-    name: Test Dart / SDK ${{ matrix.sdk }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        sdk: [stable, beta]
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: dart-lang/setup-dart@v1
-        with:
-          sdk: ${{ matrix.sdk }}
-
-      - name: Cache pub
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: pub-dart-${{ runner.os }}-${{ matrix.sdk }}-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: pub-dart-${{ runner.os }}-${{ matrix.sdk }}-
-
-      - name: Install Melos
-        run: dart pub global activate melos
-
-      - name: Bootstrap
-        run: melos bootstrap
-
-      - name: Run Dart tests
-        run: melos test:dart
-
-      - name: Generate coverage
-        if: matrix.sdk == 'stable'
-        run: melos test:coverage
-
-      - name: Upload coverage
-        if: matrix.sdk == 'stable'
-        uses: codecov/codecov-action@v4
-        with:
-          files: packages/zema/coverage/lcov.info
-          fail_ci_if_error: false
-
-  # ─────────────────────────────────────────────────────────────────────────────
-  # Tests: Flutter packages (packages/zema_forms)
-  # ─────────────────────────────────────────────────────────────────────────────
-  test-flutter:
-    name: Test Flutter / ${{ matrix.channel }}
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        channel: [stable, beta]
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: ${{ matrix.channel }}
-
-      - name: Cache pub
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: pub-flutter-${{ runner.os }}-${{ matrix.channel }}-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: pub-flutter-${{ runner.os }}-${{ matrix.channel }}-
-
-      - name: Install Melos
-        run: dart pub global activate melos
-
-      - name: Bootstrap
-        run: melos bootstrap
-
-      - name: Run Flutter tests
-        run: melos test:flutter
-
-  # ─────────────────────────────────────────────────────────────────────────────
-  # pub.dev score check (packages/zema only — pure Dart)
-  # ─────────────────────────────────────────────────────────────────────────────
-  pana:
-    name: Pana score
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: dart-lang/setup-dart@v1
-        with:
-          sdk: stable
-
-      - name: Cache pub
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: pub-dart-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: pub-dart-${{ runner.os }}-
-
-      - name: Install tools
-        run: |
-          dart pub global activate melos
-          dart pub global activate pana
-
-      - name: Bootstrap
-        run: melos bootstrap
-
-      - name: Run Pana
-        run: |
-          cd packages/zema
-          pana --exit-code-threshold 40
+  zema_forms:
+    uses: ./.github/workflows/_flutter_package.yml
+    with:
+      package: packages/zema_forms
+    secrets: inherit
+ 
