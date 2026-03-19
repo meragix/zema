@@ -41,7 +41,7 @@ jobs:
 
       - name: Analyze
         working-directory: ${{ inputs.package }}
-        run: dmelos analyze
+        run: melos analyze
 
       - name: Test
         working-directory: ${{ inputs.package }}

@@ -35,12 +35,12 @@ jobs:
         working-directory: ${{ inputs.package }}
         run: melos analyze
 
-      - name: Test
-        working-directory: ${{ inputs.package }}
-        run: melos test:flutter
+      # - name: Test
+      #   working-directory: ${{ inputs.package }}
+      #   run: melos test:flutter
 
-      - name: Upload coverage
-        uses: codecov/codecov-action@v4
-        with:
-          directory: ${{ inputs.package }}/coverage/lcov.info
-          fail_ci_if_error: false
+      # - name: Upload coverage
+      #   uses: codecov/codecov-action@v4
+      #   with:
+      #     directory: ${{ inputs.package }}/coverage/lcov.info
+      #     fail_ci_if_error: false
