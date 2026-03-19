@@ -412,7 +412,8 @@ void main() {
       expect(ctrl.errorsFor('password').value, isEmpty);
     });
 
-    test('after reset, typing does not immediately show errors '
+    test(
+        'after reset, typing does not immediately show errors '
         'even with validateOnChange', () async {
       final ctrl = ZemaFormController(schema: _loginSchema);
       addTearDown(ctrl.dispose);

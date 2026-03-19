@@ -178,7 +178,8 @@ class SchemaInlineBenchmark extends BenchmarkBase {
     // Intentionally recreates the schema on every iteration.
     // This benchmark exists to quantify the construction overhead.
     z.object({'email': z.string().email(), 'age': z.integer()}).safeParse(
-        _data);
+      _data,
+    );
   }
 }
 

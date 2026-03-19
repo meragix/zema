@@ -54,9 +54,7 @@ class ZemaForm<T> extends InheritedWidget {
   /// This call does not register a dependency on [ZemaForm] — the controller
   /// reference is expected to be stable for the lifetime of the form state.
   static ZemaFormController<T>? of<T>(BuildContext context) {
-    return context
-        .getInheritedWidgetOfExactType<ZemaForm<T>>()
-        ?.controller;
+    return context.getInheritedWidgetOfExactType<ZemaForm<T>>()?.controller;
   }
 
   /// Returns the nearest [ZemaFormController] of type [T] from the widget

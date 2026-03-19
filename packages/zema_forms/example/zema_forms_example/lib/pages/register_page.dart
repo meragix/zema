@@ -84,8 +84,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   return Padding(
                     padding: const EdgeInsets.only(bottom: 16),
                     child: _ErrorBanner(
-                      message:
-                          '${issues.length} field(s) require attention.',
+                      message: '${issues.length} field(s) require attention.',
                     ),
                   );
                 },
@@ -206,7 +205,7 @@ class _ErrorBanner extends StatelessWidget {
       decoration: BoxDecoration(
         color: Theme.of(context).colorScheme.errorContainer,
         border: Border.all(
-          color: Theme.of(context).colorScheme.error.withOpacity(0.4),
+          color: Theme.of(context).colorScheme.error.withValues(alpha: .4),
         ),
         borderRadius: BorderRadius.circular(8),
       ),

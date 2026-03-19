@@ -295,7 +295,8 @@ void main() {
   // ---------------------------------------------------------------------------
 
   group('errorBuilder', () {
-    testWidgets('custom error widget rendered on invalid value', (tester) async {
+    testWidgets('custom error widget rendered on invalid value',
+        (tester) async {
       final ctrl = ZemaFormController(schema: _schema);
       addTearDown(ctrl.dispose);
 
@@ -321,7 +322,8 @@ void main() {
       expect(tf.decoration?.errorText, isNull);
     });
 
-    testWidgets('custom error widget absent when field is valid', (tester) async {
+    testWidgets('custom error widget absent when field is valid',
+        (tester) async {
       final ctrl = ZemaFormController(schema: _schema);
       addTearDown(ctrl.dispose);
 
@@ -330,8 +332,7 @@ void main() {
           ZemaTextField(
             field: 'email',
             controller: ctrl,
-            errorBuilder: (_) =>
-                const Text('err', key: Key('custom_error')),
+            errorBuilder: (_) => const Text('err', key: Key('custom_error')),
           ),
         ),
       );

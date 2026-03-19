@@ -85,8 +85,7 @@ class _ProfilePageState extends State<ProfilePage> {
             children: [
               _SectionHeader(
                 title: 'Form-mode bridge',
-                subtitle:
-                    'Uses validatorFor() with native TextFormField. '
+                subtitle: 'Uses validatorFor() with native TextFormField. '
                     'Fields are pre-populated via initialValues.',
               ),
               const SizedBox(height: 24),
@@ -157,8 +156,7 @@ class _ProfilePageState extends State<ProfilePage> {
               const SizedBox(height: 24),
               const _InfoCard(
                 title: 'Why validatorFor?',
-                body:
-                    'Existing apps using Flutter\'s Form widget can adopt '
+                body: 'Existing apps using Flutter\'s Form widget can adopt '
                     'Zema schemas incrementally. Replace validators one field '
                     'at a time — no need to rewrite the whole form.',
               ),

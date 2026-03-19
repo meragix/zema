@@ -124,8 +124,7 @@ class ZemaFormController<T> {
   ///   },
   /// )
   /// ```
-  final ValueNotifier<List<ZemaIssue>> submitErrors =
-      ValueNotifier(const []);
+  final ValueNotifier<List<ZemaIssue>> submitErrors = ValueNotifier(const []);
 
   // ---------------------------------------------------------------------------
   // Field accessors
@@ -227,8 +226,7 @@ class ZemaFormController<T> {
     isSubmitted.value = true;
 
     final raw = <String, dynamic>{
-      for (final entry in _textControllers.entries)
-        entry.key: entry.value.text,
+      for (final entry in _textControllers.entries) entry.key: entry.value.text,
       for (final key in schema.shape.keys)
         if (!_textControllers.containsKey(key)) key: null,
     };
@@ -380,7 +378,6 @@ class ZemaFormController<T> {
     final fieldSchema = schema.shape[field];
     if (fieldSchema == null) return;
     final result = fieldSchema.safeParse(rawValue);
-    errorsFor(field).value =
-        result.isFailure ? result.errors : const [];
+    errorsFor(field).value = result.isFailure ? result.errors : const [];
   }
 }
