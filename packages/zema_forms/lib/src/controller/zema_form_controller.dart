@@ -104,6 +104,29 @@ class ZemaFormController<T> {
   /// simultaneously when the user submits the form.
   final ValueNotifier<bool> isSubmitted = ValueNotifier(false);
 
+  /// All issues produced by the most recent failed [submit] call.
+  ///
+  /// Empty when the form has not been submitted yet, when the last [submit]
+  /// succeeded, or after [reset] is called.
+  ///
+  /// Use this to drive a form-level error banner that remains visible even
+  /// when the first field in error is hidden (inside a collapsed section,
+  /// a non-selected tab, etc.):
+  ///
+  /// ```dart
+  /// ValueListenableBuilder<List<ZemaIssue>>(
+  ///   valueListenable: _ctrl.submitErrors,
+  ///   builder: (context, issues, _) {
+  ///     if (issues.isEmpty) return const SizedBox.shrink();
+  ///     return ErrorBanner(
+  ///       message: '${issues.length} field(s) require attention.',
+  ///     );
+  ///   },
+  /// )
+  /// ```
+  final ValueNotifier<List<ZemaIssue>> submitErrors =
+      ValueNotifier(const []);
+
   // ---------------------------------------------------------------------------
   // Field accessors
   // ---------------------------------------------------------------------------
@@ -226,10 +249,20 @@ class ZemaFormController<T> {
         errorsFor(key).value = byField[key] ?? const [];
       }
 
-      // Move focus to the first field in error (schema declaration order).
+      // Expose the full issue list for form-level error banners. This is the
+      // only reliable signal when the first field in error is not mounted.
+      submitErrors.value = result.errors;
+
+      // Move focus to the first focusable field in error (schema declaration
+      // order). canRequestFocus is false when the node is not attached to the
+      // widget tree (hidden / conditionally removed fields) or explicitly
+      // disabled — skip those silently.
       for (final key in schema.shape.keys) {
         if ((byField[key] ?? const []).isNotEmpty) {
-          _focusNodes[key]?.requestFocus();
+          final node = _focusNodes[key];
+          if (node != null && node.canRequestFocus) {
+            node.requestFocus();
+          }
           break;
         }
       }
@@ -240,6 +273,7 @@ class ZemaFormController<T> {
     for (final notifier in _fieldErrors.values) {
       notifier.value = const [];
     }
+    submitErrors.value = const [];
     return result.value;
   }
 
@@ -288,6 +322,7 @@ class ZemaFormController<T> {
   /// initial pre-interaction state.
   void reset() {
     isSubmitted.value = false;
+    submitErrors.value = const [];
     for (final n in _fieldTouched.values) {
       n.value = false;
     }
@@ -300,10 +335,19 @@ class ZemaFormController<T> {
   }
 
   /// Releases all [TextEditingController]s, [ValueNotifier]s, and the
-  /// [isSubmitted] notifier owned by this controller.
+  /// [isSubmitted] and [submitErrors] notifiers owned by this controller.
   ///
   /// Must be called from [State.dispose]. Not calling [dispose] leaks the
   /// listeners attached to each [TextEditingController].
+  ///
+  /// Dispose order is intentional:
+  /// 1. [TextEditingController]s first — removes listeners that write to
+  ///    [_fieldErrors], preventing writes to already-disposed notifiers.
+  /// 2. Per-field notifiers ([_fieldErrors], [_fieldTouched]) — safe once
+  ///    their write sources are gone.
+  /// 3. Global notifiers ([isSubmitted], [submitErrors]) last — no per-field
+  ///    notifier reads from them, so orphaned listeners cannot fire against a
+  ///    disposed global state during a fast screen teardown.
   void dispose() {
     for (final tc in _textControllers.values) {
       tc.dispose();
@@ -315,6 +359,7 @@ class ZemaFormController<T> {
       notifier.dispose();
     }
     isSubmitted.dispose();
+    submitErrors.dispose();
     _textControllers.clear();
     _fieldErrors.clear();
     _fieldTouched.clear();
