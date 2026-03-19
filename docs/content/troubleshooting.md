@@ -2,7 +2,7 @@
 title: Troubleshooting
 description: Common errors, their causes, and how to fix them.
 seo:
-  title: Troubleshooting | Zema Docs
+  title: Troubleshooting 
   description: Diagnose and fix common Zema validation errors, type issues, and configuration problems.
 ---
 

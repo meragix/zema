@@ -2,7 +2,7 @@
 title: FAQ
 description: Frequently asked questions about Zema.
 seo:
-  title: FAQ | Zema Docs
+  title: FAQ 
   description: Answers to the most common questions about Zema schema validation for Dart and Flutter.
 ---
 

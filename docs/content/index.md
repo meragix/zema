@@ -1,6 +1,6 @@
 ---
 seo:
-  title: Zema — Schema Validation for Dart
+  title: Zema | Schema Validation for Dart
   description: Type-safe schema validation for Dart and Flutter. Define schemas once, collect all errors in a single pass, and validate anywhere.
 ---
 
