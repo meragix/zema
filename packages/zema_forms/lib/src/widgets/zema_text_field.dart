@@ -5,9 +5,12 @@ import 'package:zema_forms/src/widgets/zema_form.dart';
 
 /// A [TextField] wired to a [ZemaFormController] field.
 ///
-/// [ZemaTextField] is a [StatelessWidget]. It subscribes to the per-field
-/// error notifier from the controller, so only this widget rebuilds when its
-/// validation state changes. No other field in the form is touched.
+/// [ZemaTextField] is a [StatefulWidget]. It owns a [FocusNode] and registers
+/// it with the controller so that:
+///
+/// - Errors are only rendered after the field has lost focus at least once,
+///   or after [ZemaFormController.submit] has been called.
+/// - A failed [submit] automatically requests focus on the first field in error.
 ///
 /// ## Controller resolution
 ///
@@ -41,12 +44,13 @@ import 'package:zema_forms/src/widgets/zema_form.dart';
 /// )
 /// ```
 ///
-/// ## Decoration
+/// ## Error visibility
 ///
-/// All [InputDecoration] properties are forwarded to the underlying
-/// [TextField]. The `errorText` property is managed internally and overrides
-/// any value you set via [decoration]. Use [errorBuilder] to customise how
-/// the error message is rendered when the default `errorText` is not enough.
+/// Errors are hidden until the user leaves the field (`onBlur`) or calls
+/// [ZemaFormController.submit]. This prevents showing "Email invalide" after
+/// typing only the first character.
+///
+/// Use [errorBuilder] to replace the default `errorText` with a custom widget.
 ///
 /// ## Coercion
 ///
@@ -58,7 +62,7 @@ import 'package:zema_forms/src/widgets/zema_form.dart';
 ///   'age': z.coerce().integer().gte(0),
 /// })
 /// ```
-class ZemaTextField<T> extends StatelessWidget {
+class ZemaTextField<T> extends StatefulWidget {
   /// Creates a [ZemaTextField] bound to [field] in the active
   /// [ZemaFormController].
   const ZemaTextField({
@@ -91,8 +95,8 @@ class ZemaTextField<T> extends StatelessWidget {
 
   /// Decoration forwarded to the underlying [TextField].
   ///
-  /// `errorText` is managed internally and is overridden by validation errors.
-  /// All other [InputDecoration] properties are forwarded as-is.
+  /// `errorText` is managed internally and is overridden by visible validation
+  /// errors. All other [InputDecoration] properties are forwarded as-is.
   final InputDecoration? decoration;
 
   /// {@macro flutter.widgets.editableText.keyboardType}
@@ -130,7 +134,7 @@ class ZemaTextField<T> extends StatelessWidget {
   final void Function()? onTap;
 
   /// Custom error renderer. When provided, replaces the default `errorText`
-  /// behaviour. Receives the list of [ZemaIssue]s for this field.
+  /// behaviour. Receives the list of visible [ZemaIssue]s for this field.
   ///
   /// ```dart
   /// ZemaTextField(
@@ -144,59 +148,119 @@ class ZemaTextField<T> extends StatelessWidget {
   final Widget Function(List<ZemaIssue> issues)? errorBuilder;
 
   @override
-  Widget build(BuildContext context) {
-    final resolved = controller ?? ZemaForm.of<T>(context);
+  State<ZemaTextField<T>> createState() => _ZemaTextFieldState<T>();
+}
+
+class _ZemaTextFieldState<T> extends State<ZemaTextField<T>> {
+  final FocusNode _focusNode = FocusNode();
+  ZemaFormController<T>? _resolved;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(_onFocusChange);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _resolveController();
+  }
+
+  @override
+  void didUpdateWidget(ZemaTextField<T> oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.controller != widget.controller) {
+      _resolved?.unregisterFocusNode(widget.field);
+      _resolveController();
+    }
+  }
+
+  void _resolveController() {
+    final ctrl = widget.controller ?? ZemaForm.of<T>(context);
     assert(
-      resolved != null,
-      'ZemaTextField(field: "$field") could not find a ZemaFormController. '
-      'Either provide the controller parameter directly, or wrap this widget '
-      'in a ZemaForm.',
+      ctrl != null,
+      'ZemaTextField(field: "${widget.field}") could not find a '
+      'ZemaFormController. Either provide the controller parameter directly, '
+      'or wrap this widget in a ZemaForm.',
     );
+    if (_resolved != ctrl) {
+      _resolved = ctrl;
+      ctrl!.registerFocusNode(widget.field, _focusNode);
+    }
+  }
 
-    final ctrl = resolved!;
+  void _onFocusChange() {
+    if (!_focusNode.hasFocus) {
+      _resolved?.markTouched(widget.field);
+    }
+  }
 
-    return ValueListenableBuilder<List<ZemaIssue>>(
-      valueListenable: ctrl.errorsFor(field),
-      builder: (context, issues, _) {
-        if (errorBuilder != null && issues.isNotEmpty) {
-          // Custom error rendering: stack the TextField above the custom widget.
+  @override
+  void dispose() {
+    _focusNode.removeListener(_onFocusChange);
+    _resolved?.unregisterFocusNode(widget.field);
+    _focusNode.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final ctrl = _resolved!;
+
+    return ListenableBuilder(
+      listenable: Listenable.merge([
+        ctrl.errorsFor(widget.field),
+        ctrl.touchedFor(widget.field),
+        ctrl.isSubmitted,
+      ]),
+      builder: (context, _) {
+        final errors = ctrl.errorsFor(widget.field).value;
+        final touched = ctrl.touchedFor(widget.field).value;
+        final submitted = ctrl.isSubmitted.value;
+        final visibleErrors =
+            (touched || submitted) ? errors : const <ZemaIssue>[];
+
+        if (widget.errorBuilder != null && visibleErrors.isNotEmpty) {
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              _buildTextField(ctrl, issues: const []),
-              errorBuilder!(issues),
+              _buildTextField(ctrl, visibleErrors: const []),
+              widget.errorBuilder!(visibleErrors),
             ],
           );
         }
 
-        return _buildTextField(ctrl, issues: issues);
+        return _buildTextField(ctrl, visibleErrors: visibleErrors);
       },
     );
   }
 
   TextField _buildTextField(
     ZemaFormController<T> ctrl, {
-    required List<ZemaIssue> issues,
+    required List<ZemaIssue> visibleErrors,
   }) {
-    final effectiveDecoration = (decoration ?? const InputDecoration()).copyWith(
-      errorText: issues.isNotEmpty ? issues.first.message : null,
+    final effectiveDecoration =
+        (widget.decoration ?? const InputDecoration()).copyWith(
+      errorText: visibleErrors.isNotEmpty ? visibleErrors.first.message : null,
     );
 
     return TextField(
-      controller: ctrl.controllerFor(field),
+      focusNode: _focusNode,
+      controller: ctrl.controllerFor(widget.field),
       decoration: effectiveDecoration,
-      keyboardType: keyboardType,
-      textInputAction: textInputAction,
-      obscureText: obscureText,
-      autocorrect: autocorrect,
-      autofocus: autofocus,
-      readOnly: readOnly,
-      maxLines: obscureText ? 1 : maxLines,
-      minLines: minLines,
-      maxLength: maxLength,
-      onSubmitted: onSubmitted,
-      onTap: onTap,
+      keyboardType: widget.keyboardType,
+      textInputAction: widget.textInputAction,
+      obscureText: widget.obscureText,
+      autocorrect: widget.autocorrect,
+      autofocus: widget.autofocus,
+      readOnly: widget.readOnly,
+      maxLines: widget.obscureText ? 1 : widget.maxLines,
+      minLines: widget.minLines,
+      maxLength: widget.maxLength,
+      onSubmitted: widget.onSubmitted,
+      onTap: widget.onTap,
     );
   }
 }
