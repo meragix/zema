@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-03-20
+
+### Added
+
+- `ZemaSeverity` enum (`error`, `warning`) and `ZemaIssue.severity` field (defaults to `error`)
+- `ZemaMetaKeys` — compile-time constants for `ZemaIssue.meta` keys (`min`, `max`, `actual`, `expected`, `received`, `allowed`, `type`, `multipleOf`, `pattern`, `length`)
+- `ZemaIssue.expected` (`String?`) — expected type/value; populated on all built-in `invalid_type` issues
+- `ZemaResult.warnings` / `ZemaResult.hasWarnings` — warning issues from a successful parse
+- `ZemaSchemaRefinement.refineWarn()` — advisory refinement; parse succeeds, issue added to `warnings`
+- `z.string().dateTime()` — validates ISO 8601 format; output stays `String`; produces `invalid_datetime_string`
+- `z.coerce().dateTime({DateTime? after, DateTime? before})` — coerces `String`, `int` (Unix ms), or `DateTime`
+- `ZemaSchema.parseInIsolate()` — offloads `safeParse()` to a background `Isolate` (built-in primitives only; closures are not isolate-sendable)
+- Strict coercion mode (`strict` parameter) on all coercion schemas; see Breaking Changes for `z.coerce().string()` default
+- i18n translations (en + fr) for `invalid_datetime_string` and `async_refinement_skipped`
+
+### Changed
+
+- `ZemaIssue` copy helpers, `operator==`, `hashCode`, and `toString()` updated for `expected` and `severity`
+- `ZemaSuccess` carries a `warnings` list (`const []` by default); `success()` factory accepts optional `warnings`
+- `z.coerce().boolean/integer/float` signatures gain a `strict` parameter (backward-compatible)
+
+### Breaking Changes
+
+- **`safeParse()` / `parse()` on async schemas** now returns `ZemaFailure(code: 'async_refinement_skipped')` instead of silently bypassing the predicate. Migrate: use `safeParseAsync()` / `parseAsync()`.
+- **`z.coerce().string()`** defaults to `strict: true` — arbitrary objects now fail with `invalid_coercion`. Migrate: pass `strict: false` to restore the old behaviour.
+
 ## [0.4.0] - 2026-03-18
 
 ### Added
@@ -79,7 +105,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Initial project setup
 - Monorepo structure with Melos 7.x
 
-[unreleased]: https://github.com/meragix/zema/compare/0.2.0...HEAD
-[0.2.0]: https://github.com/meragix/zema/releases/tag/zema-0.2.0
-[0.1.0]: https://github.com/meragix/zema/releases/tag/zema-0.1.0
+[unreleased]: https://github.com/meragix/zema/compare/zema-0.5.0...HEAD
+[0.5.0]: https://github.com/meragix/zema/compare/zema-0.4.0...zema-0.5.0
+[0.4.0]: https://github.com/meragix/zema/compare/zema-0.3.0...zema-0.4.0
+[0.3.0]: https://github.com/meragix/zema/compare/zema-0.2.0...zema-0.3.0
+[0.2.0]: https://github.com/meragix/zema/compare/zema-0.1.0...zema-0.2.0
+[0.1.0]: https://github.com/meragix/zema/compare/zema-0.0.1-dev.1...zema-0.1.0
 [0.0.1-dev.1]: https://github.com/meragix/zema/releases/tag/zema-0.0.1-dev.1
