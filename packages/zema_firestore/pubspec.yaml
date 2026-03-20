@@ -1,7 +1,7 @@
 name: zema_firestore
 description: "Zema schema validation integration for Cloud Firestore. Type-safe document parsing via withConverter."
 version: 0.1.0
-homepage: https://meragix.github.io/zema/plugins/zema_firestore
+homepage: https://zema.meragix.dev/plugins/zema_firestore
 repository: https://github.com/meragix/zema
 issue_tracker: https://github.com/meragix/zema/issues
 

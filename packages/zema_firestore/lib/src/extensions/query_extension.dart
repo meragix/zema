@@ -17,7 +17,7 @@ extension ZemaQueryExtension on Query<Map<String, dynamic>> {
   ///
   /// final snapshot = await activeUsers.get();
   /// for (final doc in snapshot.docs) {
-  ///   final user = doc.data(); // User — already validated
+  ///   final user = doc.data(); // User is already validated
   /// }
   /// ```
   Query<T> withZema<T>(

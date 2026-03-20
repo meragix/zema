@@ -4,7 +4,7 @@
 
 Zema schema validation integration for [Cloud Firestore](https://pub.dev/packages/cloud_firestore).
 
-Hooks into Firestore's native `withConverter` API so every document read is automatically validated against a Zema schema. One line to wire up a collection — all reads, streams, and queries return validated data.
+Hooks into Firestore's native `withConverter` API so every document read is automatically validated against a Zema schema. One line to wire up a collection: all reads, streams, and queries return validated data.
 
 ## Installation
 
@@ -22,9 +22,9 @@ import 'package:zema/zema.dart';
 import 'package:zema_firestore/zema_firestore.dart';
 
 final userSchema = z.object({
-  'id':        z.string(),
-  'name':      z.string().min(1),
-  'email':     z.string().email(),
+  'id': z.string(),
+  'name': z.string().min(1),
+  'email': z.string().email(),
   'createdAt': zTimestamp(),
 });
 
@@ -32,11 +32,11 @@ final usersRef = FirebaseFirestore.instance
     .collection('users')
     .withZema(userSchema);
 
-// Read — validated automatically
+// Read: validated automatically
 final snapshot = await usersRef.doc('abc').get();
 final user = snapshot.data(); // Map<String, dynamic>, always valid
 
-// Stream — each document validated as it arrives
+// Stream: each document validated as it arrives
 usersRef.snapshots().listen((snap) {
   for (final doc in snap.docs) {
     print(doc.data()['email']); // safe
@@ -133,7 +133,7 @@ await ref.set({'name': 'Alice', 'email': 'alice@example.com', 'createdAt': DateT
 
 ## Related packages
 
-- [`zema`](https://pub.dev/packages/zema) — core schema library
-- [`zema_forms`](https://pub.dev/packages/zema_forms) — Flutter form integration
-- [`zema_dio`](https://pub.dev/packages/zema_dio) — Dio response validation
-- [`zema_http`](https://pub.dev/packages/zema_http) — package:http response validation
+- [`zema`](https://pub.dev/packages/zema): core schema library
+- [`zema_forms`](https://pub.dev/packages/zema_forms): Flutter form integration
+- [`zema_dio`](https://pub.dev/packages/zema_dio): Dio response validation
+- [`zema_http`](https://pub.dev/packages/zema_http): package:http response validation

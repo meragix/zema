@@ -15,7 +15,7 @@ extension ZemaDocumentExtension on DocumentReference<Map<String, dynamic>> {
   ///     .withZema<User>(userSchema);
   ///
   /// final snapshot = await userRef.get();
-  /// final user = snapshot.data(); // User — already validated
+  /// final user = snapshot.data(); // User is already validated
   /// ```
   DocumentReference<T> withZema<T>(
     ZemaSchema<dynamic, T> schema, {

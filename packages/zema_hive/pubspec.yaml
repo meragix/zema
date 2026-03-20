@@ -1,7 +1,7 @@
 name: zema_hive
 description: "Zema schema validation integration for Hive. Type-safe local storage without TypeAdapters or code generation."
 version: 0.1.0
-homepage: https://meragix.github.io/zema/plugins/zema_hive
+homepage: https://zema.meragix.dev/plugins/zema_hive
 repository: https://github.com/meragix/zema
 issue_tracker: https://github.com/meragix/zema/issues
 

@@ -14,7 +14,7 @@ extension ZemaCollectionExtension on CollectionReference<Map<String, dynamic>> {
   ///     .withZema<User>(userSchema);
   ///
   /// final snapshot = await usersRef.doc('123').get();
-  /// final user = snapshot.data(); // User — already validated
+  /// final user = snapshot.data(); // User is already validated
   /// ```
   CollectionReference<T> withZema<T>(
     ZemaSchema<dynamic, T> schema, {

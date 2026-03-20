@@ -4,7 +4,7 @@
 
 Zema schema validation integration for [Hive CE](https://pub.dev/packages/hive_ce).
 
-Type-safe local storage without TypeAdapters or code generation. Wrap any Hive `Box` with a Zema schema — every write is validated before reaching disk, every read is validated before reaching your code.
+Type-safe local storage without TypeAdapters or code generation. Wrap any Hive `Box` with a Zema schema: every write is validated before reaching disk, every read is validated before reaching your code.
 
 ## Installation
 
@@ -23,8 +23,8 @@ import 'package:zema/zema.dart';
 import 'package:zema_hive/zema_hive.dart';
 
 final userSchema = z.object({
-  'id':    z.string(),
-  'name':  z.string().min(1),
+  'id': z.string(),
+  'name': z.string().min(1),
   'email': z.string().email(),
 });
 
@@ -33,8 +33,8 @@ final userBox = box.withZema(userSchema);
 
 // Write — validated before storage, throws ZemaHiveException on failure
 await userBox.put('alice', {
-  'id':    'alice',
-  'name':  'Alice',
+  'id': 'alice',
+  'name': 'Alice',
   'email': 'alice@example.com',
 });
 
@@ -47,8 +47,8 @@ print(user?['name']); // Alice
 
 `withZema(schema)` wraps a `Box` in a `ZemaBox<T>` that:
 
-1. Runs `schema.safeParse(data)` on every `put()` — throws `ZemaHiveException` if it fails, nothing is written.
-2. Runs `schema.safeParse(data)` on every `get()` — returns `null` (or `defaultValue`) if it fails.
+1. Runs `schema.safeParse(data)` on every `put()`. Throws `ZemaHiveException` if it fails, nothing is written.
+2. Runs `schema.safeParse(data)` on every `get()`. Returns `null` (or `defaultValue`) if it fails.
 3. Applies a [migrate] callback when `get()` fails validation, then re-validates and writes the result back automatically.
 
 ## Extension types
@@ -152,8 +152,8 @@ try {
 
 ## Related packages
 
-- [`zema`](https://pub.dev/packages/zema) — core schema library
-- [`zema_forms`](https://pub.dev/packages/zema_forms) — Flutter form integration
-- [`zema_firestore`](https://pub.dev/packages/zema_firestore) — Cloud Firestore integration
-- [`zema_dio`](https://pub.dev/packages/zema_dio) — Dio response validation
-- [`zema_http`](https://pub.dev/packages/zema_http) — package:http response validation
+- [`zema`](https://pub.dev/packages/zema): core schema library
+- [`zema_forms`](https://pub.dev/packages/zema_forms): Flutter form integration
+- [`zema_firestore`](https://pub.dev/packages/zema_firestore): Cloud Firestore integration
+<!-- - [`zema_dio`](https://pub.dev/packages/zema_dio) — Dio response validation
+- [`zema_http`](https://pub.dev/packages/zema_http) — package:http response validation -->

@@ -10,9 +10,9 @@
 /// import 'package:zema_firestore/zema_firestore.dart';
 ///
 /// final userSchema = z.object({
-///   'id':        z.string(),
-///   'name':      z.string().min(1),
-///   'email':     z.string().email(),
+///   'id': z.string(),
+///   'name': z.string().min(1),
+///   'email': z.string().email(),
 ///   'createdAt': zTimestamp(),
 /// });
 ///
