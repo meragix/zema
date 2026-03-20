@@ -1,39 +1,69 @@
-<!--
-This README describes the package. If you publish this package to pub.dev,
-this README's contents appear on the landing page for your package.
+# zema_dio
 
-For information about how to write a good package README, see the guide for
-[writing package pages](https://dart.dev/tools/pub/writing-package-pages).
+[![pub.dev](https://img.shields.io/pub/v/zema_dio.svg)](https://pub.dev/packages/zema_dio)
 
-For general information about developing packages, see the Dart guide for
-[creating packages](https://dart.dev/guides/libraries/create-packages)
-and the Flutter guide for
-[developing packages and plugins](https://flutter.dev/to/develop-packages).
--->
+Zema schema validation extension for [Dio](https://pub.dev/packages/dio) HTTP responses.
 
-TODO: Put a short description of the package here that helps potential users
-know whether this package might be useful for them.
+Adds `.parse()` and `.safeParse()` directly on `Response`, so you can validate the decoded JSON body against any Zema schema without an extra step.
 
-## Features
+## Installation
 
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
-## Getting started
-
-TODO: List prerequisites and provide or point to information on how to
-start using the package.
+```yaml
+dependencies:
+  zema: ^0.4.0
+  zema_dio: ^0.1.0
+  dio: ^5.4.0
+```
 
 ## Usage
 
-TODO: Include short and useful examples for package users. Add longer examples
-to `/example` folder.
-
 ```dart
-const like = 'sample';
+import 'package:dio/dio.dart';
+import 'package:zema/zema.dart';
+import 'package:zema_dio/zema_dio.dart';
+
+final userSchema = z.object({
+  'id':    z.integer(),
+  'name':  z.string().min(1),
+  'email': z.string().email(),
+});
+
+final dio = Dio();
+
+// --- parse(): returns T or throws ZemaException ---
+try {
+  final response = await dio.get('/users/1');
+  final user = response.parse(userSchema);
+  print(user['email']);
+} on ZemaException catch (e) {
+  print(e.issues); // List<ZemaIssue>
+}
+
+// --- safeParse(): returns ZemaResult<T>, never throws ---
+final response = await dio.get('/users/1');
+final result = response.safeParse(userSchema);
+
+switch (result) {
+  case ZemaSuccess(:final value):
+    print(value['email']);
+  case ZemaFailure(:final errors):
+    for (final issue in errors) {
+      print('${issue.path}: ${issue.message}');
+    }
+}
 ```
 
-## Additional information
+## API
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
+| Method      | Signature                                             | Behaviour                                              |
+|-------------|-------------------------------------------------------|--------------------------------------------------------|
+| `parse`     | `T parse<T>(ZemaSchema<dynamic, T>)`                  | Returns `T` or throws `ZemaException`                  |
+| `safeParse` | `ZemaResult<T> safeParse<T>(ZemaSchema<dynamic, T>)`  | Returns `ZemaSuccess` or `ZemaFailure`, never throws   |
+
+Both methods validate `Response.data` — the JSON body already decoded by Dio.
+
+## Related packages
+
+- [`zema`](https://pub.dev/packages/zema) — core schema library
+- [`zema_http`](https://pub.dev/packages/zema_http) — same extension for `package:http`
+- [`zema_forms`](https://pub.dev/packages/zema_forms) — Flutter form integration
