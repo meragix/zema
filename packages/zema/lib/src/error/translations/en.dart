@@ -32,4 +32,8 @@ final ZemaTranslations englishTranslations = {
   'too_small_exclusive': (p) => 'Must be > ${p?['min']}',
   'too_big_exclusive': (p) => 'Must be < ${p?['max']}',
   'wrong_length': (p) => 'Must be exactly ${p?['length']} characters',
+  'invalid_datetime_string': (p) => 'Must be a valid ISO 8601 date-time string',
+  'async_refinement_skipped': (p) =>
+      'Schema has async refinements — use safeParseAsync() or parseAsync() '
+      'instead of safeParse() or parse()',
 };

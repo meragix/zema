@@ -89,7 +89,7 @@ sealed class ZemaResult<T> {
           throw StateError('Cannot get value from a failed ZemaResult.'),
       };
 
-  /// The list of validation issues.
+  /// The list of validation issues (severity: [ZemaSeverity.error]).
   ///
   /// Returns an empty list when called on a [ZemaSuccess]. Never returns `null`.
   ///
@@ -102,6 +102,31 @@ sealed class ZemaResult<T> {
         ZemaSuccess() => const [],
         ZemaFailure(errors: final e) => e,
       };
+
+  /// Informational warnings produced by `.refineWarn()` refinements.
+  ///
+  /// Non-empty only on [ZemaSuccess] when at least one warning-level
+  /// refinement failed. The parse still succeeded — inspect this list to
+  /// surface advisory messages to the user (e.g. "weak password").
+  ///
+  /// Always empty on [ZemaFailure].
+  ///
+  /// ```dart
+  /// final result = passwordSchema.safeParse('hello123');
+  /// if (result.isSuccess) {
+  ///   for (final w in result.warnings) {
+  ///     print(w.message); // advisory message
+  ///   }
+  /// }
+  /// ```
+  List<ZemaIssue> get warnings => switch (this) {
+        ZemaSuccess(warnings: final w) => w,
+        ZemaFailure() => const [],
+      };
+
+  /// `true` when there are one or more warning-level issues on a successful
+  /// parse.
+  bool get hasWarnings => warnings.isNotEmpty;
 
   // ---------------------------------------------------------------------------
   // Mapping
@@ -277,23 +302,36 @@ sealed class ZemaResult<T> {
 ///
 /// ```dart
 /// ZemaSuccess('Alice')
+/// ZemaSuccess('Alice', warnings: [ZemaIssue(code: 'weak', message: '...')])
 /// ```
 @immutable
 final class ZemaSuccess<T> extends ZemaResult<T> {
   @override
   final T value;
 
-  const ZemaSuccess(this.value);
+  /// Informational warning issues from `.refineWarn()` refinements.
+  ///
+  /// Empty by default. Non-empty when one or more warning-level refinements
+  /// evaluated to `false`. The parse still succeeded.
+  @override
+  final List<ZemaIssue> warnings;
+
+  const ZemaSuccess(this.value, {this.warnings = const []});
 
   @override
-  String toString() => 'ZemaSuccess($value)';
+  String toString() => warnings.isEmpty
+      ? 'ZemaSuccess($value)'
+      : 'ZemaSuccess($value, warnings: $warnings)';
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is ZemaSuccess<T> && value == other.value;
+      identical(this, other) ||
+      other is ZemaSuccess<T> &&
+          value == other.value &&
+          warnings == other.warnings;
 
   @override
-  int get hashCode => value.hashCode;
+  int get hashCode => Object.hash(value, warnings);
 }
 
 /// A failed [ZemaResult] holding one or more [ZemaIssue]s.
@@ -334,7 +372,8 @@ final class ZemaFailure<T> extends ZemaResult<T> {
 /// Creates a [ZemaSuccess] wrapping [value].
 ///
 /// Use this inside [ZemaSchema.safeParse] implementations to signal that
-/// validation passed:
+/// validation passed. Pass [warnings] to surface advisory issues without
+/// failing the parse:
 ///
 /// ```dart
 /// @override
@@ -342,8 +381,12 @@ final class ZemaFailure<T> extends ZemaResult<T> {
 ///   if (value is! String) return singleFailure(...);
 ///   return success(value);
 /// }
+///
+/// // With warnings (from .refineWarn())
+/// return success(value, warnings: [ZemaIssue(code: 'weak', message: '...')]);
 /// ```
-ZemaResult<T> success<T>(T value) => ZemaSuccess(value);
+ZemaResult<T> success<T>(T value, {List<ZemaIssue> warnings = const []}) =>
+    ZemaSuccess(value, warnings: warnings);
 
 /// Creates a [ZemaFailure] wrapping a list of [errors].
 ///

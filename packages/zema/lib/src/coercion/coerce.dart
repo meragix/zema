@@ -3,6 +3,7 @@ import 'package:zema/src/coercion/double_coercion.dart';
 import 'package:zema/src/coercion/int_coercion.dart';
 import 'package:zema/src/coercion/string_coercion.dart';
 import 'package:zema/src/core/schema.dart';
+import 'package:zema/src/primitives/datetime.dart';
 
 /// Sub-namespace for coercing values to a target type before validating them.
 ///
@@ -52,54 +53,95 @@ class ZemaCoerce {
   ///
   /// See [CoerceInt] for accepted input types and coercion rules.
   ///
-  /// The optional [min] and [max] bounds are applied **after** coercion:
+  /// Set `strict: true` to disable string parsing (accept only `int` and
+  /// whole-number `double`):
   ///
   /// ```dart
-  /// z.coerce().integer()            // any coercible integer
-  /// z.coerce().integer(min: 1)      // coerce then assert >= 1
-  /// z.coerce().integer(max: 255)    // coerce then assert <= 255
+  /// z.coerce().integer()                       // int, double, string
+  /// z.coerce().integer(strict: true)           // int and double only
+  /// z.coerce().integer(min: 1)                 // coerce then assert >= 1
+  /// z.coerce().integer(max: 255)               // coerce then assert <= 255
   /// z.coerce().integer(min: 0, max: 100)
   /// ```
   ///
   /// Failures produce `invalid_coercion`, `too_small`, or `too_big` issues.
-  ZemaSchema<dynamic, int> integer({int? min, int? max}) =>
-      CoerceInt(min: min, max: max);
+  ZemaSchema<dynamic, int> integer({int? min, int? max, bool strict = false}) =>
+      CoerceInt(min: min, max: max, strict: strict);
 
   /// Creates a [CoerceBool] schema that coerces the input to a `bool`.
   ///
   /// See [CoerceBool] for the full table of accepted truthy/falsy strings
-  /// and integers.
+  /// and integers. Set `strict: true` to accept only native `bool` values:
   ///
   /// ```dart
-  /// z.coerce().boolean()
+  /// z.coerce().boolean()               // bool, int (0/1), string
+  /// z.coerce().boolean(strict: true)   // bool only
   /// ```
   ///
   /// Failure produces an `invalid_coercion` issue.
-  ZemaSchema<dynamic, bool> boolean() => const CoerceBool();
+  ZemaSchema<dynamic, bool> boolean({bool strict = false}) =>
+      CoerceBool(strict: strict);
 
   /// Creates a [CoerceDouble] schema that coerces the input to a `double`.
   ///
   /// See [CoerceDouble] for accepted input types and coercion rules.
   ///
-  /// The optional [min] and [max] bounds are applied **after** coercion:
+  /// Set `strict: true` to disable string parsing (accept only `double` and
+  /// `int`):
   ///
   /// ```dart
-  /// z.coerce().float()              // any coercible double
-  /// z.coerce().float(min: 0.0)      // coerce then assert >= 0.0
-  /// z.coerce().float(max: 1.0)      // coerce then assert <= 1.0
+  /// z.coerce().float()                        // double, int, string
+  /// z.coerce().float(strict: true)            // double and int only
+  /// z.coerce().float(min: 0.0)                // coerce then assert >= 0.0
+  /// z.coerce().float(max: 1.0)                // coerce then assert <= 1.0
   /// ```
   ///
   /// Failures produce `invalid_coercion`, `too_small`, or `too_big` issues.
-  ZemaSchema<dynamic, double> float({double? min, double? max}) =>
-      CoerceDouble(min: min, max: max);
+  ZemaSchema<dynamic, double> float({
+    double? min,
+    double? max,
+    bool strict = false,
+  }) =>
+      CoerceDouble(min: min, max: max, strict: strict);
+
+  /// Creates a [ZemaDateTime] schema that coerces the input to a [DateTime].
+  ///
+  /// Accepts three input representations:
+  ///
+  /// | Input | Parsing rule |
+  /// |---|---|
+  /// | `DateTime` | passed through unchanged |
+  /// | `String` | parsed with [DateTime.tryParse] (ISO 8601) |
+  /// | `int` | treated as milliseconds since the Unix epoch |
+  /// | anything else | `invalid_coercion` failure |
+  ///
+  /// The optional [after] and [before] bounds are applied **after** coercion:
+  ///
+  /// ```dart
+  /// z.coerce().dateTime()                            // any parseable date
+  /// z.coerce().dateTime(after: DateTime(2000))       // on or after 2000-01-01
+  /// z.coerce().dateTime(before: DateTime.now())      // must be in the past
+  /// ```
+  ///
+  /// Failures produce `invalid_coercion`, `date_too_early`, or
+  /// `date_too_late` issues.
+  ZemaDateTime dateTime({DateTime? after, DateTime? before}) =>
+      ZemaDateTime(min: after, max: before);
 
   /// Creates a [CoerceString] schema that coerces the input to a `String`.
   ///
-  /// See [CoerceString] for coercion behaviour (effectively calls
-  /// `.toString()` on any non-null value).
+  /// In the default **strict mode**, only known primitive types are accepted:
+  /// `String`, `int`, `double`, `num`, `bool`, and `DateTime`. Arbitrary
+  /// objects whose `.toString()` would produce `Instance of 'Foo'` are
+  /// rejected with `invalid_coercion`.
+  ///
+  /// Set `strict: false` to revert to the permissive behaviour (any non-null
+  /// value coerced via `.toString()`):
   ///
   /// ```dart
-  /// z.coerce().string()
+  /// z.coerce().string()               // strict — primitives only
+  /// z.coerce().string(strict: false)  // permissive — any object
   /// ```
-  ZemaSchema<dynamic, String> string() => const CoerceString();
+  ZemaSchema<dynamic, String> string({bool strict = true}) =>
+      CoerceString(strict: strict);
 }

@@ -32,4 +32,9 @@ final ZemaTranslations frenchTranslations = {
   'too_small_exclusive': (p) => 'Doit être > ${p?['min']}',
   'too_big_exclusive': (p) => 'Doit être < ${p?['max']}',
   'wrong_length': (p) => 'Doit contenir exactement ${p?['length']} caractères',
+  'invalid_datetime_string': (p) =>
+      'Doit être une chaîne de date-heure ISO 8601 valide',
+  'async_refinement_skipped': (p) =>
+      'Le schéma contient des raffinements asynchrones — utilisez '
+      'safeParseAsync() ou parseAsync() au lieu de safeParse() ou parse()',
 };

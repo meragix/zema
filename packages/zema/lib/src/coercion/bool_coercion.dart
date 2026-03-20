@@ -7,19 +7,32 @@ import 'package:zema/src/error/issue.dart';
 ///
 /// Construct via `z.coerce().boolean()` — do not instantiate directly.
 ///
-/// ## Coercion rules
+/// ## Standard mode (default)
+///
+/// Accepts `bool`, `int` (`0`/`1`), and recognised string literals.
+/// String matching is **case-insensitive** and **whitespace-trimmed**.
 ///
 /// | Input | Output |
 /// |---|---|
 /// | `bool` | passed through unchanged |
 /// | `int` `1` | `true` |
 /// | `int` `0` | `false` |
-/// | `String` `'true'` `'1'` `'yes'` `'on'` | `true` |
-/// | `String` `'false'` `'0'` `'no'` `'off'` | `false` |
-/// | anything else | `invalid_coercion` failure |
+/// | `'true'` `'1'` `'yes'` `'on'` | `true` |
+/// | `'false'` `'0'` `'no'` `'off'` | `false` |
+/// | anything else | `invalid_coercion` |
 ///
-/// String matching is **case-insensitive** and **whitespace-trimmed**, so
-/// `'  True '`, `'TRUE'`, and `'true'` are all equivalent.
+/// ## Strict mode
+///
+/// Set `strict: true` to accept **only** native `bool` values. String and
+/// integer coercions are disabled. Use this when loosely-typed input (e.g.
+/// `String → bool`) is considered unsafe for your context.
+///
+/// ```dart
+/// z.coerce().boolean()               // standard — bool, int, string
+/// z.coerce().boolean(strict: true)   // strict — bool only
+/// ```
+///
+/// ## Examples
 ///
 /// ```dart
 /// final schema = z.coerce().boolean();
@@ -27,7 +40,7 @@ import 'package:zema/src/error/issue.dart';
 /// schema.parse(true);    // true
 /// schema.parse(1);       // true
 /// schema.parse('yes');   // true
-/// schema.parse('ON');    // true
+/// schema.parse('ON');    // true  (case-insensitive)
 ///
 /// schema.parse(false);   // false
 /// schema.parse(0);       // false
@@ -42,24 +55,36 @@ import 'package:zema/src/error/issue.dart';
 /// - [ZemaCoerce.boolean] — factory method on the `z.coerce()` namespace.
 /// - `z.boolean()` — strict schema that only accepts actual `bool` values.
 final class CoerceBool extends ZemaSchema<dynamic, bool> {
-  const CoerceBool();
+  /// When `true`, only native `bool` values are accepted.
+  /// When `false` (default), also coerces `int` and recognised strings.
+  final bool strict;
+
+  const CoerceBool({this.strict = false});
 
   @override
   ZemaResult<bool> safeParse(dynamic value) {
     if (value is bool) return success(value);
 
-    if (value is int) {
-      if (value == 1) return success(true);
-      if (value == 0) return success(false);
-    }
-
-    if (value is String) {
-      final lower = value.trim().toLowerCase();
-      if (lower == 'true' || lower == '1' || lower == 'yes' || lower == 'on') {
-        return success(true);
+    if (!strict) {
+      if (value is int) {
+        if (value == 1) return success(true);
+        if (value == 0) return success(false);
       }
-      if (lower == 'false' || lower == '0' || lower == 'no' || lower == 'off') {
-        return success(false);
+
+      if (value is String) {
+        final lower = value.trim().toLowerCase();
+        if (lower == 'true' ||
+            lower == '1' ||
+            lower == 'yes' ||
+            lower == 'on') {
+          return success(true);
+        }
+        if (lower == 'false' ||
+            lower == '0' ||
+            lower == 'no' ||
+            lower == 'off') {
+          return success(false);
+        }
       }
     }
 
@@ -70,7 +95,7 @@ final class CoerceBool extends ZemaSchema<dynamic, bool> {
           'invalid_coercion',
           params: {'type': 'bool'},
         ),
-        meta: {'actual': value.runtimeType},
+        meta: {'actual': value.runtimeType.toString()},
       ),
     );
   }

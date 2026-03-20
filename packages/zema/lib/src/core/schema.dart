@@ -1,3 +1,5 @@
+import 'dart:isolate';
+
 import 'package:zema/src/core/result.dart';
 import 'package:zema/src/error/exception.dart';
 import 'package:zema/src/error/issue.dart';
@@ -184,6 +186,39 @@ abstract class ZemaSchema<Input, Output> {
   Future<ZemaResult<Output>> safeParseAsync(Input value) async {
     return safeParse(value);
   }
+
+  /// Runs [safeParse] in a separate [Isolate] and returns the result.
+  ///
+  /// Offloads CPU-intensive validation to a background isolate so the Flutter
+  /// UI thread is not blocked. Returns a `Future<ZemaResult<Output>>` that
+  /// resolves when the isolate finishes.
+  ///
+  /// ```dart
+  /// // Parse a large JSON payload without freezing the UI
+  /// final result = await schema.parseInIsolate(largePayload);
+  /// ```
+  ///
+  /// ## Important limitations
+  ///
+  /// Dart isolates communicate via message passing and can only transfer
+  /// **sendable** values. Schemas that capture Dart closures (`.transform()`,
+  /// `.refine()`, `.preprocess()`, etc.) are **not sendable** and will throw
+  /// a runtime `IsolateSpawnException` when passed to a new isolate.
+  ///
+  /// Use [parseInIsolate] for schemas composed exclusively of built-in
+  /// primitive and complex schemas (`z.string()`, `z.object()`, etc.) with
+  /// no user-supplied callbacks. For schemas with callbacks, run validation
+  /// manually via `Isolate.run(() => schema.safeParse(value))` inside a
+  /// closure that captures the schema in the spawning isolate.
+  ///
+  /// For async refinements, use [safeParseAsync] directly — async refinements
+  /// perform I/O and do not benefit from isolate offloading.
+  ///
+  /// See also:
+  /// - [safeParse] — the synchronous equivalent.
+  /// - [safeParseAsync] — for schemas with async refinements.
+  Future<ZemaResult<Output>> parseInIsolate(Input value) =>
+      Isolate.run(() => safeParse(value));
 
   // ===========================================================================
   // TRANSFORMATION METHODS

@@ -96,7 +96,9 @@ export 'src/error/error.dart'
         ZemaI18n,
         ZemaTranslations,
         ZemaException,
-        ZemaIssue;
+        ZemaIssue,
+        ZemaMetaKeys,
+        ZemaSeverity;
 
 // ---------------------------------------------------------------------------
 // Primitive schemas

@@ -7,7 +7,9 @@ import 'package:zema/src/error/issue.dart';
 ///
 /// Construct via `z.coerce().float()` — do not instantiate directly.
 ///
-/// ## Coercion rules
+/// ## Standard mode (default)
+///
+/// Accepts `double`, `int`, and parseable `String`.
 ///
 /// | Input | Output |
 /// |---|---|
@@ -17,35 +19,28 @@ import 'package:zema/src/error/issue.dart';
 /// | `String` not parseable (e.g. `'abc'`) | `invalid_coercion` failure |
 /// | anything else | `invalid_coercion` failure |
 ///
-/// String input is **whitespace-trimmed** before parsing, so `' 3.14 '`
-/// is treated the same as `'3.14'`. Scientific notation (`'1e3'`) and
+/// String input is **whitespace-trimmed**. Scientific notation (`'1e3'`) and
 /// special values (`'Infinity'`, `'NaN'`) are accepted by `double.parse`
-/// and will be passed through.
+/// and are passed through.
+///
+/// ## Strict mode
+///
+/// Set `strict: true` to accept only `double` and `int`. String parsing is
+/// disabled. Use this when string coercion is undesirable.
+///
+/// ```dart
+/// z.coerce().float()               // standard — double, int, string
+/// z.coerce().float(strict: true)   // strict — double and int only
+/// ```
 ///
 /// ## Range constraints
 ///
-/// The optional [min] and [max] bounds are enforced **after** coercion
-/// succeeds. Both can be set independently:
+/// Applied **after** coercion succeeds:
 ///
 /// ```dart
-/// z.coerce().float()                 // any coercible double
-/// z.coerce().float(min: 0.0)         // >= 0.0 after coercion
-/// z.coerce().float(max: 1.0)         // <= 1.0 after coercion
-/// z.coerce().float(min: 0.0, max: 1.0)
-/// ```
-///
-/// ## Examples
-///
-/// ```dart
-/// final schema = z.coerce().float();
-///
-/// schema.parse(3.14);     // 3.14
-/// schema.parse(42);       // 42.0   (int widened)
-/// schema.parse('3.14');   // 3.14
-/// schema.parse(' 1e3 ');  // 1000.0 (trimmed, scientific notation)
-///
-/// schema.parse('abc');    // fails — invalid_coercion
-/// schema.parse(true);     // fails — invalid_coercion
+/// z.coerce().float(min: 0.0)        // >= 0.0 after coercion
+/// z.coerce().float(max: 1.0)        // <= 1.0 after coercion
+/// z.coerce().float(strict: true, min: 0.0, max: 1.0)
 /// ```
 ///
 /// Range failures produce `too_small` or `too_big` issues respectively.
@@ -60,7 +55,11 @@ final class CoerceDouble extends ZemaSchema<dynamic, double> {
   /// Upper bound (inclusive). Applied after coercion. `null` means no limit.
   final double? max;
 
-  const CoerceDouble({this.min, this.max});
+  /// When `true`, string parsing is disabled; only `double` and `int` are
+  /// accepted. Default `false`.
+  final bool strict;
+
+  const CoerceDouble({this.min, this.max, this.strict = false});
 
   @override
   ZemaResult<double> safeParse(dynamic value) {
@@ -70,7 +69,7 @@ final class CoerceDouble extends ZemaSchema<dynamic, double> {
       parsed = value;
     } else if (value is int) {
       parsed = value.toDouble();
-    } else if (value is String) {
+    } else if (!strict && value is String) {
       parsed = double.tryParse(value.trim());
     }
 
@@ -82,7 +81,7 @@ final class CoerceDouble extends ZemaSchema<dynamic, double> {
             'invalid_coercion',
             params: {'type': 'double'},
           ),
-          meta: {'actual': value.runtimeType},
+          meta: {'actual': value.runtimeType.toString()},
         ),
       );
     }
@@ -95,10 +94,7 @@ final class CoerceDouble extends ZemaSchema<dynamic, double> {
           code: 'too_small',
           message: ZemaI18n.translate(
             'too_small',
-            params: {
-              'min': min,
-              'actual': parsed,
-            },
+            params: {'min': min, 'actual': parsed},
           ),
           meta: {'min': min, 'actual': parsed},
         ),
@@ -111,20 +107,14 @@ final class CoerceDouble extends ZemaSchema<dynamic, double> {
           code: 'too_big',
           message: ZemaI18n.translate(
             'too_big',
-            params: {
-              'max': max,
-              'actual': parsed,
-            },
+            params: {'max': max, 'actual': parsed},
           ),
           meta: {'max': max, 'actual': parsed},
         ),
       );
     }
 
-    if (issues.isNotEmpty) {
-      return failure(issues);
-    }
-
+    if (issues.isNotEmpty) return failure(issues);
     return success(parsed);
   }
 }

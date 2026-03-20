@@ -18,7 +18,7 @@ import 'package:zema/src/helpers/validators.dart';
 ///    on success.
 /// 3. Length — [min] and [max] are checked against the (possibly trimmed) length.
 /// 4. Pattern — [regex] match is tested.
-/// 5. Format — [email], [url], [uuid] are tested in that order.
+/// 5. Format — [email], [url], [uuid], [dateTime] are tested in that order.
 /// 6. Enum — [oneOf] is checked last.
 ///
 /// All active constraints are evaluated; every failure is collected and
@@ -43,11 +43,14 @@ import 'package:zema/src/helpers/validators.dart';
 /// z.string().email()             // valid email address
 /// z.string().url()               // valid URL
 /// z.string().uuid()              // valid UUID v4
+/// z.string().dateTime()          // valid ISO 8601 date-time string
 /// z.string().oneOf(['a', 'b'])   // must equal 'a' or 'b'
 /// ```
 ///
 /// See also:
 /// - `z.coerce().string()` — converts any value to a string before validating.
+/// - `z.coerce().dateTime()` — parses a string/int/DateTime into a [DateTime].
+/// - `z.dateTime()` — accepts DateTime, ISO 8601 string, or Unix timestamp.
 final class ZemaString extends ZemaSchema<dynamic, String>
     with ZemaCustomMessage<dynamic, String> {
   /// Minimum allowed length (inclusive). `null` means no lower bound.
@@ -77,6 +80,19 @@ final class ZemaString extends ZemaSchema<dynamic, String>
   /// When `true`, the string must be a valid UUID v4.
   final bool? isUuid;
 
+  /// When `true`, the string must be a valid ISO 8601 date-time string
+  /// parseable by [DateTime.tryParse].
+  ///
+  /// This validates the **format** only — the output type remains `String`.
+  /// To obtain a [DateTime] value, chain `.transform(DateTime.parse)` or use
+  /// `z.coerce().dateTime()` / `z.dateTime()` instead.
+  ///
+  /// ```dart
+  /// z.string().dateTime()                   // validates ISO 8601 format
+  /// z.string().dateTime().transform(DateTime.parse)  // → DateTime output
+  /// ```
+  final bool? isDateTime;
+
   @override
   final String? customMessage;
 
@@ -90,6 +106,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
     this.isEmail,
     this.isUrl,
     this.isUuid,
+    this.isDateTime,
     this.customMessage,
   });
 
@@ -107,11 +124,10 @@ final class ZemaString extends ZemaSchema<dynamic, String>
           },
         ),
         receivedValue: value,
+        expected: 'string',
         meta: {'expected': 'string', 'received': value.runtimeType.toString()},
       );
-      return singleFailure(
-        applyCustomMessage(issue),
-      );
+      return singleFailure(applyCustomMessage(issue));
     }
 
     // Trim if requested
@@ -124,10 +140,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
         code: 'too_short',
         message: ZemaI18n.translate(
           'too_short',
-          params: {
-            'min': minLength,
-            'actual': str.length,
-          },
+          params: {'min': minLength, 'actual': str.length},
         ),
         receivedValue: str,
         meta: {'min': minLength, 'actual': str.length},
@@ -140,10 +153,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
         code: 'too_long',
         message: ZemaI18n.translate(
           'too_long',
-          params: {
-            'max': maxLength,
-            'actual': str.length,
-          },
+          params: {'max': maxLength, 'actual': str.length},
         ),
         receivedValue: str,
         meta: {'max': maxLength, 'actual': str.length},
@@ -207,15 +217,23 @@ final class ZemaString extends ZemaSchema<dynamic, String>
       );
     }
 
+    // DateTime format validation
+    if (isDateTime == true && DateTime.tryParse(str) == null) {
+      final issue = ZemaIssue(
+        code: 'invalid_datetime_string',
+        message: ZemaI18n.translate('invalid_datetime_string'),
+        receivedValue: str,
+      );
+      issues.add(applyCustomMessage(issue));
+    }
+
     // Enum validation
     if (enumValues != null && !enumValues!.contains(str)) {
       final issue = ZemaIssue(
         code: 'invalid_enum',
         message: ZemaI18n.translate(
           'invalid_enum',
-          params: {
-            'allowed': enumValues!.toList(),
-          },
+          params: {'allowed': enumValues!.toList()},
         ),
         receivedValue: str,
         meta: {'allowed': enumValues!.toList()},
@@ -223,10 +241,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
       issues.add(applyCustomMessage(issue));
     }
 
-    if (issues.isNotEmpty) {
-      return failure(issues);
-    }
-
+    if (issues.isNotEmpty) return failure(issues);
     return success(str);
   }
 
@@ -254,6 +269,8 @@ final class ZemaString extends ZemaSchema<dynamic, String>
         isEmail: isEmail,
         isUrl: isUrl,
         isUuid: isUuid,
+        isDateTime: isDateTime,
+        customMessage: customMessage,
       );
 
   /// Requires the string to have at least [length] characters.
@@ -275,6 +292,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
         isEmail: isEmail,
         isUrl: isUrl,
         isUuid: isUuid,
+        isDateTime: isDateTime,
         customMessage: message,
       );
 
@@ -297,6 +315,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
         isEmail: isEmail,
         isUrl: isUrl,
         isUuid: isUuid,
+        isDateTime: isDateTime,
         customMessage: message,
       );
 
@@ -319,6 +338,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
         isEmail: true,
         isUrl: isUrl,
         isUuid: isUuid,
+        isDateTime: isDateTime,
         customMessage: message,
       );
 
@@ -340,6 +360,8 @@ final class ZemaString extends ZemaSchema<dynamic, String>
         isEmail: isEmail,
         isUrl: true,
         isUuid: isUuid,
+        isDateTime: isDateTime,
+        customMessage: customMessage,
       );
 
   /// Requires the string to be a valid UUID (version 4 format).
@@ -362,6 +384,37 @@ final class ZemaString extends ZemaSchema<dynamic, String>
         isEmail: isEmail,
         isUrl: isUrl,
         isUuid: true,
+        isDateTime: isDateTime,
+        customMessage: customMessage,
+      );
+
+  /// Requires the string to be a valid ISO 8601 date-time string.
+  ///
+  /// Validates that [DateTime.tryParse] can parse the string. The output
+  /// type remains `String` — this validates **format only**. To produce a
+  /// [DateTime] output, chain `.transform(DateTime.parse)`:
+  ///
+  /// ```dart
+  /// z.string().dateTime()                            // validates format
+  /// z.string().dateTime().transform(DateTime.parse)  // → DateTime output
+  /// ```
+  ///
+  /// For schemas where the input may be a `DateTime`, `String`, or Unix `int`,
+  /// use `z.dateTime()` or `z.coerce().dateTime()` instead.
+  ///
+  /// Produces an `invalid_datetime_string` issue on failure.
+  ZemaString dateTime({String? message}) => ZemaString(
+        minLength: minLength,
+        maxLength: maxLength,
+        exactLength: exactLength,
+        pattern: pattern,
+        shouldTrim: shouldTrim,
+        enumValues: enumValues,
+        isEmail: isEmail,
+        isUrl: isUrl,
+        isUuid: isUuid,
+        isDateTime: true,
+        customMessage: message,
       );
 
   /// Requires the string to be one of the provided [values].
@@ -385,6 +438,8 @@ final class ZemaString extends ZemaSchema<dynamic, String>
         isEmail: isEmail,
         isUrl: isUrl,
         isUuid: isUuid,
+        isDateTime: isDateTime,
+        customMessage: customMessage,
       );
 
   /// Requires the string to have exactly [length] characters.
@@ -406,6 +461,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
         isEmail: isEmail,
         isUrl: isUrl,
         isUuid: isUuid,
+        isDateTime: isDateTime,
         customMessage: message,
       );
 
@@ -431,6 +487,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
         isEmail: isEmail,
         isUrl: isUrl,
         isUuid: isUuid,
+        isDateTime: isDateTime,
         customMessage: message,
       );
 }

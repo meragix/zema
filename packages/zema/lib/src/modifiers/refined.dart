@@ -1,9 +1,10 @@
 import 'package:zema/src/core/result.dart';
 import 'package:zema/src/core/schema.dart';
 import 'package:zema/src/error/issue.dart';
+import 'package:zema/src/error/severity.dart';
 
-/// Extension that adds [refine], [refineAsync], and [superRefine] to every
-/// [ZemaSchema].
+/// Extension that adds [refine], [refineAsync], [refineWarn], and
+/// [superRefine] to every [ZemaSchema].
 ///
 /// These methods let you attach **custom validation logic** on top of any
 /// existing schema without creating a new schema class.
@@ -12,8 +13,9 @@ import 'package:zema/src/error/issue.dart';
 ///
 /// | Method | Async | Issues | Best for |
 /// |---|---|---|---|
-/// | [refine] | No | 1 (fixed message) | Simple predicates |
-/// | [refineAsync] | Yes | 1 (fixed message) | I/O checks (DB, network) |
+/// | [refine] | No | 1 (error) | Simple predicates |
+/// | [refineAsync] | Yes | 1 (error) | I/O checks (DB, network) |
+/// | [refineWarn] | No | 1 (warning) | Advisory checks that don't block |
 /// | [superRefine] | No | N (full control) | Multi-issue custom logic |
 extension ZemaSchemaRefinement<I, O> on ZemaSchema<I, O> {
   /// Adds a synchronous custom validation rule via a boolean [predicate].
@@ -48,6 +50,7 @@ extension ZemaSchemaRefinement<I, O> on ZemaSchema<I, O> {
   ///
   /// See also:
   /// - [refineAsync] — for predicates that require async I/O.
+  /// - [refineWarn] — for advisory checks that don't block the parse.
   /// - [superRefine] — for producing multiple issues or accessing a context.
   ZemaSchema<I, O> refine(
     bool Function(O) predicate, {
@@ -65,9 +68,12 @@ extension ZemaSchemaRefinement<I, O> on ZemaSchema<I, O> {
   ///
   /// The predicate runs **after** the base schema succeeds, **only** when
   /// [ZemaSchema.safeParseAsync] (or [ZemaSchema.parseAsync]) is called.
-  /// Calling the synchronous [ZemaSchema.safeParse] skips the async predicate
-  /// entirely and delegates straight to the base schema — so always use the
-  /// `…Async` variants when an async refinement is in the chain.
+  ///
+  /// **Breaking change from 0.5.0**: Calling the synchronous
+  /// [ZemaSchema.safeParse] on a schema that has async refinements now returns
+  /// a [ZemaFailure] with code `async_refinement_skipped` instead of silently
+  /// bypassing the async predicate. Always use `safeParseAsync()` or
+  /// `parseAsync()` when the chain contains `.refineAsync()`.
   ///
   /// If the predicate returns `false`, a single issue with [message] and
   /// [code] is produced. If it throws, an `async_refinement_error` issue is
@@ -97,6 +103,43 @@ extension ZemaSchemaRefinement<I, O> on ZemaSchema<I, O> {
         predicate,
         message ?? 'Async validation failed',
         code ?? 'async_custom_error',
+      );
+
+  /// Adds a warning-level refinement that does **not** fail the parse.
+  ///
+  /// If [predicate] returns `false`, the parse still succeeds but a
+  /// [ZemaSeverity.warning] issue is added to [ZemaResult.warnings]. Use this
+  /// for advisory checks such as password strength hints, deprecation notices,
+  /// or soft data-quality rules in Flutter forms.
+  ///
+  /// ```dart
+  /// final passwordSchema = z.string()
+  ///     .min(8)
+  ///     .refineWarn(
+  ///       (s) => s.contains(RegExp(r'[A-Z]')),
+  ///       message: 'Adding uppercase letters improves password strength.',
+  ///       code: 'weak_password',
+  ///     );
+  ///
+  /// final result = passwordSchema.safeParse('hello123');
+  /// print(result.isSuccess);       // true — parse succeeded
+  /// print(result.hasWarnings);     // true
+  /// print(result.warnings.first.message); // advisory message
+  /// ```
+  ///
+  /// See also:
+  /// - [refine] — the error-level equivalent.
+  /// - [ZemaResult.warnings] — where warning issues are surfaced.
+  ZemaSchema<I, O> refineWarn(
+    bool Function(O) predicate, {
+    String? message,
+    String? code,
+  }) =>
+      _WarnRefinedSchema(
+        this,
+        predicate,
+        message ?? 'Validation warning',
+        code ?? 'custom_warning',
       );
 
   /// Adds a custom validation rule with full control over the issues produced.
@@ -159,7 +202,7 @@ final class _RefinedSchema<I, O> extends ZemaSchema<I, O> {
       return singleFailure(ZemaIssue(code: code, message: message));
     }
 
-    return success(output);
+    return success(output, warnings: result.warnings);
   }
 }
 
@@ -171,10 +214,22 @@ final class _AsyncRefinedSchema<I, O> extends ZemaSchema<I, O> {
 
   const _AsyncRefinedSchema(this.base, this.predicate, this.message, this.code);
 
+  /// Calling [safeParse] on a schema that contains async refinements is a
+  /// programming error — the async predicate would be silently skipped,
+  /// producing a false success. This method returns a [ZemaFailure] with
+  /// code `async_refinement_skipped` to surface the mistake immediately.
+  ///
+  /// Use [safeParseAsync] or [parseAsync] instead.
   @override
   ZemaResult<O> safeParse(I value) {
-    // Sync parse delegates to base only — async predicate is not executed.
-    return base.safeParse(value);
+    return singleFailure(
+      const ZemaIssue(
+        code: 'async_refinement_skipped',
+        message: 'This schema contains async refinements. '
+            'Call safeParseAsync() or parseAsync() instead of '
+            'safeParse() or parse().',
+      ),
+    );
   }
 
   @override
@@ -189,7 +244,7 @@ final class _AsyncRefinedSchema<I, O> extends ZemaSchema<I, O> {
       if (!isValid) {
         return singleFailure(ZemaIssue(code: code, message: message));
       }
-      return success(output);
+      return success(output, warnings: result.warnings);
     } catch (e) {
       return singleFailure(
         ZemaIssue(
@@ -198,6 +253,40 @@ final class _AsyncRefinedSchema<I, O> extends ZemaSchema<I, O> {
         ),
       );
     }
+  }
+}
+
+final class _WarnRefinedSchema<I, O> extends ZemaSchema<I, O> {
+  final ZemaSchema<I, O> base;
+  final bool Function(O) predicate;
+  final String message;
+  final String code;
+
+  const _WarnRefinedSchema(this.base, this.predicate, this.message, this.code);
+
+  @override
+  ZemaResult<O> safeParse(I value) {
+    final result = base.safeParse(value);
+    if (result.isFailure) return result;
+
+    final output = result.value;
+    final baseWarnings = result.warnings;
+
+    if (!predicate(output)) {
+      return success(
+        output,
+        warnings: [
+          ...baseWarnings,
+          ZemaIssue(
+            code: code,
+            message: message,
+            severity: ZemaSeverity.warning,
+          ),
+        ],
+      );
+    }
+
+    return result;
   }
 }
 
@@ -258,6 +347,6 @@ final class _SuperRefinedSchema<I, O> extends ZemaSchema<I, O> {
       return failure(issues);
     }
 
-    return success(output);
+    return success(output, warnings: result.warnings);
   }
 }

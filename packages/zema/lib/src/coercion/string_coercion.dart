@@ -3,64 +3,102 @@ import 'package:zema/src/core/schema.dart';
 import 'package:zema/src/error/i18n.dart';
 import 'package:zema/src/error/issue.dart';
 
-/// A coercion schema that converts any non-null value to a `String`.
+/// A coercion schema that converts primitive values to a `String`.
 ///
 /// Construct via `z.coerce().string()` — do not instantiate directly.
 ///
-/// ## Coercion rules
+/// ## Strict mode (default)
 ///
-/// Calls `.toString()` on the input value. This succeeds for virtually every
-/// Dart object — the only way it can fail is if `.toString()` itself throws,
-/// which is extremely rare and would indicate a broken object.
+/// By default [strict] is `true` and only known primitive types are accepted:
+/// `String`, `int`, `double`, `num`, `bool`, and `DateTime`. Any other type
+/// produces an `invalid_coercion` failure — preventing useless strings like
+/// `"Instance of 'User'"`.
 ///
-/// | Input | Output |
+/// `DateTime` values are converted to their ISO 8601 string representation
+/// via `.toIso8601String()` rather than the default `.toString()`.
+///
+/// | Input | Output (strict) |
 /// |---|---|
 /// | `String` | passed through unchanged |
 /// | `int` `42` | `'42'` |
 /// | `double` `3.14` | `'3.14'` |
 /// | `bool` `true` | `'true'` |
-/// | any other object | `object.toString()` |
-/// | throws inside `.toString()` | `invalid_coercion` failure |
+/// | `num` | `.toString()` |
+/// | `DateTime` | `.toIso8601String()` |
+/// | any other type | `invalid_coercion` |
+///
+/// ## Permissive mode
+///
+/// Set `strict: false` to coerce **any** non-null value via `.toString()`.
+/// Use this when you are certain that all input types have a meaningful
+/// string representation.
+///
+/// ```dart
+/// z.coerce().string()               // strict — primitives only
+/// z.coerce().string(strict: false)  // permissive — any object
+/// ```
 ///
 /// ## Examples
 ///
 /// ```dart
 /// final schema = z.coerce().string();
 ///
-/// schema.parse('hello');  // 'hello'
-/// schema.parse(42);       // '42'
-/// schema.parse(3.14);     // '3.14'
-/// schema.parse(true);     // 'true'
-/// schema.parse(null);     // 'null'
-/// ```
+/// schema.parse('hello');           // 'hello'
+/// schema.parse(42);                // '42'
+/// schema.parse(3.14);              // '3.14'
+/// schema.parse(true);              // 'true'
+/// schema.parse(DateTime(2024, 1)); // '2024-01-01T00:00:00.000'
 ///
-/// If you need to validate or transform the resulting string further,
-/// chain additional schema methods after coercion:
-///
-/// ```dart
-/// z.coerce().string().trim().min(1)   // coerce, trim, then check length
-/// z.coerce().string().email()         // coerce then validate as email
+/// schema.parse(Object());          // fails — invalid_coercion (strict mode)
 /// ```
 ///
 /// See also:
 /// - [ZemaCoerce.string] — factory method on the `z.coerce()` namespace.
 /// - `z.string()` — strict schema that only accepts actual `String` values.
 final class CoerceString extends ZemaSchema<dynamic, String> {
-  const CoerceString();
+  /// When `true` (default), only known primitive types are accepted.
+  /// When `false`, any non-null value is coerced via `.toString()`.
+  final bool strict;
+
+  const CoerceString({this.strict = true});
+
+  static const _allowedTypes = {
+    String,
+    int,
+    double,
+    num,
+    bool,
+    DateTime,
+  };
 
   @override
   ZemaResult<String> safeParse(dynamic value) {
+    if (strict && !_allowedTypes.contains(value.runtimeType)) {
+      return singleFailure(
+        ZemaIssue(
+          code: 'invalid_coercion',
+          message: ZemaI18n.translate(
+            'invalid_coercion',
+            params: {'type': 'String'},
+          ),
+          meta: {'actual': value.runtimeType.toString(), 'type': 'String'},
+        ),
+      );
+    }
+
     try {
-      return success(value.toString());
+      final result =
+          value is DateTime ? value.toIso8601String() : value.toString();
+      return success(result);
     } catch (e) {
       return singleFailure(
         ZemaIssue(
           code: 'invalid_coercion',
           message: ZemaI18n.translate(
             'invalid_coercion',
-            params: {'type': 'string'},
+            params: {'type': 'String'},
           ),
-          meta: {'actual': value.runtimeType},
+          meta: {'actual': value.runtimeType.toString()},
         ),
       );
     }
