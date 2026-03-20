@@ -12,6 +12,7 @@ workspace:
   - packages/zema_dio
   - packages/zema_http
   - packages/zema_firestore
+  - packages/zema_hive
 
 dev_dependencies:
   melos: ^7.4.0
