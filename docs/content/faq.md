@@ -89,7 +89,7 @@ Pass the list to `z.array()` with an object schema as the element schema. All el
 
 ```dart
 final schema = z.array(z.object({
-  'id':    z.integer().positive(),
+  'id': z.integer().positive(),
   'email': z.string().email(),
 }));
 
@@ -171,7 +171,7 @@ Register a custom locale:
 ```dart
 ZemaI18n.registerTranslations('es', {
   'invalid_type': 'Tipo inválido: se esperaba {expected}.',
-  'too_short':    'Demasiado corto: mínimo {min}.',
+  'too_short': 'Demasiado corto: mínimo {min}.',
 });
 ZemaErrorMap.setLocale('es');
 ```
@@ -205,7 +205,7 @@ Yes. Use `z.lazy()` to defer schema construction:
 
 ```dart
 final nodeSchema = z.object({
-  'value':    z.integer(),
+  'value': z.integer(),
   'children': z.array(z.lazy(() => nodeSchema)).optional(),
 });
 ```

@@ -19,7 +19,7 @@ extension ZSchemaBranding<I, O> on ZemaSchema<I, O> {
 /// A nominally-typed wrapper that distinguishes values at compile time even
 /// when the underlying type is the same.
 ///
-/// Dart uses **structural** typing — two values of type `String` are
+/// Dart uses **structural** typing, two values of type `String` are
 /// interchangeable regardless of what they represent. [Branded] adds a
 /// phantom [Brand] type parameter that the compiler treats as distinct,
 /// preventing accidental mixing of semantically different values:
@@ -60,8 +60,8 @@ extension ZSchemaBranding<I, O> on ZemaSchema<I, O> {
 /// ```
 ///
 /// See also:
-/// - [ZSchemaBranding.brand] — the extension method that produces this wrapper.
-/// - [BrandedSchema] — the internal schema implementation.
+/// - [ZSchemaBranding.brand]: the extension method that produces this wrapper.
+/// - [BrandedSchema]: the internal schema implementation.
 @immutable
 final class Branded<T, Brand> {
   /// The underlying validated value.
