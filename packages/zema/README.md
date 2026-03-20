@@ -4,7 +4,7 @@
 [![package publisher](https://img.shields.io/pub/publisher/zema.svg)](https://pub.dev/packages/zema/publisher)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Schema validation for Dart, inspired by [Zod](https://zod.dev). Define schemas once, validate anywhere. All validation errors are collected in a single pass — no silent failures, no partial results.
+Schema validation for Dart, inspired by [Zod](https://zod.dev). Define schemas once, validate anywhere. All validation errors are collected in a single pass: no silent failures, no partial results.
 
 ---
 
@@ -12,7 +12,7 @@ Schema validation for Dart, inspired by [Zod](https://zod.dev). Define schemas o
 
 - Fluent, chainable API: `z.string().min(2).email()`
 - Exhaustive error collection: every failing field is reported, not just the first
-- Sealed result type: `ZemaSuccess<T>` and `ZemaFailure<T>` — no exceptions by default
+- Sealed result type: `ZemaSuccess<T>` and `ZemaFailure<T>`, no exceptions by default
 - Composable objects: `extend()`, `merge()`, `pick()`, `omit()`
 - Discriminated unions with O(1) schema selection
 - Async refinements for database and network checks
@@ -39,9 +39,9 @@ import 'package:zema/zema.dart';
 
 ```dart
 final userSchema = z.object({
-  'name':  z.string().min(2),
+  'name': z.string().min(2),
   'email': z.string().email(),
-  'age':   z.integer().gte(18).optional(),
+  'age': z.integer().gte(18).optional(),
 });
 
 // parse() returns the validated value or throws ZemaException
@@ -50,7 +50,7 @@ final user = userSchema.parse({
   'email': 'alice@example.com',
 });
 
-// safeParse() never throws — returns ZemaResult<T>
+// safeParse() never throws, returns ZemaResult<T>
 final result = userSchema.safeParse(rawInput);
 
 switch (result) {
@@ -108,9 +108,9 @@ z.double().finite()
 
 ```dart
 final schema = z.object({
-  'id':       z.string().uuid(),
-  'name':     z.string().min(2),
-  'email':    z.string().email(),
+  'id': z.string().uuid(),
+  'name': z.string().min(2),
+  'email': z.string().email(),
   'password': z.string().min(8),
 });
 
@@ -178,8 +178,8 @@ event.parse({'type': 'click', 'x': 100, 'y': 200});
 ## Modifiers
 
 ```dart
-z.string().optional()             // String?  — null passes through
-z.string().nullable()             // String?  — null is a valid value
+z.string().optional()             // String? (null passes through)
+z.string().nullable()             // String? (null is a valid value)
 z.integer().withDefault(0)        // always returns a value, never null
 z.integer().catchError((_) => 0)  // intercept failures, inspect issues
 
@@ -267,9 +267,9 @@ final result = schema.safeParse(input);
 
 if (result.isFailure) {
   for (final issue in result.errors) {
-    // issue.code    — machine-readable string ('invalid_type', 'too_short', …)
-    // issue.message — human-readable string
-    // issue.path    — location in the input (['user', 'email'])
+    // issue.code: machine-readable string ('invalid_type', 'too_short', …)
+    // issue.message: human-readable string
+    // issue.path: location in the input (['user', 'email'])
     print('[${issue.code}] ${issue.path.join(".")}: ${issue.message}');
   }
 }
@@ -293,8 +293,8 @@ ZemaErrorMap.setLocale('fr');
 // Custom locale
 ZemaI18n.registerTranslations('es', {
   'invalid_type': 'Tipo inválido: se esperaba {expected}, se recibió {received}.',
-  'too_short':    'Demasiado corto: mínimo {min}.',
-  'too_long':     'Demasiado largo: máximo {max}.',
+  'too_short': 'Demasiado corto: mínimo {min}.',
+  'too_long': 'Demasiado largo: máximo {max}.',
   'invalid_email': 'Dirección de correo inválida.',
 });
 ZemaErrorMap.setLocale('es');
@@ -329,4 +329,22 @@ Full guides, API reference, and examples: [zema.meragix.dev](https://zema.meragi
 
 ## License
 
-MIT License — see [LICENSE](https://github.com/meragix/zema/blob/main/LICENSE)
+MIT License — see [LICENSE](LICENSE)
+
+<!-- 
+/// Adds Zema schema validation directly on [Response].
+extension ZemaDioResponseX<E> on Response<E> {
+  /// Validates [data] against [schema].
+  ///
+  /// Returns the parsed output on success.
+  /// Throws [ZemaException] if validation fails.
+  T parse<T>(ZemaSchema<dynamic, T> schema) => schema.parse(data);
+
+  /// Validates [data] against [schema].
+  ///
+  /// Returns [ZemaSuccess] on success or [ZemaFailure] on validation failure.
+  /// Never throws.
+  ZemaResult<T> safeParse<T>(ZemaSchema<dynamic, T> schema) =>
+      schema.safeParse(data);
+} 
+-->
