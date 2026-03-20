@@ -27,8 +27,7 @@ extension ZemaHttpResponseX on http.Response {
   /// Returns the parsed output on success.
   /// Throws [ZemaException] if validation fails.
   /// Throws [FormatException] if [body] is not valid JSON.
-  T parse<T>(ZemaSchema<dynamic, T> schema) =>
-      schema.parse(jsonDecode(body));
+  T parse<T>(ZemaSchema<dynamic, T> schema) => schema.parse(jsonDecode(body));
 
   /// Decodes [body] as JSON and validates it against [schema].
   ///

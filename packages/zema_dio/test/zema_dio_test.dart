@@ -42,7 +42,8 @@ void main() {
     });
 
     test('throws ZemaException on invalid data', () {
-      final response = _response({'id': 1, 'name': '', 'email': 'not-an-email'});
+      final response =
+          _response({'id': 1, 'name': '', 'email': 'not-an-email'});
 
       expect(
         () => response.parse(_userSchema),

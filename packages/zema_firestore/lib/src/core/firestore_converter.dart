@@ -153,8 +153,7 @@ final class ZemaFirestoreConverter<T> {
   /// Recursively converts [DateTime] values to [Timestamp] for Firestore writes.
   Map<String, dynamic> _convertDates(Map<String, dynamic> map) {
     return {
-      for (final entry in map.entries)
-        entry.key: _convertValue(entry.value),
+      for (final entry in map.entries) entry.key: _convertValue(entry.value),
     };
   }
 

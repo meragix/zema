@@ -64,7 +64,7 @@ Future<void> _basicExample() async {
   });
 
   final user = userBox.get('alice');
-  print('name: ${user?['name']}');   // Alice
+  print('name: ${user?['name']}'); // Alice
   print('email: ${user?['email']}'); // alice@example.com
 
   // Missing key returns null
@@ -94,8 +94,8 @@ Future<void> _extensionTypeExample() async {
   final raw = userBox.get('bob');
   if (raw != null) {
     final user = User(raw);
-    print('name: ${user.name}');   // Bob
-    print('role: ${user.role}');   // admin
+    print('name: ${user.name}'); // Bob
+    print('role: ${user.role}'); // admin
   }
 
   // Wrap all values on the way out
@@ -158,7 +158,8 @@ Future<void> _errorHandlingExample() async {
     userSchemaV1,
     onParseError: (key, rawData, issues) {
       // In production: Sentry.captureException(issues)
-      print('  parse error on "$key": ${issues.map((i) => i.message).join(', ')}');
+      print(
+          '  parse error on "$key": ${issues.map((i) => i.message).join(', ')}');
       return {
         'id': key,
         'name': 'Unknown',

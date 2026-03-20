@@ -29,6 +29,7 @@
 /// ```
 library;
 
-export 'src/core/zema_box.dart' show ZemaBox, ZemaHiveMigration, OnHiveParseError;
+export 'src/core/zema_box.dart'
+    show ZemaBox, ZemaHiveMigration, OnHiveParseError;
 export 'src/exceptions/hive_exception.dart';
 export 'src/extensions/box_extension.dart';

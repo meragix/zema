@@ -16,13 +16,13 @@ import 'package:zema/zema.dart';
 ZemaSchema<dynamic, DateTime> zTimestamp() {
   return z
       .custom<dynamic>(
-        (value) => value is Timestamp || value is DateTime,
-        message: 'Expected Timestamp or DateTime',
-      )
+    (value) => value is Timestamp || value is DateTime,
+    message: 'Expected Timestamp or DateTime',
+  )
       .transform((value) {
-        if (value is Timestamp) return value.toDate();
-        return value as DateTime;
-      });
+    if (value is Timestamp) return value.toDate();
+    return value as DateTime;
+  });
 }
 
 /// Schema that validates a Firestore [GeoPoint].

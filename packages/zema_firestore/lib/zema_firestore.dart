@@ -33,7 +33,8 @@ library;
 export 'src/types/firebase_types.dart';
 
 // Converter
-export 'src/core/firestore_converter.dart' show ZemaFirestoreConverter, OnParseError;
+export 'src/core/firestore_converter.dart'
+    show ZemaFirestoreConverter, OnParseError;
 
 // Exception
 export 'src/exceptions/firestore_exception.dart';

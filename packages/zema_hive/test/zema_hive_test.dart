@@ -88,7 +88,8 @@ void main() {
       final userBox = box.withZema(_userSchema);
 
       expect(
-        () => userBox.put('bad', {'id': 'bad', 'name': '', 'email': 'not-valid'}),
+        () =>
+            userBox.put('bad', {'id': 'bad', 'name': '', 'email': 'not-valid'}),
         throwsA(isA<ZemaHiveException>()),
       );
     });
@@ -152,7 +153,8 @@ void main() {
     });
 
     test('reads back a valid document', () async {
-      await box.put('u1', {'id': 'u1', 'name': 'Alice', 'email': 'alice@example.com'});
+      await box.put(
+          'u1', {'id': 'u1', 'name': 'Alice', 'email': 'alice@example.com'});
       final userBox = box.withZema(_userSchema);
 
       final user = userBox.get('u1');
@@ -162,7 +164,8 @@ void main() {
       expect(user['email'], equals('alice@example.com'));
     });
 
-    test('returns null for an invalid document when no migrate or onParseError', () async {
+    test('returns null for an invalid document when no migrate or onParseError',
+        () async {
       await box.put('bad', {'id': 'bad', 'name': '', 'email': 'not-valid'});
       final userBox = box.withZema(_userSchema);
 
@@ -246,7 +249,11 @@ void main() {
         migrate: (rawData) => rawData, // no-op — still invalid after migration
         onParseError: (key, rawData, issues) {
           onParseErrorCalled = true;
-          return {'id': key, 'name': 'Fallback', 'email': 'fallback@example.com'};
+          return {
+            'id': key,
+            'name': 'Fallback',
+            'email': 'fallback@example.com'
+          };
         },
       );
 
@@ -284,8 +291,10 @@ void main() {
 
   group('ZemaBox utilities', () {
     test('values returns all valid documents', () async {
-      await box.put('u1', {'id': 'u1', 'name': 'Alice', 'email': 'alice@example.com'});
-      await box.put('u2', {'id': 'u2', 'name': 'Bob', 'email': 'bob@example.com'});
+      await box.put(
+          'u1', {'id': 'u1', 'name': 'Alice', 'email': 'alice@example.com'});
+      await box
+          .put('u2', {'id': 'u2', 'name': 'Bob', 'email': 'bob@example.com'});
       await box.put('bad', {'id': 'bad', 'name': '', 'email': 'x'});
 
       final userBox = box.withZema(_userSchema);
@@ -296,8 +305,10 @@ void main() {
     });
 
     test('keys returns all stored keys', () async {
-      await box.put('u1', {'id': 'u1', 'name': 'Alice', 'email': 'alice@example.com'});
-      await box.put('u2', {'id': 'u2', 'name': 'Bob', 'email': 'bob@example.com'});
+      await box.put(
+          'u1', {'id': 'u1', 'name': 'Alice', 'email': 'alice@example.com'});
+      await box
+          .put('u2', {'id': 'u2', 'name': 'Bob', 'email': 'bob@example.com'});
 
       final userBox = box.withZema(_userSchema);
 
@@ -305,8 +316,10 @@ void main() {
     });
 
     test('length reflects number of stored entries', () async {
-      await box.put('u1', {'id': 'u1', 'name': 'Alice', 'email': 'alice@example.com'});
-      await box.put('u2', {'id': 'u2', 'name': 'Bob', 'email': 'bob@example.com'});
+      await box.put(
+          'u1', {'id': 'u1', 'name': 'Alice', 'email': 'alice@example.com'});
+      await box
+          .put('u2', {'id': 'u2', 'name': 'Bob', 'email': 'bob@example.com'});
 
       final userBox = box.withZema(_userSchema);
 
@@ -320,7 +333,8 @@ void main() {
     });
 
     test('containsKey', () async {
-      await box.put('u1', {'id': 'u1', 'name': 'Alice', 'email': 'alice@example.com'});
+      await box.put(
+          'u1', {'id': 'u1', 'name': 'Alice', 'email': 'alice@example.com'});
       final userBox = box.withZema(_userSchema);
 
       expect(userBox.containsKey('u1'), isTrue);
@@ -328,7 +342,8 @@ void main() {
     });
 
     test('delete removes a key', () async {
-      await box.put('u1', {'id': 'u1', 'name': 'Alice', 'email': 'alice@example.com'});
+      await box.put(
+          'u1', {'id': 'u1', 'name': 'Alice', 'email': 'alice@example.com'});
       final userBox = box.withZema(_userSchema);
 
       await userBox.delete('u1');
@@ -337,8 +352,10 @@ void main() {
     });
 
     test('clear removes all entries', () async {
-      await box.put('u1', {'id': 'u1', 'name': 'Alice', 'email': 'alice@example.com'});
-      await box.put('u2', {'id': 'u2', 'name': 'Bob', 'email': 'bob@example.com'});
+      await box.put(
+          'u1', {'id': 'u1', 'name': 'Alice', 'email': 'alice@example.com'});
+      await box
+          .put('u2', {'id': 'u2', 'name': 'Bob', 'email': 'bob@example.com'});
       final userBox = box.withZema(_userSchema);
 
       await userBox.clear();
@@ -347,8 +364,10 @@ void main() {
     });
 
     test('toMap returns all valid entries as a map', () async {
-      await box.put('u1', {'id': 'u1', 'name': 'Alice', 'email': 'alice@example.com'});
-      await box.put('u2', {'id': 'u2', 'name': 'Bob', 'email': 'bob@example.com'});
+      await box.put(
+          'u1', {'id': 'u1', 'name': 'Alice', 'email': 'alice@example.com'});
+      await box
+          .put('u2', {'id': 'u2', 'name': 'Bob', 'email': 'bob@example.com'});
       final userBox = box.withZema(_userSchema);
 
       final map = userBox.toMap();

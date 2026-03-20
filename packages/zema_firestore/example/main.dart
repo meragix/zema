@@ -87,10 +87,8 @@ Future<void> _readExample(FirebaseFirestore db) async {
 Future<void> _queryExample(FirebaseFirestore db) async {
   print('\n--- query ---');
 
-  final snap = await usersRef(db)
-      .orderBy('createdAt', descending: true)
-      .limit(10)
-      .get();
+  final snap =
+      await usersRef(db).orderBy('createdAt', descending: true).limit(10).get();
 
   for (final doc in snap.docs) {
     final user = doc.data();

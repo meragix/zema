@@ -4,8 +4,7 @@ import 'package:zema/zema.dart';
 import '../core/firestore_converter.dart';
 
 /// Adds [withZema] to [CollectionReference].
-extension ZemaCollectionExtension
-    on CollectionReference<Map<String, dynamic>> {
+extension ZemaCollectionExtension on CollectionReference<Map<String, dynamic>> {
   /// Returns a typed [CollectionReference<T>] that parses and validates
   /// each document through [schema].
   ///

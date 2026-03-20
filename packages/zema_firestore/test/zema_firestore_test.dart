@@ -51,7 +51,8 @@ void main() {
       final result = zTimestamp().safeParse('not-a-date');
 
       expect(result, isA<ZemaFailure>());
-      expect(result.errors.first.message, contains('Expected Timestamp or DateTime'));
+      expect(result.errors.first.message,
+          contains('Expected Timestamp or DateTime'));
     });
   });
 
@@ -119,7 +120,12 @@ void main() {
     test('toFirestore converts DateTime to Timestamp', () {
       final converter = ZemaFirestoreConverter(schema: _userSchema);
       final now = DateTime(2024, 1, 15);
-      final input = {'id': '1', 'name': 'Alice', 'email': 'alice@example.com', 'ts': now};
+      final input = {
+        'id': '1',
+        'name': 'Alice',
+        'email': 'alice@example.com',
+        'ts': now
+      };
 
       final result = converter.toFirestore(input, null);
 
@@ -129,19 +135,28 @@ void main() {
 
     test('toFirestore removes documentIdField', () {
       final converter = ZemaFirestoreConverter(schema: _userSchema);
-      final input = {'id': 'abc', 'name': 'Alice', 'email': 'alice@example.com'};
+      final input = {
+        'id': 'abc',
+        'name': 'Alice',
+        'email': 'alice@example.com'
+      };
 
       final result = converter.toFirestore(input, null);
 
       expect(result.containsKey('id'), isFalse);
     });
 
-    test('toFirestore keeps documentIdField when injectDocumentId is false', () {
+    test('toFirestore keeps documentIdField when injectDocumentId is false',
+        () {
       final converter = ZemaFirestoreConverter(
         schema: _userSchema,
         injectDocumentId: false,
       );
-      final input = {'id': 'abc', 'name': 'Alice', 'email': 'alice@example.com'};
+      final input = {
+        'id': 'abc',
+        'name': 'Alice',
+        'email': 'alice@example.com'
+      };
 
       final result = converter.toFirestore(input, null);
 
@@ -149,10 +164,14 @@ void main() {
     });
 
     test('toFirestore recursively converts nested DateTime', () {
-      final schema = z.object({'meta': z.object({'createdAt': z.string()})});
+      final schema = z.object({
+        'meta': z.object({'createdAt': z.string()})
+      });
       final converter = ZemaFirestoreConverter(schema: schema);
       final now = DateTime(2024, 3, 10);
-      final input = {'meta': <String, dynamic>{'createdAt': now}};
+      final input = {
+        'meta': <String, dynamic>{'createdAt': now}
+      };
 
       final result = converter.toFirestore(input, null);
       final meta = result['meta'] as Map<String, dynamic>;
@@ -206,7 +225,7 @@ void main() {
 
     test('throws ZemaFirestoreException on schema mismatch', () async {
       await fakeFirestore.collection('users').doc('bad').set({
-        'name': '',          // too short — min(1)
+        'name': '', // too short — min(1)
         'email': 'not-valid',
       });
 
@@ -224,7 +243,11 @@ void main() {
         'email': 'bad',
       });
 
-      final fallback = {'id': 'broken', 'name': 'Unknown', 'email': 'unknown@example.com'};
+      final fallback = {
+        'id': 'broken',
+        'name': 'Unknown',
+        'email': 'unknown@example.com'
+      };
       var errorCallbackInvoked = false;
 
       final usersRef = fakeFirestore.collection('users').withZema(

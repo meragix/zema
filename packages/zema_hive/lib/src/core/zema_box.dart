@@ -176,10 +176,7 @@ final class ZemaBox<T extends Object> {
 
   /// All valid documents in the box, skipping entries that fail validation.
   Iterable<T> get values {
-    return _box.keys
-        .whereType<String>()
-        .map((key) => get(key))
-        .whereType<T>();
+    return _box.keys.whereType<String>().map((key) => get(key)).whereType<T>();
   }
 
   /// All valid documents keyed by their Hive key.

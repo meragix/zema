@@ -97,7 +97,8 @@ Future<void> _exampleInvalidJson(http.Client client) async {
   print('\n--- invalid JSON body ---');
 
   // Simulate a response with a non-JSON body (e.g. an HTML error page).
-  final fakeResponse = http.Response('<html>503 Service Unavailable</html>', 503);
+  final fakeResponse =
+      http.Response('<html>503 Service Unavailable</html>', 503);
   final result = fakeResponse.safeParse(_userSchema);
 
   switch (result) {
@@ -105,7 +106,7 @@ Future<void> _exampleInvalidJson(http.Client client) async {
       print('Unexpected success');
     case ZemaFailure(:final errors):
       final issue = errors.first;
-      print('code: ${issue.code}');          // invalid_json
+      print('code: ${issue.code}'); // invalid_json
       print('received: ${issue.receivedValue}');
   }
 }
