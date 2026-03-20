@@ -8,13 +8,13 @@
 /// ## Setup
 ///
 /// ```dart
-/// import 'package:hive/hive.dart';
+/// import 'package:hive_ce/hive_ce.dart';
 /// import 'package:zema/zema.dart';
 /// import 'package:zema_hive/zema_hive.dart';
 ///
 /// final userSchema = z.object({
-///   'id':    z.string(),
-///   'name':  z.string().min(1),
+///   'id': z.string(),
+///   'name': z.string().min(1),
 ///   'email': z.string().email(),
 /// });
 ///

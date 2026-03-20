@@ -155,5 +155,3 @@ try {
 - [`zema`](https://pub.dev/packages/zema): core schema library
 - [`zema_forms`](https://pub.dev/packages/zema_forms): Flutter form integration
 - [`zema_firestore`](https://pub.dev/packages/zema_firestore): Cloud Firestore integration
-<!-- - [`zema_dio`](https://pub.dev/packages/zema_dio) — Dio response validation
-- [`zema_http`](https://pub.dev/packages/zema_http) — package:http response validation -->

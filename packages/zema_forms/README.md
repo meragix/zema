@@ -3,7 +3,7 @@
 Flutter form widgets backed by [Zema](https://pub.dev/packages/zema) schemas.
 
 - Surgical per-field rebuilds: only the field in error rebuilds on each keystroke.
-- "First contact" UX: errors appear after the field loses focus or the form is submitted — never on the first character.
+- "First contact" UX: errors appear after the field loses focus or the form is submitted, never on the first character.
 - Auto-focus: failed `submit()` moves focus to the first field in error automatically.
 - Form-level error banner via `submitErrors` for hidden or conditional fields.
 - Works with Flutter's native `Form` widget (zero migration cost).
@@ -12,7 +12,7 @@ Flutter form widgets backed by [Zema](https://pub.dev/packages/zema) schemas.
 
 ```yaml
 dependencies:
-  zema: ^0.4.0
+  zema: ^0.5.0
   zema_forms: ^0.1.0
 ```
 
@@ -138,12 +138,8 @@ z.object({
 | `reset()`                     | Clear all text, errors, and state                                   |
 | `dispose()`                   | Release all resources                                               |
 
-## Requirements
+## Related packages
 
-- Dart `>=3.5.0`
-- Flutter `>=3.18.0`
-- `zema: ^0.4.0`
-
-## License
-
-MIT
+- [`zema`](https://pub.dev/packages/zema): core schema library
+- [`zema_forms`](https://pub.dev/packages/zema_forms): Flutter form integration
+- [`zema_hive`](https://pub.dev/packages/zema_hive): Hive integration

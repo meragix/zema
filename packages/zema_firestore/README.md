@@ -135,5 +135,4 @@ await ref.set({'name': 'Alice', 'email': 'alice@example.com', 'createdAt': DateT
 
 - [`zema`](https://pub.dev/packages/zema): core schema library
 - [`zema_forms`](https://pub.dev/packages/zema_forms): Flutter form integration
-- [`zema_dio`](https://pub.dev/packages/zema_dio): Dio response validation
-- [`zema_http`](https://pub.dev/packages/zema_http): package:http response validation
+- [`zema_hive`](https://pub.dev/packages/zema_hive): Hive integration
