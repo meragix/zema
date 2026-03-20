@@ -47,7 +47,7 @@ Everything you need to validate data in Dart
   [Fluent]{.text-primary} chainable API
 
   #description
-  Build schemas by chaining constraints: `z.string().min(2).email()`. Every method returns a new immutable schema instance — no mutation, no side effects.
+  Build schemas by chaining constraints: `z.string().min(2).email()`. Every method returns a new immutable schema instance: no mutation, no side effects.
   :::
 
   :::u-page-feature
@@ -69,7 +69,7 @@ Everything you need to validate data in Dart
   [Sealed]{.text-primary} result type
 
   #description
-  `safeParse()` returns `ZemaSuccess<T>` or `ZemaFailure<T>` — never throws. Use Dart 3 pattern matching to handle both cases. Call `parse()` when you prefer an exception on failure.
+  `safeParse()` returns `ZemaSuccess<T>` or `ZemaFailure<T>`, never throws. Use Dart 3 pattern matching to handle both cases. Call `parse()` when you prefer an exception on failure.
   :::
 
   :::u-page-feature
@@ -91,7 +91,7 @@ Everything you need to validate data in Dart
   [Discriminated]{.text-primary} unions
 
   #description
-  `discriminatedBy()` selects the matching schema directly from a literal field — O(1) instead of a linear scan. No unnecessary validation of non-matching schemas.
+  `discriminatedBy()` selects the matching schema directly from a literal field, O(1) instead of a linear scan. No unnecessary validation of non-matching schemas.
   :::
 
   :::u-page-feature
