@@ -9,6 +9,8 @@ environment:
 workspace:
   - packages/zema
   - packages/zema_forms
+  - packages/zema_dio
+  - packages/zema_http
 
 dev_dependencies:
   melos: ^7.4.0
