@@ -9,8 +9,6 @@ environment:
 workspace:
   - packages/zema
   - packages/zema_forms
-  - packages/zema_dio
-  - packages/zema_http
   - packages/zema_firestore
   - packages/zema_hive
 

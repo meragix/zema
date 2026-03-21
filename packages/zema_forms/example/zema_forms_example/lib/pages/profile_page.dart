@@ -95,6 +95,7 @@ class _ProfilePageState extends State<ProfilePage> {
               // the exact signature TextFormField.validator expects.
               Form(
                 key: _formKey,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
