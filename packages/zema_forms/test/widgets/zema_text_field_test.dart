@@ -190,7 +190,7 @@ void main() {
 
       ctrl.controllerFor('email').text = 'bad-email';
       ctrl.controllerFor('password').text = 'validpass1';
-      ctrl.markTouched('email');    // errors only visible after touch or submit
+      ctrl.markTouched('email'); // errors only visible after touch or submit
       ctrl.markTouched('password');
       await tester.pump();
 
