@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart' show debugPrint;
 import 'package:zema/zema.dart';
 
 import '../exceptions/firestore_exception.dart';
@@ -104,9 +103,6 @@ final class ZemaFirestoreConverter<T> {
       final fallback = onParseError?.call(snapshot, error, stackTrace);
       if (fallback != null) return fallback;
 
-      debugPrint(
-        '[zema_firestore] parse error at ${snapshot.reference.path}: $error',
-      );
       rethrow;
     }
   }
