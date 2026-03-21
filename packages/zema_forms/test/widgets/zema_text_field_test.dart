@@ -146,6 +146,7 @@ void main() {
       await tester.pumpWidget(_fieldWithController(ctrl, field: 'email'));
 
       ctrl.controllerFor('email').text = 'not-an-email';
+      ctrl.markTouched('email'); // errors only visible after touch or submit
       await tester.pump(); // flush listener + rebuild
 
       final tf = tester.widget<TextField>(find.byType(TextField));
@@ -159,6 +160,7 @@ void main() {
       await tester.pumpWidget(_fieldWithController(ctrl, field: 'email'));
 
       ctrl.controllerFor('email').text = 'bad';
+      ctrl.markTouched('email'); // errors only visible after touch or submit
       await tester.pump();
 
       final before = tester.widget<TextField>(find.byType(TextField));
@@ -188,6 +190,8 @@ void main() {
 
       ctrl.controllerFor('email').text = 'bad-email';
       ctrl.controllerFor('password').text = 'validpass1';
+      ctrl.markTouched('email');    // errors only visible after touch or submit
+      ctrl.markTouched('password');
       await tester.pump();
 
       final fields = tester.widgetList<TextField>(find.byType(TextField));

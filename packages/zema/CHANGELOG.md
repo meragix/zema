@@ -7,18 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.5.0] - 2026-03-20
+## [0.5.0] - 2026-03-21
 
 ### Added
 
 - `ZemaSeverity` enum (`error`, `warning`) and `ZemaIssue.severity` field (defaults to `error`)
-- `ZemaMetaKeys` — compile-time constants for `ZemaIssue.meta` keys (`min`, `max`, `actual`, `expected`, `received`, `allowed`, `type`, `multipleOf`, `pattern`, `length`)
-- `ZemaIssue.expected` (`String?`) — expected type/value; populated on all built-in `invalid_type` issues
-- `ZemaResult.warnings` / `ZemaResult.hasWarnings` — warning issues from a successful parse
-- `ZemaSchemaRefinement.refineWarn()` — advisory refinement; parse succeeds, issue added to `warnings`
-- `z.string().dateTime()` — validates ISO 8601 format; output stays `String`; produces `invalid_datetime_string`
-- `z.coerce().dateTime({DateTime? after, DateTime? before})` — coerces `String`, `int` (Unix ms), or `DateTime`
-- `ZemaSchema.parseInIsolate()` — offloads `safeParse()` to a background `Isolate` (built-in primitives only; closures are not isolate-sendable)
+- `ZemaMetaKeys`: compile-time constants for `ZemaIssue.meta` keys (`min`, `max`, `actual`, `expected`, `received`, `allowed`, `type`, `multipleOf`, `pattern`, `length`)
+- `ZemaIssue.expected` (`String?`): expected type/value; populated on all built-in `invalid_type` issues
+- `ZemaResult.warnings` / `ZemaResult.hasWarnings`: warning issues from a successful parse
+- `ZemaSchemaRefinement.refineWarn()`: advisory refinement; parse succeeds, issue added to `warnings`
+- `z.string().dateTime()`: validates ISO 8601 format; output stays `String`; produces `invalid_datetime_string`
+- `z.coerce().dateTime({DateTime? after, DateTime? before})`: coerces `String`, `int` (Unix ms), or `DateTime`
+- `ZemaSchema.parseInIsolate()`: offloads `safeParse()` to a background `Isolate` (built-in primitives only; closures are not isolate-sendable)
 - Strict coercion mode (`strict` parameter) on all coercion schemas; see Breaking Changes for `z.coerce().string()` default
 - i18n translations (en + fr) for `invalid_datetime_string` and `async_refinement_skipped`
 
@@ -31,16 +31,16 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Breaking Changes
 
 - **`safeParse()` / `parse()` on async schemas** now returns `ZemaFailure(code: 'async_refinement_skipped')` instead of silently bypassing the predicate. Migrate: use `safeParseAsync()` / `parseAsync()`.
-- **`z.coerce().string()`** defaults to `strict: true` — arbitrary objects now fail with `invalid_coercion`. Migrate: pass `strict: false` to restore the old behaviour.
+- **`z.coerce().string()`** defaults to `strict: true`: arbitrary objects now fail with `invalid_coercion`. Migrate: pass `strict: false` to restore the old behaviour.
 
 ## [0.4.0] - 2026-03-18
 
 ### Added
 
-- `ZemaInt.nonNegative()` — accepts zero and positive integers (`value >= 0`)
-- `ZemaDouble.nonNegative()` — accepts zero and positive doubles (`value >= 0.0`)
-- `ZemaObject.merge()` — merges fields from another `ZemaObject` instance (fields from the argument win on conflict)
-- `ZemaUnion.discriminatedBy()` — fast-path validation using a named literal field to select the matching schema directly
+- `ZemaInt.nonNegative()`: accepts zero and positive integers (`value >= 0`)
+- `ZemaDouble.nonNegative()`: accepts zero and positive doubles (`value >= 0.0`)
+- `ZemaObject.merge()`:  merges fields from another `ZemaObject` instance (fields from the argument win on conflict)
+- `ZemaUnion.discriminatedBy()` : fast-path validation using a named literal field to select the matching schema directly
 
 ### Tests
 

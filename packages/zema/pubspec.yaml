@@ -1,10 +1,10 @@
 name: zema
 description: "A high-performance, type-safe schema validation library for Dart & Flutter."
-version: 0.4.0
-homepage: https://zema.meragix.dev
-repository: https://github.com/meragix/zema
+version: 0.5.0
+homepage: https://github.com/meragix/zema
+repository: https://github.com/meragix/zema/tree/main/packages/zema
 issue_tracker: https://github.com/meragix/zema/issues
-documentation: https://meragix.github.io/zema
+documentation: https://zema.meragix.dev
 
 environment:
   sdk: ">=3.5.0 <4.0.0"
