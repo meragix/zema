@@ -20,10 +20,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - uses: dart-lang/setup-dart@v1
-        with:
-          sdk: stable
-
+      # Flutter action bundles the Dart SDK — no need for dart-lang/setup-dart.
+      # Flutter is required anyway for `melos bootstrap` (workspace has Flutter packages).
       - uses: subosito/flutter-action@v2
         with:
           channel: stable
@@ -37,7 +35,7 @@ jobs:
 
       - name: Format
         working-directory: ${{ inputs.package }}
-        run: melos format:check
+        run: dart format --output=none --set-exit-if-changed .
 
       - name: Analyze
         working-directory: ${{ inputs.package }}
@@ -45,10 +43,14 @@ jobs:
 
       - name: Test
         working-directory: ${{ inputs.package }}
-        run: melos test:dart
+        run: dart test --coverage=coverage
+
+      - name: Format coverage
+        working-directory: ${{ inputs.package }}
+        run: dart run coverage:format_coverage --lcov --in=coverage --out=coverage/lcov.info --report-on=lib
 
       - name: Upload coverage
         uses: codecov/codecov-action@v4
         with:
-          directory: ${{ inputs.package }}/coverage/lcov.info
+          files: ${{ inputs.package }}/coverage/lcov.info
           fail_ci_if_error: false

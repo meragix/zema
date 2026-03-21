@@ -29,18 +29,18 @@ jobs:
 
       - name: Format
         working-directory: ${{ inputs.package }}
-        run: melos format
+        run: dart format --output=none --set-exit-if-changed .
 
-      # - name: Analyze
-      #   working-directory: ${{ inputs.package }}
-      #   run: flutter analyze --fatal-infos
+      - name: Analyze
+        working-directory: ${{ inputs.package }}
+        run: flutter analyze --fatal-infos
 
-      # - name: Test
-      #   working-directory: ${{ inputs.package }}
-      #   run: melos test:flutter
+      - name: Test
+        working-directory: ${{ inputs.package }}
+        run: flutter test --coverage
 
-      # - name: Upload coverage
-      #   uses: codecov/codecov-action@v4
-      #   with:
-      #     directory: ${{ inputs.package }}/coverage/lcov.info
-      #     fail_ci_if_error: false
+      - name: Upload coverage
+        uses: codecov/codecov-action@v4
+        with:
+          files: ${{ inputs.package }}/coverage/lcov.info
+          fail_ci_if_error: false

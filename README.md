@@ -6,11 +6,6 @@
   </a>
   <h1>Schema validation for Dart</h1>
   <p>Inspired by <a href="https://zod.dev">Zod</a>. Define schemas once, parse anywhere. All errors are collected in a single pass.</p> -->
-
-[![CI](https://github.com/meragix/zema/workflows/CI/badge.svg)](https://github.com/meragix/zema/actions)
-[![Coverage](https://img.shields.io/codecov/c/github/meragix/zema)](https://codecov.io/gh/meragix/zema)
-[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
-
 <!-- </div> -->
 
 Schema validation for Dart, inspired by [Zod](https://zod.dev). Define schemas once, parse anywhere. All errors are collected in a single pass.
@@ -19,16 +14,19 @@ Schema validation for Dart, inspired by [Zod](https://zod.dev). Define schemas o
 
 ## Packages
 
-| Package | Likes | Downloads | Analysis |
-| ------- | ----- | --------- | -------- |
-| [![zema](https://img.shields.io/pub/v/zema.svg?label=zema)](https://pub.dev/packages/zema) | [![likes](https://img.shields.io/pub/likes/zema)](https://pub.dev/packages/zema/score) | [![dm](https://img.shields.io/pub/dm/zema)](https://pub.dev/packages/zema/score) | [![pub points](https://img.shields.io/pub/points/zema)](https://pub.dev/packages/zema/score) |
+| Package | Description | CI | Pub |
+| ------- | ----------- | -- | --- |
+| [zema](https://pub.dev/packages/zema) | Core schema validation library | [![zema](https://github.com/meragix/zema/actions/workflows/zema.yml/badge.svg)](https://github.com/meragix/zema/actions/workflows/zema.yml) | [![pub](https://img.shields.io/pub/v/zema.svg)](https://pub.dev/packages/zema) |
+| [zema_forms](https://pub.dev/packages/zema_forms) | Flutter form widgets and controller | [![zema_forms](https://github.com/meragix/zema/actions/workflows/zema_forms.yml/badge.svg)](https://github.com/meragix/zema/actions/workflows/zema_forms.yml) | [![pub](https://img.shields.io/pub/v/zema_forms.svg)](https://pub.dev/packages/zema_forms) |
+| [zema_firestore](https://pub.dev/packages/zema_firestore) | Cloud Firestore integration via `withConverter` | [![zema_firestore](https://github.com/meragix/zema/actions/workflows/zema_firestore.yml/badge.svg)](https://github.com/meragix/zema/actions/workflows/zema_firestore.yml) | [![pub](https://img.shields.io/pub/v/zema_firestore.svg)](https://pub.dev/packages/zema_firestore) |
+| [zema_hive](https://pub.dev/packages/zema_hive) | Hive local storage integration | [![zema_hive](https://github.com/meragix/zema/actions/workflows/zema_hive.yml/badge.svg)](https://github.com/meragix/zema/actions/workflows/zema_hive.yml) | [![pub](https://img.shields.io/pub/v/zema_hive.svg)](https://pub.dev/packages/zema_hive) |
 
 ## Quick Start
 
 ```yaml
 # pubspec.yaml
 dependencies:
-  zema: ^0.3.0
+  zema: ^0.5.0
 ```
 
 ```dart
@@ -42,11 +40,11 @@ final userSchema = z.object({
 
 // parse() returns the validated value or throws ZemaException
 final user = userSchema.parse({
-  'name':  'Alice',
+  'name': 'Alice',
   'email': 'alice@example.com',
 });
 
-// safeParse() never throws — returns ZemaResult<T>
+// safeParse() never throws, returns ZemaResult<T>
 final result = userSchema.safeParse(rawInput);
 
 switch (result) {
@@ -75,4 +73,4 @@ Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines
 
 ## License
 
-MIT License  — see [LICENSE](LICENSE)
+This project is licensed under the [LICENSE](LICENSE) License

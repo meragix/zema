@@ -1,39 +1,85 @@
 name: Publish to pub.dev
 
+# Tag convention:
+#   zema-v1.2.3       → publish packages/zema
+#   zema_forms-v1.2.3 → publish packages/zema_forms
 on:
   push:
     tags:
-      - 'zema-*'
-      # - '*' # Allow any tag
+      - 'zema-v*'
+      - 'zema_forms-v*'
 
 jobs:
-  publish:
+  # ---------------------------------------------------------------------------
+  # packages/zema  (pure Dart)
+  # ---------------------------------------------------------------------------
+  publish-zema:
+    if: startsWith(github.ref_name, 'zema-v') && !startsWith(github.ref_name, 'zema_forms-v')
     runs-on: ubuntu-latest
     permissions:
-      id-token: write # Required for authentication using OIDC
+      id-token: write # Required for OIDC authentication with pub.dev
+
     steps:
       - uses: actions/checkout@v4
-      
-      - uses: dart-lang/setup-dart@v1
+
+      - uses: subosito/flutter-action@v2
         with:
-          sdk: "3.9.0"
+          channel: stable
+          cache: true
 
       - name: Cache pub
         uses: actions/cache@v3
         with:
           path: ~/.pub-cache
           key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
-      
+
       - name: Install Melos
         run: dart pub global activate melos 7.4.0
-      
+
       - name: Bootstrap
         run: melos bootstrap
-      
+
       - name: Run tests
-        run: melos test
-      
-      - name: Publish to pub.dev
-        run: |
-          cd packages/zema
-          dart pub publish --force
+        working-directory: packages/zema
+        run: dart test
+
+      - name: Publish
+        working-directory: packages/zema
+        run: dart pub publish --force
+
+  # ---------------------------------------------------------------------------
+  # packages/zema_forms  (Flutter)
+  # ---------------------------------------------------------------------------
+  publish-zema_forms:
+    if: startsWith(github.ref_name, 'zema_forms-v')
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # Required for OIDC authentication with pub.dev
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+
+      - name: Cache pub
+        uses: actions/cache@v3
+        with:
+          path: ~/.pub-cache
+          key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
+
+      - name: Install Melos
+        run: dart pub global activate melos 7.4.0
+
+      - name: Bootstrap
+        run: melos bootstrap
+
+      - name: Run tests
+        working-directory: packages/zema_forms
+        run: flutter test
+
+      - name: Publish
+        working-directory: packages/zema_forms
+        run: dart pub publish --force

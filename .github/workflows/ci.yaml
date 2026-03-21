@@ -24,4 +24,15 @@ jobs:
     with:
       package: packages/zema_forms
     secrets: inherit
- 
+
+  zema_firestore:
+    uses: ./.github/workflows/_flutter_package.yml
+    with:
+      package: packages/zema_firestore
+    secrets: inherit
+
+  zema_hive:
+    uses: ./.github/workflows/_dart_package.yml
+    with:
+      package: packages/zema_hive
+    secrets: inherit

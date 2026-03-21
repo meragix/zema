@@ -1,0 +1,21 @@
+name: zema_firestore
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packages/zema_firestore/**"
+      - ".github/workflows/zema_firestore.yml"
+      - ".github/workflows/_flutter_package.yml"
+  pull_request:
+    paths:
+      - "packages/zema_firestore/**"
+      - ".github/workflows/zema_firestore.yml"
+      - ".github/workflows/_flutter_package.yml"
+
+jobs:
+  ci:
+    uses: ./.github/workflows/_flutter_package.yml
+    with:
+      package: packages/zema_firestore
+    secrets: inherit
