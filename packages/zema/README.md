@@ -46,7 +46,7 @@ final userSchema = z.object({
 
 // parse() returns the validated value or throws ZemaException
 final user = userSchema.parse({
-  'name':  'Alice',
+  'name': 'Alice',
   'email': 'alice@example.com',
 });
 
@@ -125,7 +125,7 @@ final merged = base.merge(override);
 
 // Subset of fields
 final public = schema.pick(['id', 'name', 'email']);
-final safe   = schema.omit(['password']);
+final safe = schema.omit(['password']);
 ```
 
 ### Typed output
