@@ -14,7 +14,7 @@
     <a href="https://zema.meragix.dev"><strong>Explore the docs »</strong></a>
     <br />
     <br />
-    <a href="https://github.com/meragix/zema?tab=contributing-ov-file">Contribute</a>
+    <a href="https://github.com/meragix/zema/blob/main/CONTRIBUTING.md">Contribute</a>
     &middot;
     <a href="https://github.com/meragix/zema/issues/new">Report Bug</a>
     &middot;
