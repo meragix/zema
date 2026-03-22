@@ -103,7 +103,7 @@ final class ZemaObject<T> extends ZemaSchema<dynamic, T> {
     }
 
     final cleaned = <String, dynamic>{};
-    final allIssues = <ZemaIssue>[];
+    List<ZemaIssue>? allIssues;
 
     for (final entry in shape.entries) {
       final key = entry.key;
@@ -114,7 +114,7 @@ final class ZemaObject<T> extends ZemaSchema<dynamic, T> {
 
       if (result.isFailure) {
         for (final issue in result.errors) {
-          allIssues.add(issue.withPath(key));
+          (allIssues ??= []).add(issue.withPath(key));
         }
       } else {
         cleaned[key] = result.value;
@@ -125,7 +125,7 @@ final class ZemaObject<T> extends ZemaSchema<dynamic, T> {
     if (strict) {
       for (final key in value.keys) {
         if (!shape.containsKey(key)) {
-          allIssues.add(
+          (allIssues ??= []).add(
             ZemaIssue(
               code: 'unknown_key',
               message: 'Unknown key: $key',
@@ -136,7 +136,7 @@ final class ZemaObject<T> extends ZemaSchema<dynamic, T> {
       }
     }
 
-    if (allIssues.isNotEmpty) {
+    if (allIssues != null) {
       return failure(allIssues);
     }
 

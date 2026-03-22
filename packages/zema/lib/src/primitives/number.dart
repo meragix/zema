@@ -97,7 +97,7 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
       return singleFailure(applyCustomMessage(issue));
     }
 
-    final issues = <ZemaIssue>[];
+    List<ZemaIssue>? issues;
 
     if (min != null && value < min!) {
       final issue = ZemaIssue(
@@ -112,7 +112,7 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
         receivedValue: value,
         meta: {'min': min, 'actual': value},
       );
-      issues.add(applyCustomMessage(issue));
+      (issues ??= []).add(applyCustomMessage(issue));
     }
 
     if (max != null && value > max!) {
@@ -128,7 +128,7 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
         receivedValue: value,
         meta: {'max': max, 'actual': value},
       );
-      issues.add(applyCustomMessage(issue));
+      (issues ??= []).add(applyCustomMessage(issue));
     }
 
     if (exclusiveMin != null && value <= exclusiveMin!) {
@@ -141,7 +141,7 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
         receivedValue: value,
         meta: {'min': exclusiveMin, 'actual': value},
       );
-      issues.add(applyCustomMessage(issue));
+      (issues ??= []).add(applyCustomMessage(issue));
     }
 
     if (exclusiveMax != null && value >= exclusiveMax!) {
@@ -154,7 +154,7 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
         receivedValue: value,
         meta: {'max': exclusiveMax, 'actual': value},
       );
-      issues.add(applyCustomMessage(issue));
+      (issues ??= []).add(applyCustomMessage(issue));
     }
 
     if (isPositive == true && value <= 0) {
@@ -167,7 +167,7 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
           'received': value,
         },
       );
-      issues.add(applyCustomMessage(issue));
+      (issues ??= []).add(applyCustomMessage(issue));
     }
 
     if (isNegative == true && value >= 0) {
@@ -180,7 +180,7 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
           'received': value,
         },
       );
-      issues.add(applyCustomMessage(issue));
+      (issues ??= []).add(applyCustomMessage(issue));
     }
 
     if (multipleOf != null && value % multipleOf! != 0) {
@@ -196,13 +196,10 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
           'received': value,
         },
       );
-      issues.add(applyCustomMessage(issue));
+      (issues ??= []).add(applyCustomMessage(issue));
     }
 
-    if (issues.isNotEmpty) {
-      return failure(issues);
-    }
-
+    if (issues != null) return failure(issues);
     return success(value);
   }
 
@@ -457,10 +454,10 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
       return singleFailure(applyCustomMessage(issue));
     }
 
-    final issues = <ZemaIssue>[];
+    List<ZemaIssue>? issues;
 
     if (isFinite == true && !value.isFinite) {
-      issues.add(
+      (issues ??= []).add(
         ZemaIssue(
           code: 'not_finite',
           message: ZemaI18n.translate('not_finite'),
@@ -483,7 +480,7 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
         receivedValue: value,
         meta: {'min': min, 'actual': value},
       );
-      issues.add(applyCustomMessage(issue));
+      (issues ??= []).add(applyCustomMessage(issue));
     }
 
     if (max != null && value > max!) {
@@ -499,7 +496,7 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
         receivedValue: value,
         meta: {'max': max, 'actual': value},
       );
-      issues.add(applyCustomMessage(issue));
+      (issues ??= []).add(applyCustomMessage(issue));
     }
 
     if (isPositive == true && value <= 0) {
@@ -512,7 +509,7 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
           'received': value,
         },
       );
-      issues.add(applyCustomMessage(issue));
+      (issues ??= []).add(applyCustomMessage(issue));
     }
 
     if (isNegative == true && value >= 0) {
@@ -525,7 +522,7 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
           'received': value,
         },
       );
-      issues.add(applyCustomMessage(issue));
+      (issues ??= []).add(applyCustomMessage(issue));
     }
 
     if (exclusiveMin != null && value <= exclusiveMin!) {
@@ -538,7 +535,7 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
         receivedValue: value,
         meta: {'min': exclusiveMin, 'actual': value},
       );
-      issues.add(applyCustomMessage(issue));
+      (issues ??= []).add(applyCustomMessage(issue));
     }
 
     if (exclusiveMax != null && value >= exclusiveMax!) {
@@ -551,13 +548,10 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
         receivedValue: value,
         meta: {'max': exclusiveMax, 'actual': value},
       );
-      issues.add(applyCustomMessage(issue));
+      (issues ??= []).add(applyCustomMessage(issue));
     }
 
-    if (issues.isNotEmpty) {
-      return failure(issues);
-    }
-
+    if (issues != null) return failure(issues);
     return success(value);
   }
 

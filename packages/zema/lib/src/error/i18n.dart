@@ -12,19 +12,30 @@ class ZemaI18n {
     'fr': frenchTranslations,
   };
 
+  // Cached active translations to avoid a Map lookup on every translate() call.
+  static ZemaTranslations _active = englishTranslations;
+  static String _activeLocale = 'en';
+
   /// Register custom translations for a locale
   static void registerTranslations(
     String locale,
     ZemaTranslations translations,
   ) {
     _translations[locale] = translations;
+    // Invalidate cache if the registered locale is currently active.
+    if (locale == _activeLocale) {
+      _active = translations;
+    }
   }
 
   /// Get translation for a code
   static String translate(String code, {Map<String, dynamic>? params}) {
     final locale = ZemaErrorMap.locale;
-    final translations = _translations[locale] ?? _translations['en']!;
-    final translator = translations[code];
+    if (locale != _activeLocale) {
+      _activeLocale = locale;
+      _active = _translations[locale] ?? _translations['en']!;
+    }
+    final translator = _active[code];
 
     if (translator == null) {
       // Fallback to English

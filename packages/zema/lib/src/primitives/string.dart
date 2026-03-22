@@ -132,7 +132,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
 
     // Trim if requested
     final str = shouldTrim ? value.trim() : value;
-    final issues = <ZemaIssue>[];
+    List<ZemaIssue>? issues;
 
     // Length validation
     if (minLength != null && str.length < minLength!) {
@@ -145,7 +145,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
         receivedValue: str,
         meta: {'min': minLength, 'actual': str.length},
       );
-      issues.add(applyCustomMessage(issue));
+      (issues ??= []).add(applyCustomMessage(issue));
     }
 
     if (maxLength != null && str.length > maxLength!) {
@@ -158,7 +158,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
         receivedValue: str,
         meta: {'max': maxLength, 'actual': str.length},
       );
-      issues.add(applyCustomMessage(issue));
+      (issues ??= []).add(applyCustomMessage(issue));
     }
 
     if (exactLength != null && str.length != exactLength!) {
@@ -171,12 +171,12 @@ final class ZemaString extends ZemaSchema<dynamic, String>
         receivedValue: str,
         meta: {'length': exactLength, 'actual': str.length},
       );
-      issues.add(applyCustomMessage(issue));
+      (issues ??= []).add(applyCustomMessage(issue));
     }
 
     // Pattern validation
     if (pattern != null && !pattern!.hasMatch(str)) {
-      issues.add(
+      (issues ??= []).add(
         ZemaIssue(
           code: 'invalid_format',
           message: 'String does not match required pattern',
@@ -192,12 +192,12 @@ final class ZemaString extends ZemaSchema<dynamic, String>
         message: ZemaI18n.translate('invalid_email'),
         receivedValue: str,
       );
-      issues.add(applyCustomMessage(issue));
+      (issues ??= []).add(applyCustomMessage(issue));
     }
 
     // URL validation
     if (isUrl == true && !Validators.urlRegex.hasMatch(str)) {
-      issues.add(
+      (issues ??= []).add(
         ZemaIssue(
           code: 'invalid_url',
           message: ZemaI18n.translate('invalid_url'),
@@ -208,7 +208,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
 
     // UUID validation
     if (isUuid == true && !Validators.uuidRegex.hasMatch(str)) {
-      issues.add(
+      (issues ??= []).add(
         ZemaIssue(
           code: 'invalid_uuid',
           message: ZemaI18n.translate('invalid_uuid'),
@@ -224,7 +224,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
         message: ZemaI18n.translate('invalid_datetime_string'),
         receivedValue: str,
       );
-      issues.add(applyCustomMessage(issue));
+      (issues ??= []).add(applyCustomMessage(issue));
     }
 
     // Enum validation
@@ -238,10 +238,10 @@ final class ZemaString extends ZemaSchema<dynamic, String>
         receivedValue: str,
         meta: {'allowed': enumValues!.toList()},
       );
-      issues.add(applyCustomMessage(issue));
+      (issues ??= []).add(applyCustomMessage(issue));
     }
 
-    if (issues.isNotEmpty) return failure(issues);
+    if (issues != null) return failure(issues);
     return success(str);
   }
 
