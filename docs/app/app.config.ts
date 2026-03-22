@@ -3,13 +3,13 @@ export default defineAppConfig({
     title: 'Zema',
     logo: {
       light: '/logo/logo-dark.svg',
-      darlk: '/logo/logo-light.svg',
+      dark: '/logo/logo-light.svg',
       alt: 'Zema Logo',
       // wordmark: {
       //   light: '/logo/wordmark-dark.png',
       //   dark: '/logo/wordmark-light.png',
       // },
-      favicon: '/favicon.svg',
+      favicon: '/favicon.ico',
     },
   },
   socials: {
