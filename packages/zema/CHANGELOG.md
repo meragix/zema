@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Performance
+
+- `ZemaString`, `ZemaInt`, `ZemaDouble`: issue list is now allocated lazily; no heap allocation on the success path
+- `ZemaObject`: `allIssues` list is now allocated lazily; same benefit on both success and failure paths
+- `ZemaI18n`: active translations map is cached after the first lookup; locale changes still invalidate the cache automatically
+
 ## [0.5.0] - 2026-03-21
 
 ### Added
