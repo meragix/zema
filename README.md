@@ -1,16 +1,26 @@
-# Zema
-
-<!-- <div align="center"> -->
-  <!-- <a href="https://zema.meragix.dev">
-    <img src="https://zema.meragix.dev/logo.png" alt="Zema Logo" width="200">
+<br />
+<div align="center">
+  <a href="https://github.com/meragix/zema">
+    <img src="assets/logo.png" alt="Logo" width="80" height="80">
   </a>
-  <h1>Schema validation for Dart</h1>
-  <p>Inspired by <a href="https://zod.dev">Zod</a>. Define schemas once, parse anywhere. All errors are collected in a single pass.</p> -->
-<!-- </div> -->
 
-Schema validation for Dart, inspired by [Zod](https://zod.dev). Define schemas once, parse anywhere. All errors are collected in a single pass.
+  <h3 align="center">Zema</h3>
 
----
+  <p align="center">
+    Schema validation for Dart, inspired by <a href="https://zod.dev">Zod</a>.
+    <br />
+    <em>Define schemas once, parse anywhere. All errors are collected in a single pass.</em>
+    <br />
+    <a href="https://zema.meragix.dev"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/meragix/zema?tab=contributing-ov-file">Contribute</a>
+    &middot;
+    <a href="https://github.com/meragix/zema/issues/new">Report Bug</a>
+    &middot;
+    <a href="https://github.com/meragix/zema/issues/new">Request Feature</a>
+  </p>
+</div>
 
 ## Packages
 
