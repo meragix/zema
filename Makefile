@@ -43,6 +43,10 @@ publish-check:
 version:
 	melos version
 
+# Run competitive benchmarks (zema vs acanthis, ez_validator, luthor, zod_validation, zard)
+bench:
+	cd benchmark && dart pub get && dart run bin/competitive.dart
+
 # All checks (CI simulation)
 ci: format-check analyze test
 
@@ -56,3 +60,4 @@ help:
 	@echo "  make format        - Format code"
 	@echo "  make clean         - Clean workspace"
 	@echo "  make ci            - Run all CI checks"
+	@echo "  make bench         - Run competitive benchmarks"

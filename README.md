@@ -59,6 +59,23 @@ switch (result) {
 
 ---
 
+## Performance
+
+Schemas defined once at the top level and reused — measured with [`benchmark_harness`](https://pub.dev/packages/benchmark_harness) on an Apple M-series chip, Dart 3.x (JIT). Lower is better.
+
+| Scenario                  | zema          | acanthis | zard     | ez_validator | luthor   |
+| ------------------------- | ------------- | -------- | -------- | ------------ | -------- |
+| String.email              | **0.81 µs**   | 1.80 µs  | 3.83 µs  | 0.78 µs      | 74.7 µs  |
+| Integer.range             | **0.17 µs**   | 0.47 µs  | 2.13 µs  | 0.33 µs      | 0.62 µs  |
+| Object.flat (4 fields)    | **4.37 µs**   | 4.34 µs  | 13.4 µs  | 10.1 µs      | 92.8 µs  |
+| Object.failure (3 errors) | **12.8 µs**   | 6.27 µs  | 68.0 µs  | 11.3 µs      | 40.2 µs  |
+
+> `Object.failure` measures exhaustive error collection across all fields simultaneously — a core feature of zema. Libraries that short-circuit on the first error will appear faster on this scenario.
+>
+> Run the benchmarks yourself: `make bench`
+
+---
+
 ## Documentation
 
 Full documentation is available at [zema.meragix.dev](https://zema.meragix.dev).
