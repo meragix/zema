@@ -7,6 +7,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.1] - 2026-03-25
+
 ### Performance
 
 - `ZemaString`, `ZemaInt`, `ZemaDouble`: issue list is now allocated lazily; no heap allocation on the success path
