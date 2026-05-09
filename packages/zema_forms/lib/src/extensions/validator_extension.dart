@@ -1,4 +1,7 @@
+import 'package:flutter/material.dart';
 import 'package:zema/zema.dart';
+import 'package:zema_forms/src/controller/zema_form_controller.dart';
+import 'package:zema_forms/src/widgets/zema_text_field.dart';
 
 /// Form-mode bridge extensions on [ZemaSchema].
 ///
