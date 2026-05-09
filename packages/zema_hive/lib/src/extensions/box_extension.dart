@@ -1,7 +1,6 @@
 import 'package:hive_ce/hive_ce.dart';
 import 'package:zema/zema.dart';
-
-import '../core/zema_box.dart';
+import 'package:zema_hive/src/core/zema_box.dart';
 
 /// Adds [withZema] to Hive's [Box].
 extension ZemaBoxExtension on Box {

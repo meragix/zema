@@ -1,4 +1,5 @@
 import 'package:zema/zema.dart';
+import 'package:zema_hive/src/core/zema_box.dart';
 
 /// Thrown when a [ZemaBox] operation fails schema validation.
 ///

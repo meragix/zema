@@ -1,7 +1,6 @@
 import 'package:hive_ce/hive_ce.dart';
 import 'package:zema/zema.dart';
-
-import '../exceptions/hive_exception.dart';
+import 'package:zema_hive/src/exceptions/hive_exception.dart';
 
 /// Called when [ZemaBox.get] fails to parse a stored document.
 ///
