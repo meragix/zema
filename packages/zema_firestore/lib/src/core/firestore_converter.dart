@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:zema/zema.dart';
-
-import '../exceptions/firestore_exception.dart';
+import 'package:zema_firestore/src/exceptions/firestore_exception.dart';
 
 /// Callback invoked when [ZemaFirestoreConverter.fromFirestore] fails.
 ///

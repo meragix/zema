@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:zema/zema.dart';
-
-import '../core/firestore_converter.dart';
+import 'package:zema_firestore/zema_firestore.dart';
 
 /// Adds [withZema] to [CollectionReference].
 extension ZemaCollectionExtension on CollectionReference<Map<String, dynamic>> {
