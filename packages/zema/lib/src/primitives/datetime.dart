@@ -38,7 +38,7 @@ import 'package:zema/src/error/issue.dart';
 ///
 /// ```dart
 /// final epoch = DateTime(1970);
-/// final now   = DateTime.now();
+/// final now  = DateTime.now();
 ///
 /// z.dateTime().after(epoch)           // must be after the Unix epoch
 /// z.dateTime().before(now)            // must be in the past

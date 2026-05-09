@@ -1,5 +1,6 @@
 import 'package:zema/src/core/result.dart';
 import 'package:zema/src/core/schema.dart';
+import 'package:zema/src/modifiers/optional.dart';
 
 /// A schema that substitutes [defaultValue] whenever the input is `null`
 /// **or** the [base] schema fails, ensuring the output is never `null`.

@@ -2,6 +2,9 @@ import 'package:zema/src/core/result.dart';
 import 'package:zema/src/core/schema.dart';
 import 'package:zema/src/error/issue.dart';
 
+import 'pipe.dart';
+import 'preprocess.dart';
+
 /// A schema that validates with [base] and then maps the output through
 /// [transformer], changing the output type from [O] to [T].
 ///

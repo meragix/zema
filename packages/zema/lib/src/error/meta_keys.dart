@@ -1,3 +1,5 @@
+import 'package:zema/src/error/issue.dart';
+
 /// Compile-time constants for known [ZemaIssue.meta] interpolation keys.
 ///
 /// Using these constants instead of raw string literals prevents typos that

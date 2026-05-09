@@ -3,6 +3,8 @@ import 'package:zema/src/core/schema.dart';
 import 'package:zema/src/error/i18n.dart';
 import 'package:zema/src/error/issue.dart';
 
+import 'coerce.dart';
+
 /// A coercion schema that converts primitive values to a `String`.
 ///
 /// Construct via `z.coerce().string()` — do not instantiate directly.

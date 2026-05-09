@@ -1,4 +1,5 @@
 import 'package:zema/src/core/result.dart';
+import 'package:zema/src/factory.dart';
 import 'package:zema/zema.dart';
 
 /// A schema that accepts a value if **any** of the given [schemas] succeeds.

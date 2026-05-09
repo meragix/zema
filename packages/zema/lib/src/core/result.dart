@@ -1,5 +1,9 @@
 import 'package:meta/meta.dart';
+import 'package:zema/src/complex/object.dart';
 import 'package:zema/src/error/issue.dart';
+import 'package:zema/src/error/severity.dart';
+
+import 'schema.dart';
 
 /// The result of a Zema validation — either a success or a failure.
 ///

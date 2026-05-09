@@ -1,5 +1,6 @@
 import 'package:zema/src/core/result.dart';
 import 'package:zema/src/core/schema.dart';
+import 'package:zema/src/modifiers/modifiers.dart';
 
 /// A schema that treats `null` as a distinct, explicitly-present value and
 /// delegates non-null input to the wrapped [base] schema.

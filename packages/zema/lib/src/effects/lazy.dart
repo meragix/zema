@@ -1,5 +1,6 @@
 import 'package:zema/src/core/result.dart';
 import 'package:zema/src/core/schema.dart';
+import 'package:zema/src/factory.dart';
 
 /// A schema that defers construction of its inner schema to the first parse
 /// call, breaking circular dependencies caused by self-referential types.
@@ -15,7 +16,7 @@ import 'package:zema/src/core/schema.dart';
 /// ```dart
 /// // ✗ Circular dependency — nodeSchema referenced before it is assigned
 /// final nodeSchema = z.object({
-///   'value':    z.integer(),
+///   'value': z.integer(),
 ///   'children': z.array(nodeSchema),
 /// });
 /// ```
@@ -27,7 +28,7 @@ import 'package:zema/src/core/schema.dart';
 /// late final ZemaSchema<dynamic, dynamic> nodeSchema;
 ///
 /// nodeSchema = z.object({
-///   'value':    z.integer(),
+///   'value': z.integer(),
 ///   'children': z.array(z.lazy(() => nodeSchema)).optional(),
 /// });
 /// ```

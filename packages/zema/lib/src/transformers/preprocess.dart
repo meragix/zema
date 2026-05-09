@@ -2,6 +2,9 @@ import 'package:zema/src/core/result.dart';
 import 'package:zema/src/core/schema.dart';
 import 'package:zema/src/error/issue.dart';
 
+import 'pipe.dart';
+import 'transform.dart';
+
 /// A schema that transforms the raw input with [preprocessor] before passing
 /// it to [base] for validation.
 ///

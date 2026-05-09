@@ -29,7 +29,7 @@ import 'package:zema/src/error/issue.dart';
 /// ```
 ///
 /// See also:
-/// - `z.coerce().boolean()` — accepts strings and integers in addition to bools.
+/// - `z.coerce().boolean()` — accepts strings and integers in addition to bool.
 /// - [ZemaSchema.optional] — wraps this schema to also accept `null`.
 final class ZemaBool extends ZemaSchema<dynamic, bool> {
   const ZemaBool();

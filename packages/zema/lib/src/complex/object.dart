@@ -2,6 +2,9 @@ import 'package:zema/src/core/result.dart';
 import 'package:zema/src/core/schema.dart';
 import 'package:zema/src/error/i18n.dart';
 import 'package:zema/src/error/issue.dart';
+import 'package:zema/src/factory.dart';
+
+import 'map.dart';
 
 /// A schema that validates `Map` values against a fixed set of named fields.
 ///

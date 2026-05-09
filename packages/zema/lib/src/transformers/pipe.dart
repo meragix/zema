@@ -1,6 +1,9 @@
 import 'package:zema/src/core/result.dart';
 import 'package:zema/src/core/schema.dart';
 
+import 'preprocess.dart';
+import 'transform.dart';
+
 /// A schema that chains two schemas in sequence: [first] validates the raw
 /// input, then [second] validates [first]'s output.
 ///

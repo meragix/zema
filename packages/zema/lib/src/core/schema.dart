@@ -1,11 +1,13 @@
 import 'dart:isolate';
 
+import 'package:zema/src/complex/object.dart';
 import 'package:zema/src/core/result.dart';
 import 'package:zema/src/error/exception.dart';
 import 'package:zema/src/error/issue.dart';
 import 'package:zema/src/modifiers/default.dart';
 import 'package:zema/src/modifiers/nullable.dart';
 import 'package:zema/src/modifiers/optional.dart';
+import 'package:zema/src/primitives/string.dart';
 import 'package:zema/src/transformers/catch.dart';
 import 'package:zema/src/transformers/pipe.dart';
 import 'package:zema/src/transformers/preprocess.dart';
@@ -41,7 +43,7 @@ import 'package:zema/src/transformers/transform.dart';
 /// ```dart
 /// final schema = z.object({
 ///   'name': z.string().min(2),
-///   'age':  z.int().gte(0),
+///   'age': z.int().gte(0),
 /// });
 ///
 /// // Throws ZemaException on invalid input
@@ -63,13 +65,13 @@ import 'package:zema/src/transformers/transform.dart';
 /// and reuse across your application.
 ///
 /// ```dart
-/// final base    = z.string().min(2);
+/// final base = z.string().min(2);
 /// final trimmed = base.transform((s) => s.trim()); // base is unchanged
-/// final opt     = base.optional();                  // base is unchanged
+/// final opt = base.optional();                  // base is unchanged
 /// ```
 ///
 /// Type parameters:
-/// - [Input]  — the raw type accepted by [safeParse] (often `dynamic`).
+/// - [Input] — the raw type accepted by [safeParse] (often `dynamic`).
 /// - [Output] — the validated, possibly-transformed type produced on success.
 abstract class ZemaSchema<Input, Output> {
   const ZemaSchema();
@@ -332,7 +334,7 @@ abstract class ZemaSchema<Input, Output> {
   ///
   /// // Inside an object, missing keys arrive as null
   /// final userSchema = z.object({
-  ///   'name':     z.string(),
+  ///   'name': z.string(),
   ///   'nickname': z.string().optional(), // may be absent
   /// });
   /// ```

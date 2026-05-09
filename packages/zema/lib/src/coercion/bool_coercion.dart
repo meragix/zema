@@ -3,6 +3,8 @@ import 'package:zema/src/core/schema.dart';
 import 'package:zema/src/error/i18n.dart';
 import 'package:zema/src/error/issue.dart';
 
+import 'coerce.dart';
+
 /// A coercion schema that converts loosely-typed input to a Dart `bool`.
 ///
 /// Construct via `z.coerce().boolean()` — do not instantiate directly.

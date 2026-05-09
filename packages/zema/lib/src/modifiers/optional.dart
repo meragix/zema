@@ -1,5 +1,7 @@
+import 'package:zema/src/complex/object.dart';
 import 'package:zema/src/core/result.dart';
 import 'package:zema/src/core/schema.dart';
+import 'package:zema/src/modifiers/modifiers.dart';
 
 /// A schema that passes `null` through as a `null` output, and delegates
 /// non-null values to the wrapped [base] schema.

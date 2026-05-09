@@ -6,7 +6,7 @@ class Validators {
   );
 
   static final urlRegex = RegExp(
-    r'^https?://[^\s/$.?#].[^\s]*$',
+    r'^https?://[^\s/$.?#].\S*$',
     caseSensitive: false,
   );
 

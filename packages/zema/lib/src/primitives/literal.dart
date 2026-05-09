@@ -17,8 +17,8 @@ import 'package:zema/src/error/issue.dart';
 ///
 /// ```dart
 /// ZemaLiteral<String> = z.literal('admin')
-/// ZemaLiteral<int>    = z.literal(42)
-/// ZemaLiteral<bool>   = z.literal(true)
+/// ZemaLiteral<int> = z.literal(42)
+/// ZemaLiteral<bool> = z.literal(true)
 /// ```
 ///
 /// ## Examples
