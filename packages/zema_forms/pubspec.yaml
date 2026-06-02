@@ -1,6 +1,6 @@
 name: zema_forms
 description: "Flutter form widgets backed by Zema schemas. Surgical per-field rebuilds, isTouched UX, auto-focus on first error, and a form-level error banner."
-version: 0.1.0
+version: 0.2.0
 homepage: https://meragix.github.io/zema/plugins/zema_forms
 repository: https://github.com/meragix/zema
 issue_tracker: https://github.com/meragix/zema/issues
@@ -15,7 +15,7 @@ resolution: workspace
 dependencies:
   flutter:
     sdk: flutter
-  zema: ^0.5.1
+  zema: ^0.6.0
 
 dev_dependencies:
   flutter_test:
