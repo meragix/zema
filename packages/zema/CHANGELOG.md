@@ -9,6 +9,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [0.6.0] - 2026-06-02
 
+## [0.6.0] - 2026-06-02
+
 ### Fixed
 
 - **Critical:** `ZemaIssue.withPath()` now correctly prepends segments instead of appending them. This resolves a bug where error paths for nested objects and arrays were built backwards, which led to an incorrect structure when calling `result.errors.format()` on deeply nested schemas.
