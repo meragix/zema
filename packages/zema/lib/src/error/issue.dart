@@ -142,7 +142,7 @@ final class ZemaIssue {
   ZemaIssue withPath(Object segment) => ZemaIssue(
         code: code,
         message: message,
-        path: [...path, segment],
+        path: [segment, ...path],
         receivedValue: receivedValue,
         expected: expected,
         meta: meta,

@@ -158,10 +158,10 @@ void main() {
         expect(result.isFailure, isTrue);
         expect(result.errors.length, equals(2));
 
-        // path is built bottom-up: [childSegment, parentSegment]
+        // path is built correctly top-down: [parentSegment, childSegment]
         final paths = result.errors.map((e) => e.path.join('.')).toList();
-        expect(paths, contains('name.user'));
-        expect(paths, contains('email.user'));
+        expect(paths, contains('user.name'));
+        expect(paths, contains('user.email'));
       });
     });
 

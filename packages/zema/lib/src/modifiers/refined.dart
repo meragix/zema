@@ -318,13 +318,32 @@ class ValidationContext {
   /// Arbitrary metadata provided by the schema or its parent.
   final Map<String, dynamic> meta;
 
+  final List<ZemaIssue> _issues = [];
+
+  /// The issues accumulated in this context.
+  List<ZemaIssue> get issues => List.unmodifiable(_issues);
+
   ValidationContext({
     this.path = const [],
     this.meta = const {},
   });
 
-  void addIssue({required String code, required String message}) {
-    // Store issue in context
+  void addIssue({
+    required String code,
+    required String message,
+    List<Object>? path,
+    Map<String, dynamic>? meta,
+    ZemaSeverity severity = ZemaSeverity.error,
+  }) {
+    _issues.add(
+      ZemaIssue(
+        code: code,
+        message: message,
+        path: path ?? this.path,
+        meta: meta ?? this.meta,
+        severity: severity,
+      ),
+    );
   }
 }
 
@@ -343,8 +362,12 @@ final class _SuperRefinedSchema<I, O> extends ZemaSchema<I, O> {
     final ctx = ValidationContext();
     final issues = validator(output, ctx);
 
-    if (issues != null && issues.isNotEmpty) {
-      return failure(issues);
+    final allIssues = <ZemaIssue>[];
+    if (issues != null) allIssues.addAll(issues);
+    allIssues.addAll(ctx.issues);
+
+    if (allIssues.isNotEmpty) {
+      return failure(allIssues);
     }
 
     return success(output, warnings: result.warnings);

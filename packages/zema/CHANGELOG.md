@@ -7,6 +7,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **Critical:** `ZemaIssue.withPath()` now correctly prepends segments instead of appending them. This resolves a bug where error paths for nested objects and arrays were built backwards, which led to an incorrect structure when calling `result.errors.format()` on deeply nested schemas.
+- **Critical:** Implemented `ValidationContext.addIssue()` for `superRefine()`. Previously a stub, it now properly tracks issues and merges them with the issues returned by the validator.
+
+### Added
+
+- Integration test `format_nested_test.dart` to strictly verify deeply nested `.format()` outputs.
+
 ## [0.5.1] - 2026-03-25
 
 ### Performance

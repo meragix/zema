@@ -148,9 +148,9 @@ void main() {
         ]);
 
         expect(result.isFailure, isTrue);
-        // path is built bottom-up: [childSegment, parentIndex]
-        expect(result.errors.first.path.first, equals('email'));
-        expect(result.errors.first.path.last, equals(1));
+        // path is built correctly top-down: [parentIndex, childSegment]
+        expect(result.errors.first.path.first, equals(1));
+        expect(result.errors.first.path.last, equals('email'));
       });
     });
   });

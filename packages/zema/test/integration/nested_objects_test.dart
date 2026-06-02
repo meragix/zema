@@ -68,13 +68,8 @@ void main() {
       final result = schema.safeParse(invalidData);
 
       expect(result.isSuccess, isFalse);
-      //todo: fix the test expectation
-      // Expected: 'level1.level2.level3.value'
-      // Actual: 'value.level3.level2.level1'
-      // expect(
-      //   result.errors.first.path.reversed.join('.'),
-      //   equals('level1.level2.level3.value'),
-      // );
+      final paths = result.errors.first.path.map((e) => e.toString()).join('.');
+      expect(paths, equals('level1.level2.level3.value'));
     });
 
     test('validates arrays of nested objects', () {
@@ -100,12 +95,9 @@ void main() {
       expect(result.isSuccess, isFalse);
       expect(result.errors.length, equals(2));
 
-      //final paths = result.errors.map((e) => e.path.join('.')).toList();
-      //Todo: fix the test expectation
-      // Actual: ['name.1.users', 'email.1.users']
-      // Which: does not contain 'users.[1].name'
-      // expect(paths, contains('users.[1].name'));
-      // expect(paths, contains('users.[1].email'));
+      final paths = result.errors.map((e) => e.pathString).toList();
+      expect(paths, contains('users.[1].name'));
+      expect(paths, contains('users.[1].email'));
     });
   });
 }
