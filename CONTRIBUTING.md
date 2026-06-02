@@ -1,6 +1,6 @@
 # Contributing to Zema
 
-Thank you for taking the time to contribute. This document covers everything you need to get started.
+Thanks for taking the time to contribute. This document covers everything you need to get started.
 
 ---
 
@@ -106,7 +106,7 @@ The project uses `package:lints/recommended.yaml` with strict analyzer settings.
 
 ### Immutability
 
-Every schema is immutable. Fluent API methods return **new instances** — they never mutate state.
+Every schema is immutable. Fluent API methods return **new instances**, never mutating state.
 
 ```dart
 // correct: return a new schema with the constraint applied
@@ -199,7 +199,7 @@ Rules:
 
 4. Update `packages/zema/CHANGELOG.md` under `## [Unreleased]` with a concise entry describing what changed.
 
-5. Open a pull request against `main`. Fill in the PR template — describe what changed and why.
+5. Open a pull request against `main`. Fill in the PR template and describe what changed and why.
 
 ### Commit message format
 
