@@ -9,34 +9,25 @@
   <p align="center">
     Schema validation for Dart, inspired by <a href="https://zod.dev">Zod</a>.
     <br />
-    <em>Define schemas once, parse anywhere. All errors are collected in a single pass.</em>
+    Define schemas once, parse anywhere. All errors collected in a single pass.
     <br />
     <a href="https://zema.meragix.dev"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://github.com/meragix/zema/blob/main/CONTRIBUTING.md">Contribute</a>
     &middot;
-    <a href="https://github.com/meragix/zema/issues/new">Report Bug</a>
+    <a href="https://github.com/meragix/zema/issues/new">Report a bug</a>
     &middot;
-    <a href="https://github.com/meragix/zema/issues/new">Request Feature</a>
+    <a href="https://github.com/meragix/zema/issues/new">Request a feature</a>
   </p>
 </div>
 
-## Packages
-
-| Package | Description | CI | Pub |
-| ------- | ----------- | -- | --- |
-| [zema](https://pub.dev/packages/zema) | Core schema validation library | [![zema](https://github.com/meragix/zema/actions/workflows/zema.yml/badge.svg)](https://github.com/meragix/zema/actions/workflows/zema.yml) | [![pub](https://img.shields.io/pub/v/zema.svg)](https://pub.dev/packages/zema) |
-| [zema_forms](https://pub.dev/packages/zema_forms) | Flutter form widgets and controller | [![zema_forms](https://github.com/meragix/zema/actions/workflows/zema_forms.yml/badge.svg)](https://github.com/meragix/zema/actions/workflows/zema_forms.yml) | [![pub](https://img.shields.io/pub/v/zema_forms.svg)](https://pub.dev/packages/zema_forms) |
-| [zema_firestore](https://pub.dev/packages/zema_firestore) | Cloud Firestore integration via `withConverter` | [![zema_firestore](https://github.com/meragix/zema/actions/workflows/zema_firestore.yml/badge.svg)](https://github.com/meragix/zema/actions/workflows/zema_firestore.yml) | [![pub](https://img.shields.io/pub/v/zema_firestore.svg)](https://pub.dev/packages/zema_firestore) |
-| [zema_hive](https://pub.dev/packages/zema_hive) | Hive local storage integration | [![zema_hive](https://github.com/meragix/zema/actions/workflows/zema_hive.yml/badge.svg)](https://github.com/meragix/zema/actions/workflows/zema_hive.yml) | [![pub](https://img.shields.io/pub/v/zema_hive.svg)](https://pub.dev/packages/zema_hive) |
-
-## Quick Start
+Zema is a type-safe schema validation library for Dart. Think Zod, but for Dart. Declare your data contracts once and reuse them across your whole application, whether it's parsing API responses, validating form inputs, or enforcing invariants at runtime.
 
 ```yaml
 # pubspec.yaml
 dependencies:
-  zema: ^0.5.0
+  zema: ^0.6.0
 ```
 
 ```dart
@@ -69,6 +60,27 @@ switch (result) {
 
 ---
 
+## Packages
+
+| Package | Description | CI | Pub |
+| ------- | ----------- | -- | --- |
+| [zema](https://pub.dev/packages/zema) | Core validation library | [![zema](https://github.com/meragix/zema/actions/workflows/zema.yml/badge.svg)](https://github.com/meragix/zema/actions/workflows/zema.yml) | [![pub](https://img.shields.io/pub/v/zema.svg)](https://pub.dev/packages/zema) |
+| [zema_forms](https://pub.dev/packages/zema_forms) | Flutter form widgets & controller | [![zema_forms](https://github.com/meragix/zema/actions/workflows/zema_forms.yml/badge.svg)](https://github.com/meragix/zema/actions/workflows/zema_forms.yml) | [![pub](https://img.shields.io/pub/v/zema_forms.svg)](https://pub.dev/packages/zema_forms) |
+| [zema_firestore](https://pub.dev/packages/zema_firestore) | Cloud Firestore integration via `withConverter` | [![zema_firestore](https://github.com/meragix/zema/actions/workflows/zema_firestore.yml/badge.svg)](https://github.com/meragix/zema/actions/workflows/zema_firestore.yml) | [![pub](https://img.shields.io/pub/v/zema_firestore.svg)](https://pub.dev/packages/zema_firestore) |
+| [zema_hive](https://pub.dev/packages/zema_hive) | Hive local storage integration | [![zema_hive](https://github.com/meragix/zema/actions/workflows/zema_hive.yml/badge.svg)](https://github.com/meragix/zema/actions/workflows/zema_hive.yml) | [![pub](https://img.shields.io/pub/v/zema_hive.svg)](https://pub.dev/packages/zema_hive) |
+
+---
+
+## Why Zema?
+
+- **Exhaustive error collection.** No short-circuiting. Every issue is found and reported in one pass.
+- **Composable.** Schemas are just values. Combine, transform, and reuse them freely.
+- **Type-safe.** Full Dart 3 type inference. What you validate is what you get.
+- **Fast.** Competitive with hand-written validation. [Benchmarks](#performance) included.
+- **Immutable.** Every method returns a new schema. No side effects, no surprises.
+
+---
+
 ## Performance
 
 Schemas defined once at the top level and reused, measured with [`benchmark_harness`](https://pub.dev/packages/benchmark_harness) on an Apple M-series chip, Dart 3.x (JIT). Lower is better.
@@ -80,7 +92,7 @@ Schemas defined once at the top level and reused, measured with [`benchmark_harn
 | Object.flat (4 fields)    | **4.37 µs**   | 4.34 µs  | 13.4 µs  | 10.1 µs      | 92.8 µs  |
 | Object.failure (3 errors) | **12.8 µs**   | 6.27 µs  | 68.0 µs  | 11.3 µs      | 40.2 µs  |
 
-> `Object.failure` measures exhaustive error collection across all fields simultaneously, a core feature of zema. Libraries that short-circuit on the first error will appear faster on this scenario.
+> `Object.failure` measures exhaustive error collection across all fields simultaneously, a core feature of Zema. Libraries that short-circuit on the first error will appear faster on this specific scenario.
 >
 > Run the benchmarks yourself: `make bench`
 
@@ -94,10 +106,10 @@ Full documentation is available at [zema.meragix.dev](https://zema.meragix.dev).
 
 ## Contributing
 
-Contributions are welcome! See [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines.
+Contributions are welcome! Head over to [CONTRIBUTING.md](CONTRIBUTING.md) to get started.
 
 ---
 
 ## License
 
-This project is licensed under the [LICENSE](LICENSE) License
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
