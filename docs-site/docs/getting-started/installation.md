@@ -9,12 +9,8 @@ Get started with Zema in less than 5 minutes.
 
 ## Requirements
 
-- **Dart SDK**: ≥ 3.3.0
-- **Flutter**: ≥ 3.10.0 (for Flutter apps only)
-
-:::info Why Dart 3.3+?
-Zema uses [Extension Types](https://dart.dev/language/extension-types), a Dart 3.3+ feature that provides zero-cost type-safe wrappers. This enables Zema to deliver runtime validation with minimal performance overhead.
-:::
+- **Dart SDK**: >= 3.5.0
+- **Flutter**: >= 3.18.0 (for Flutter apps only)
 
 ---
 
@@ -26,7 +22,7 @@ The core `zema` package provides the schema definition and validation engine.
 
 ```yaml title="pubspec.yaml"
 dependencies:
-  zema: ^1.0.0
+  zema: ^0.6.0
 ```
 
 ### Install
@@ -47,20 +43,18 @@ Create a test file to verify Zema is working:
 import 'package:zema/zema.dart';
 
 void main() {
-  // Define a schema
-  final userSchema = z.object({
+  final schema = z.object({
     'name': z.string(),
-    'age': z.integer().min(0),
+    'age': z.integer().gte(0),
   });
 
-  // Validate data
-  final result = userSchema.parse({
+  final result = schema.safeParse({
     'name': 'Alice',
     'age': 30,
   });
 
   if (result.isSuccess) {
-    print('✅ Zema is working!');
+    print('Zema is working!');
     print('User data: ${result.value}');
   }
 }
@@ -70,111 +64,48 @@ Run it:
 
 ```bash
 dart run test_zema.dart
-# Output: ✅ Zema is working!
+# Output: Zema is working!
 ```
 
 ---
 
-<!-- ## Plugins (Optional)
+## Plugins
 
-Zema provides plugins for common use cases. Install only what you need.
+Zema provides optional plugins for common use cases. Install only what you need.
 
-### HTTP Validation (Comming Soon)
-
-Validate API responses from Dio, package:http, or Chopper.
-
-```yaml title="pubspec.yaml"
-dependencies:
-  zema_fetch: ^1.0.0
-  
-  # Choose your HTTP client
-  dio: ^5.4.0           # Option 1: Dio
-  # http: ^1.2.0        # Option 2: package:http
-  # chopper: ^7.0.0     # Option 3: Chopper
-```
-
-**Tree-shaking imports** (recommended for smaller bundle size):
-
-```dart
-// Import only what you need
-import 'package:zema_fetch/dio.dart';        // Dio only
-// import 'package:zema_fetch/http.dart';     // package:http only
-// import 'package:zema_fetch/chopper.dart';  // Chopper only
-``` -->
-
-<!-- [→ Learn more about zema_fetch](/docs/plugins/zema_http/overview) -->
-
----
-
-<!-- ### Form Management
+### Flutter Forms
 
 Type-safe form validation for Flutter.
 
 ```yaml title="pubspec.yaml"
 dependencies:
-  zema_form: ^1.0.0
+  zema: ^0.6.0
+  zema_forms: ^0.2.0
 ```
 
-[→ Learn more about zema_form](/docs/plugins/zema_form/overview)
-
----
-
-### Local Storage (Hive)
-
-Validated Hive storage without TypeAdapters.
-
-```yaml title="pubspec.yaml"
-dependencies:
-  zema_hive: ^1.0.0
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0  # For Flutter apps
-```
-
-[→ Learn more about zema_hive](/docs/plugins/zema_hive/overview)
-
----
-
-### Settings Storage
-
-Type-safe reactive settings with SharedPreferences.
-
-```yaml title="pubspec.yaml"
-dependencies:
-  zema_shared_preferences: ^1.0.0
-  shared_preferences: ^2.2.0
-```
-
-[→ Learn more about zema_shared_preferences](/docs/plugins/zema_shared_preferences/overview)
-
----
-
-### Firestore
+### Cloud Firestore
 
 Runtime validation for Cloud Firestore documents.
 
 ```yaml title="pubspec.yaml"
 dependencies:
-  zema_firestore: ^1.0.0
-  cloud_firestore: ^4.13.0
+  zema: ^0.6.0
+  zema_firestore: ^0.2.0
+  cloud_firestore: ^5.0.0
 ```
 
-[→ Learn more about zema_firestore](/docs/plugins/zema_firestore/overview)
+### Hive Local Storage
 
----
-
-### State Management (Riverpod)
-
-Validated state with Riverpod providers.
+Validated Hive storage without TypeAdapters or code generation.
 
 ```yaml title="pubspec.yaml"
 dependencies:
-  zema_riverpod: ^1.0.0
-  flutter_riverpod: ^2.4.0
+  zema: ^0.6.0
+  zema_hive: ^0.2.0
+  hive_ce: ^2.19.3
 ```
 
-[→ Learn more about zema_riverpod](/docs/plugins/zema_riverpod/overview)
-
---- -->
+---
 
 ## IDE Setup
 
@@ -214,28 +145,6 @@ import DocCard from '@theme/DocCard';
 
 ## Troubleshooting
 
-### "Extension types are not supported"
-
-**Solution**: Ensure you're using Dart SDK ≥ 3.3.0
-
-```bash
-dart --version
-# Should show: Dart SDK version: 3.x.x
-```
-
-Update if needed:
-
-```bash
-# Via Flutter
-flutter upgrade
-
-# Via Dart SDK directly
-brew upgrade dart-sdk  # macOS
-# or download from https://dart.dev/get-dart
-```
-
----
-
 ### "Package zema not found"
 
 **Solution**: Clear pub cache and reinstall
@@ -249,6 +158,4 @@ dart pub get
 
 ### Still Having Issues?
 
-- [GitHub Issues](https://github.com/your-org/zema/issues)
-- [Discord Community](https://discord.gg/zema)
-- [Stack Overflow](https://stackoverflow.com/questions/tagged/zema)
+- [GitHub Issues](https://github.com/meragix/zema/issues)
