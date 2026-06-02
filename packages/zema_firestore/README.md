@@ -10,8 +10,8 @@ Hooks into Firestore's native `withConverter` API so every document read is auto
 
 ```yaml
 dependencies:
-  zema: ^0.4.0
-  zema_firestore: ^0.1.0
+  zema: ^0.6.0
+  zema_firestore: ^0.2.0
   cloud_firestore: ^5.0.0
 ```
 

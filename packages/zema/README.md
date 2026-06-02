@@ -4,7 +4,7 @@
 [![package publisher](https://img.shields.io/pub/publisher/zema.svg)](https://pub.dev/packages/zema/publisher)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Schema validation for Dart, inspired by [Zod](https://zod.dev). Define schemas once, validate anywhere. All validation errors are collected in a single pass: no silent failures, no partial results.
+Schema validation for Dart, inspired by [Zod](https://zod.dev). Define schemas once, validate anywhere. All validation errors are collected in a single pass. No silent failures, no partial results.
 
 ---
 
@@ -26,7 +26,7 @@ Schema validation for Dart, inspired by [Zod](https://zod.dev). Define schemas o
 
 ```yaml
 dependencies:
-  zema: ^0.3.0
+  zema: ^0.6.0
 ```
 
 ```dart
@@ -329,22 +329,4 @@ Full guides, API reference, and examples: [zema.meragix.dev](https://zema.meragi
 
 ## License
 
-MIT License — see [LICENSE](LICENSE)
-
-<!-- 
-/// Adds Zema schema validation directly on [Response].
-extension ZemaDioResponseX<E> on Response<E> {
-  /// Validates [data] against [schema].
-  ///
-  /// Returns the parsed output on success.
-  /// Throws [ZemaException] if validation fails.
-  T parse<T>(ZemaSchema<dynamic, T> schema) => schema.parse(data);
-
-  /// Validates [data] against [schema].
-  ///
-  /// Returns [ZemaSuccess] on success or [ZemaFailure] on validation failure.
-  /// Never throws.
-  ZemaResult<T> safeParse<T>(ZemaSchema<dynamic, T> schema) =>
-      schema.safeParse(data);
-} 
--->
+MIT License. See [LICENSE](LICENSE)

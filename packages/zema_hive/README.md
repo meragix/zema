@@ -10,8 +10,8 @@ Type-safe local storage without TypeAdapters or code generation. Wrap any Hive `
 
 ```yaml
 dependencies:
-  zema: ^0.4.0
-  zema_hive: ^0.1.0
+  zema: ^0.6.0
+  zema_hive: ^0.2.0
   hive_ce: ^2.19.3
 ```
 
