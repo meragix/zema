@@ -74,7 +74,9 @@ void main() {
       final dept0 = departments['0'] as Map<String, dynamic>;
       expect(dept0, contains('employees'));
       expect(
-          (dept0['employees'] as Map<String, dynamic>)['_errors'], isNotEmpty,);
+        (dept0['employees'] as Map<String, dynamic>)['_errors'],
+        isNotEmpty,
+      );
 
       // Assert index 1 of array
       expect(departments, contains('1'));
