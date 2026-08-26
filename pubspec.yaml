@@ -11,6 +11,7 @@ workspace:
   - packages/zema_forms
   - packages/zema_firestore
   - packages/zema_hive
+  - packages/zema_standard_schema
 
 dev_dependencies:
   melos: ^7.4.0
