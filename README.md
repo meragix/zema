@@ -68,7 +68,7 @@ switch (result) {
 | [zema_forms](https://pub.dev/packages/zema_forms) | Flutter form widgets & controller | [![zema_forms](https://github.com/meragix/zema/actions/workflows/zema_forms.yml/badge.svg)](https://github.com/meragix/zema/actions/workflows/zema_forms.yml) | [![pub](https://img.shields.io/pub/v/zema_forms.svg)](https://pub.dev/packages/zema_forms) |
 | [zema_firestore](https://pub.dev/packages/zema_firestore) | Cloud Firestore integration via `withConverter` | [![zema_firestore](https://github.com/meragix/zema/actions/workflows/zema_firestore.yml/badge.svg)](https://github.com/meragix/zema/actions/workflows/zema_firestore.yml) | [![pub](https://img.shields.io/pub/v/zema_firestore.svg)](https://pub.dev/packages/zema_firestore) |
 | [zema_hive](https://pub.dev/packages/zema_hive) | Hive local storage integration | [![zema_hive](https://github.com/meragix/zema/actions/workflows/zema_hive.yml/badge.svg)](https://github.com/meragix/zema/actions/workflows/zema_hive.yml) | [![pub](https://img.shields.io/pub/v/zema_hive.svg)](https://pub.dev/packages/zema_hive) |
-| [zema_standard_schema](https://pub.dev/packages/zema_standard_schema) | Standard Schema adapter for CLI frameworks & consumers | | [![pub](https://img.shields.io/pub/v/zema_standard_schema.svg)](https://pub.dev/packages/zema_standard_schema) |
+| [zema_standard_schema](https://pub.dev/packages/zema_standard_schema) | Standard Schema adapter for CLI frameworks & consumers | [![zema_standard_schema](https://github.com/meragix/zema/actions/workflows/zema_standard_schema.yml/badge.svg)](https://github.com/meragix/zema/actions/workflows/zema_standard_schema.yml) | [![pub](https://img.shields.io/pub/v/zema_standard_schema.svg)](https://pub.dev/packages/zema_standard_schema) |
 
 ---
 
