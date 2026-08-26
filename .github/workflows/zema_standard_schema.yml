@@ -1,0 +1,21 @@
+name: zema_standard_schema
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "packages/zema_standard_schema/**"
+      - ".github/workflows/zema_standard_schema.yml"
+      - ".github/workflows/_dart_package.yml"
+  pull_request:
+    paths:
+      - "packages/zema_standard_schema/**"
+      - ".github/workflows/zema_standard_schema.yml"
+      - ".github/workflows/_dart_package.yml"
+
+jobs:
+  ci:
+    uses: ./.github/workflows/_dart_package.yml
+    with:
+      package: packages/zema_standard_schema
+    secrets: inherit
