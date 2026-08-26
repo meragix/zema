@@ -1,9 +1,0 @@
-{
-  "label": "Transformations",
-  "position": 4,
-  "link": {
-    "type": "generated-index",
-    "description": "Learn how to use Zema's powerful transformation features to manipulate and transform your data during validation.",
-    "slug": "/transformations"
-  }
-}

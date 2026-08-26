@@ -1,9 +1,0 @@
-{
-  "label": "zema_standard_schema",
-  "position": 4,
-  "link": {
-    "type": "generated-index",
-    "description": "Bridge any Zema schema into the Standard Schema contract for use with CLI frameworks and other consumers.",
-    "slug": "/zema_standard_schema"
-  }
-}
