@@ -119,7 +119,7 @@ final class ZemaObject<T> extends ZemaSchema<dynamic, T> {
         for (final issue in result.errors) {
           (allIssues ??= []).add(issue.withPath(key));
         }
-      } else {
+      } else if (value.containsKey(key) || result.value != null) {
         cleaned[key] = result.value;
       }
     }
