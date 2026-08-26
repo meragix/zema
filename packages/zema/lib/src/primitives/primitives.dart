@@ -1,4 +1,4 @@
-// Primitive schema types — re-exported as a single barrel for internal use.
+// Primitive schema types, re-exported as a single barrel for internal use.
 
 export './bool.dart';
 export './datetime.dart';

@@ -43,8 +43,8 @@ melos test:coverage
 
 **`ZemaSchema<Input, Output>`** is the root abstract class. Every schema extends it and must implement `safeParse(Input value) → ZemaResult<Output>`. The base class provides:
 
-- `parse()` — throws `ZemaException` on failure
-- `safeParse()` / `safeParseAsync()` — returns `ZemaResult`
+- `parse()`: throws `ZemaException` on failure
+- `safeParse()` / `safeParseAsync()`: returns `ZemaResult`
 - Chainable modifier methods: `.optional()`, `.nullable()`, `.withDefault()`, `.catchError()`
 - Transformation methods: `.transform()`, `.pipe()`, `.preprocess()`
 
@@ -69,13 +69,13 @@ melos test:coverage
 
 ### Immutability Pattern
 
-All schemas use `const` constructors and are fully immutable. Fluent API methods (`.min()`, `.email()`, `.trim()`, etc.) return **new schema instances** — they never mutate state. When adding new validators to a primitive schema, copy all existing fields and set the new one.
+All schemas use `const` constructors and are fully immutable. Fluent API methods (`.min()`, `.email()`, `.trim()`, etc.) return **new schema instances**, they never mutate state. When adding new validators to a primitive schema, copy all existing fields and set the new one.
 
 ### Error System (`packages/zema/lib/src/error/`)
 
-- **`ZemaIssue`** — immutable value object: `code` (string), `message`, `path` (list), `receivedValue`, `meta`
-- **`ZemaErrorMap`** — global registry for custom error messages and locale. Set via `ZemaErrorMap.setErrorMap(fn)` and `ZemaErrorMap.setLocale('fr')`
-- **`ZemaI18n`** — translation system with built-in `en` and `fr` locales. Register custom locales via `ZemaI18n.registerTranslations(locale, map)`
+- **`ZemaIssue`**: immutable value object: `code` (string), `message`, `path` (list), `receivedValue`, `meta`
+- **`ZemaErrorMap`**: global registry for custom error messages and locale. Set via `ZemaErrorMap.setErrorMap(fn)` and `ZemaErrorMap.setLocale('fr')`
+- **`ZemaI18n`**: translation system with built-in `en` and `fr` locales. Register custom locales via `ZemaI18n.registerTranslations(locale, map)`
 - Error codes are string constants: `'invalid_type'`, `'too_short'`, `'too_long'`, `'invalid_email'`, `'invalid_enum'`, etc.
 
 ### `ZemaObject` Features
@@ -87,9 +87,9 @@ All schemas use `const` constructors and are fully immutable. Fluent API methods
 The project uses `package:lints/recommended.yaml` with strict analyzer settings:
 
 - `strict-casts`, `strict-inference`, `strict-raw-types` all enabled
-- `prefer_single_quotes` — use single quotes for strings
-- `require_trailing_commas` — required in function calls/definitions
-- `type_annotate_public_apis` — all public API must be typed
+- `prefer_single_quotes`: use single quotes for strings
+- `require_trailing_commas`: required in function calls/definitions
+- `type_annotate_public_apis`: all public API must be typed
 - `prefer_const_constructors` / `prefer_const_declarations`
 
 ## Testing

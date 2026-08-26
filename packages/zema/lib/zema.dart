@@ -1,4 +1,4 @@
-/// Type-safe schema validation for Dart — inspired by Zod.
+/// Type-safe schema validation for Dart, inspired by Zod.
 ///
 /// Zema provides a fluent, declarative API for defining, validating, and
 /// transforming data at runtime. Every schema is **immutable** and
@@ -16,13 +16,13 @@
 ///   'age':   z.int().gte(0).optional(),
 /// });
 ///
-/// // 2. Parse — throws ZemaException on failure
+/// // 2. Parse, throws ZemaException on failure
 /// final user = userSchema.parse({
 ///   'name':  'Alice',
 ///   'email': 'alice@example.com',
 /// });
 ///
-/// // 3. Safe parse — returns ZemaResult, never throws
+/// // 3. Safe parse, returns ZemaResult, never throws
 /// final result = userSchema.safeParse(untrustedInput);
 ///
 /// switch (result) {
@@ -49,8 +49,8 @@
 /// ## Result handling
 ///
 /// [ZemaSchema.safeParse] returns a sealed [ZemaResult]:
-/// - [ZemaSuccess] — holds the validated value.
-/// - [ZemaFailure] — holds a list of [ZemaIssue]s with codes, messages,
+/// - [ZemaSuccess] holds the validated value.
+/// - [ZemaFailure] holds a list of [ZemaIssue]s with codes, messages,
 ///   and field paths.
 ///
 /// Use `result.when(success: …, failure: …)` for exhaustive handling, or

@@ -8,8 +8,8 @@ import 'map.dart';
 
 /// A schema that validates `Map` values against a fixed set of named fields.
 ///
-/// Construct via `z.object(shape)` or `z.objectAs(shape, constructor)` —
-/// do not instantiate directly.
+/// Construct via `z.object(shape)` or `z.objectAs(shape, constructor)`.
+/// Do not instantiate directly.
 ///
 /// ## Validation
 ///
@@ -34,9 +34,9 @@ import 'map.dart';
 ///
 /// A key absent from the input map arrives as `null`. Whether that is valid
 /// depends on the field's schema:
-/// - `z.string()` — fails with `invalid_type` (null is not a String).
-/// - `z.string().optional()` — succeeds, producing `null` in the output.
-/// - `z.string().withDefault('x')` — succeeds, substituting `'x'`.
+/// - `z.string()` fails with `invalid_type` (null is not a String).
+/// - `z.string().optional()` succeeds, producing `null` in the output.
+/// - `z.string().withDefault('x')` succeeds, substituting `'x'`.
 ///
 /// ## Typed output
 ///
@@ -46,13 +46,13 @@ import 'map.dart';
 /// If [constructor] throws, a `transform_error` issue is produced.
 ///
 /// ```dart
-/// // Untyped — output is Map<String, dynamic>
+/// // Untyped, output is Map<String, dynamic>
 /// final schema = z.object({
 ///   'name':  z.string().min(2),
 ///   'email': z.string().email(),
 /// });
 ///
-/// // Typed — output is User
+/// // Typed, output is User
 /// final typedSchema = z.objectAs(
 ///   {
 ///     'name':  z.string().min(2),
@@ -63,8 +63,8 @@ import 'map.dart';
 /// ```
 ///
 /// See also:
-/// - [ZemaMap] — for maps with a dynamic set of keys validated uniformly.
-/// - `z.object` / `z.objectAs` — factory methods in [Zema].
+/// - [ZemaMap] for maps with a dynamic set of keys validated uniformly.
+/// - `z.object` / `z.objectAs` are factory methods in [Zema].
 final class ZemaObject<T> extends ZemaSchema<dynamic, T> {
   /// The field definitions. Each key maps to the schema that validates it.
   final Map<String, ZemaSchema<dynamic, dynamic>> shape;
@@ -184,7 +184,7 @@ final class ZemaObject<T> extends ZemaSchema<dynamic, T> {
   /// final strict = z.object({'name': z.string()}).makeStrict();
   ///
   /// strict.parse({'name': 'Alice'});                    // OK
-  /// strict.parse({'name': 'Alice', 'extra': 'value'});  // fails — unknown_key
+  /// strict.parse({'name': 'Alice', 'extra': 'value'});  // fails, unknown_key
   /// ```
   ZemaObject<T> makeStrict() => ZemaObject(
         shape,
@@ -196,7 +196,7 @@ final class ZemaObject<T> extends ZemaSchema<dynamic, T> {
   /// [shape].
   ///
   /// Fields in [additionalShape] override fields with the same key. The
-  /// returned schema always has output type `Map<String, dynamic>` —
+  /// returned schema always has output type `Map<String, dynamic>`.
   /// the typed constructor is not carried over.
   ///
   /// ```dart
@@ -268,7 +268,7 @@ final class ZemaObject<T> extends ZemaSchema<dynamic, T> {
   /// final base     = z.object({'name': z.string(), 'age': z.integer()});
   /// final override = z.object({'age': z.integer().gte(18), 'email': z.string().email()});
   /// final merged   = base.merge(override);
-  /// // merged validates: name (base), age (override — gte(18)), email (override)
+  /// // merged validates: name (base), age (override, gte(18)), email (override)
   /// ```
   ZemaObject<Map<String, dynamic>> merge(ZemaObject<dynamic> other) {
     return ZemaObject({...shape, ...other.shape});

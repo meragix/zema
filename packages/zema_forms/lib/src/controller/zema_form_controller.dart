@@ -37,7 +37,7 @@ import 'package:zema_forms/src/widgets/zema_text_field.dart';
 ///
 /// @override
 /// void dispose() {
-///   _ctrl.dispose(); // required — releases TextEditingControllers and notifiers
+///   _ctrl.dispose(); // required. Releases TextEditingControllers and notifiers
 ///   super.dispose();
 /// }
 /// ```
@@ -255,7 +255,7 @@ class ZemaFormController<T> {
       // Move focus to the first focusable field in error (schema declaration
       // order). canRequestFocus is false when the node is not attached to the
       // widget tree (hidden / conditionally removed fields) or explicitly
-      // disabled — skip those silently.
+      // disabled; skip those silently.
       for (final key in schema.shape.keys) {
         if ((byField[key] ?? const []).isNotEmpty) {
           final node = _focusNodes[key];
@@ -340,11 +340,11 @@ class ZemaFormController<T> {
   /// listeners attached to each [TextEditingController].
   ///
   /// Dispose order is intentional:
-  /// 1. [TextEditingController]s first — removes listeners that write to
+  /// 1. [TextEditingController]s first, removing listeners that write to
   ///    [_fieldErrors], preventing writes to already-disposed notifiers.
-  /// 2. Per-field notifiers ([_fieldErrors], [_fieldTouched]) — safe once
+  /// 2. Per-field notifiers ([_fieldErrors], [_fieldTouched]), safe once
   ///    their write sources are gone.
-  /// 3. Global notifiers ([isSubmitted], [submitErrors]) last — no per-field
+  /// 3. Global notifiers ([isSubmitted], [submitErrors]) last. No per-field
   ///    notifier reads from them, so orphaned listeners cannot fire against a
   ///    disposed global state during a fast screen teardown.
   void dispose() {

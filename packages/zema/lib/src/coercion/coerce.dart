@@ -10,11 +10,11 @@ import 'package:zema/src/primitives/datetime.dart';
 /// Coercion schemas differ from strict schemas in one key way: instead of
 /// rejecting an incompatible input immediately, they **attempt to convert** it
 /// to the target type first. This is useful when your data arrives from
-/// sources that don't preserve types — HTML form fields, URL query parameters,
-/// environment variables, CSV files — where every value is technically
+/// sources that don't preserve types, such as HTML form fields, URL query parameters,
+/// environment variables, CSV files, where every value is technically
 /// a string.
 ///
-/// Access via `z.coerce()` — do not construct directly:
+/// Access via `z.coerce()`. Do not construct directly:
 ///
 /// ```dart
 /// z.coerce().integer()   // '42'  → 42
@@ -44,7 +44,7 @@ import 'package:zema/src/primitives/datetime.dart';
 /// ```
 ///
 /// See also:
-/// - [ZemaSchema.preprocess] — for custom input transformations that are not
+/// - [ZemaSchema.preprocess] for custom input transformations that are not
 ///   covered by the built-in coercions.
 class ZemaCoerce {
   const ZemaCoerce();
@@ -139,8 +139,8 @@ class ZemaCoerce {
   /// value coerced via `.toString()`):
   ///
   /// ```dart
-  /// z.coerce().string()               // strict — primitives only
-  /// z.coerce().string(strict: false)  // permissive — any object
+  /// z.coerce().string()               // strict, primitives only
+  /// z.coerce().string(strict: false)  // permissive, any object
   /// ```
   ZemaSchema<dynamic, String> string({bool strict = true}) =>
       CoerceString(strict: strict);

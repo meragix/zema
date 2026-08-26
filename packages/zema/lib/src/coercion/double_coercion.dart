@@ -7,7 +7,7 @@ import 'coerce.dart';
 
 /// A coercion schema that converts loosely-typed input to a Dart `double`.
 ///
-/// Construct via `z.coerce().float()` — do not instantiate directly.
+/// Construct via `z.coerce().float()`. Do not instantiate directly.
 ///
 /// ## Standard mode (default)
 ///
@@ -31,8 +31,8 @@ import 'coerce.dart';
 /// disabled. Use this when string coercion is undesirable.
 ///
 /// ```dart
-/// z.coerce().float()               // standard — double, int, string
-/// z.coerce().float(strict: true)   // strict — double and int only
+/// z.coerce().float()               // standard, double, int, string
+/// z.coerce().float(strict: true)   // strict, double and int only
 /// ```
 ///
 /// ## Range constraints
@@ -48,8 +48,8 @@ import 'coerce.dart';
 /// Range failures produce `too_small` or `too_big` issues respectively.
 ///
 /// See also:
-/// - [ZemaCoerce.float] — factory method on the `z.coerce()` namespace.
-/// - `z.double()` — strict schema that only accepts actual `double` values.
+/// - [ZemaCoerce.float] is a factory method on the `z.coerce()` namespace.
+/// - `z.double()` is a strict schema that only accepts actual `double` values.
 final class CoerceDouble extends ZemaSchema<dynamic, double> {
   /// Lower bound (inclusive). Applied after coercion. `null` means no limit.
   final double? min;

@@ -292,7 +292,7 @@ void main() {
 
       ctrl.controllerFor('name').text = 'Alice';
       ctrl.controllerFor('age').text = '25';
-      // 'bio' controller never registered — arrives as null in raw map.
+      // 'bio' controller never registered, so it arrives as null in raw map.
       final result = ctrl.submit();
 
       expect(result, isNotNull);
@@ -423,7 +423,7 @@ void main() {
       await Future<void>.delayed(Duration.zero);
       ctrl.reset();
 
-      // Type again — field is dirty again immediately.
+      // Type again; field is dirty again immediately.
       ctrl.controllerFor('email').text = 'still-bad';
       await Future<void>.delayed(Duration.zero);
 

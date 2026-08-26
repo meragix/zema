@@ -4,7 +4,7 @@ import 'package:zema/zema.dart';
 import 'package:zema_firestore/zema_firestore.dart';
 
 // ---------------------------------------------------------------------------
-// Schemas — defined once at module scope.
+// Schemas, defined once at module scope.
 // ---------------------------------------------------------------------------
 
 final userSchema = z.object({
@@ -24,7 +24,7 @@ final postSchema = z.object({
 });
 
 // ---------------------------------------------------------------------------
-// Typed references — one definition, used everywhere.
+// Typed references, one definition, used everywhere.
 // ---------------------------------------------------------------------------
 
 CollectionReference<Map<String, dynamic>> usersRef(FirebaseFirestore db) =>
@@ -96,7 +96,7 @@ Future<void> _queryExample(FirebaseFirestore db) async {
   }
 }
 
-// --- Stream — each document validated as it arrives ---
+// --- Stream, each document validated as it arrives ---
 
 Future<void> _streamExample(FirebaseFirestore db) async {
   print('\n--- stream (first batch) ---');

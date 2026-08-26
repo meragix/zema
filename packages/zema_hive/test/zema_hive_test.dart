@@ -68,7 +68,7 @@ void main() {
   });
 
   // -------------------------------------------------------------------------
-  // ZemaBox — writes
+  // ZemaBox writes
   // -------------------------------------------------------------------------
 
   group('ZemaBox.put()', () {
@@ -134,7 +134,7 @@ void main() {
   });
 
   // -------------------------------------------------------------------------
-  // ZemaBox — reads
+  // ZemaBox reads
   // -------------------------------------------------------------------------
 
   group('ZemaBox.get()', () {
@@ -198,7 +198,7 @@ void main() {
   // Migration
   // -------------------------------------------------------------------------
 
-  group('ZemaBox — migration', () {
+  group('ZemaBox migration', () {
     test('applies migration callback on validation failure', () async {
       // Store a V1 document (missing 'email' field)
       await box.put('u1', {'id': 'u1', 'name': 'Alice'});
@@ -234,7 +234,7 @@ void main() {
       userBox.get('u1');
       await Future<void>.delayed(Duration.zero); // let async write complete
 
-      // Read raw box — should now have the migrated data.
+      // Read raw box, should now have the migrated data.
       final raw = Map<String, dynamic>.from(box.get('u1') as Map);
       expect(raw['email'], equals('migrated@example.com'));
     });
@@ -246,7 +246,7 @@ void main() {
 
       final userBox = box.withZema(
         _userSchema,
-        migrate: (rawData) => rawData, // no-op — still invalid after migration
+        migrate: (rawData) => rawData, // no-op, still invalid after migration
         onParseError: (key, rawData, issues) {
           onParseErrorCalled = true;
           return {

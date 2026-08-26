@@ -31,14 +31,14 @@ final userSchema = z.object({
 final box = await Hive.openBox('users');
 final userBox = box.withZema(userSchema);
 
-// Write — validated before storage, throws ZemaHiveException on failure
+// Write, validated before storage, throws ZemaHiveException on failure
 await userBox.put('alice', {
   'id': 'alice',
   'name': 'Alice',
   'email': 'alice@example.com',
 });
 
-// Read — validated on retrieval
+// Read, validated on retrieval
 final user = userBox.get('alice'); // Map<String, dynamic>?
 print(user?['name']); // Alice
 ```
@@ -91,7 +91,7 @@ final userBox = box.withZema(
 final user = userBox.get('legacy'); // migrated and written back automatically
 ```
 
-Make each migration idempotent (check before modifying) — the callback is called once per failing document, and the migrated version is written back, so subsequent reads no longer trigger it.
+Make each migration idempotent (check before modifying), the callback is called once per failing document, and the migrated version is written back, so subsequent reads no longer trigger it.
 
 ## Error handling
 
@@ -122,7 +122,7 @@ try {
 }
 ```
 
-`putAll()` validates all entries before writing any of them — if one entry fails, nothing is written.
+`putAll()` validates all entries before writing any of them, if one entry fails, nothing is written.
 
 ## Configuration
 

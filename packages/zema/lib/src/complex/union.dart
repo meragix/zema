@@ -4,19 +4,19 @@ import 'package:zema/zema.dart';
 
 /// A schema that accepts a value if **any** of the given [schemas] succeeds.
 ///
-/// Construct via `z.union(schemas)` — do not instantiate directly.
+/// Construct via `z.union(schemas)`. Do not instantiate directly.
 ///
 /// ## Validation
 ///
 /// Schemas are tried in the order they appear in [schemas]. The first one
-/// that succeeds determines the output — remaining schemas are not evaluated.
+/// that succeeds determines the output. Remaining schemas are not evaluated.
 /// If **all** schemas fail, a single `invalid_union` issue is returned. Its
 /// `meta` map contains:
 ///
-/// - `'unionErrors'` — a `List<List<ZemaIssue>>` with each schema's errors.
-/// - `'schemaCount'` — the total number of schemas tried.
-/// - `'receivedType'` — the runtime type of the input as a string.
-/// - `'discriminator'` — the discriminator key, if one was provided.
+/// - `'unionErrors'` is a `List<List<ZemaIssue>>` with each schema's errors.
+/// - `'schemaCount'` is the total number of schemas tried.
+/// - `'receivedType'` is the runtime type of the input as a string.
+/// - `'discriminator'` is the discriminator key, if one was provided.
 ///
 /// ## Examples
 ///
@@ -63,8 +63,8 @@ import 'package:zema/zema.dart';
 /// ```
 ///
 /// See also:
-/// - `z.union` — factory method in [Zema].
-/// - `z.literal` — for exact-value schemas often used inside unions.
+/// - `z.union` is a factory method in [Zema].
+/// - `z.literal` for exact-value schemas often used inside unions.
 final class ZemaUnion<T> extends ZemaSchema<dynamic, T> {
   /// The candidate schemas, tried in order until one succeeds.
   final List<ZemaSchema<dynamic, T>> schemas;
@@ -113,7 +113,7 @@ final class ZemaUnion<T> extends ZemaSchema<dynamic, T> {
       unionErrors.add(result.errors);
     }
 
-    // All schemas failed — return a single issue with full diagnostics.
+    // All schemas failed. Return a single issue with full diagnostics.
     return singleFailure(
       ZemaIssue(
         code: 'invalid_union',
@@ -146,7 +146,7 @@ final class ZemaUnion<T> extends ZemaSchema<dynamic, T> {
   ///
   /// schema.parse({'type': 'click',    'x': 100, 'y': 200});
   /// schema.parse({'type': 'keypress', 'key': 'Enter'});
-  /// schema.parse({'type': 'unknown'});  // fails — invalid_union
+  /// schema.parse({'type': 'unknown'});  // fails, invalid_union
   /// ```
   ZemaUnion<T> discriminatedBy(String field) =>
       ZemaUnion(schemas, discriminator: field);

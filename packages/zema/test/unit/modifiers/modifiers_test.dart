@@ -3,7 +3,7 @@ import 'package:zema/src/error/issue.dart';
 import 'package:zema/src/factory.dart';
 import 'package:zema/src/modifiers/branded.dart';
 
-// Brand marker classes used in brand() tests — must be top-level in Dart.
+// Brand marker classes used in brand() tests, must be top-level in Dart.
 abstract class _UserIdBrand {}
 
 abstract class _TeamIdBrand {}

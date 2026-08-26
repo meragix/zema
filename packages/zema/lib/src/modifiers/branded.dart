@@ -25,7 +25,7 @@ extension ZSchemaBranding<I, O> on ZemaSchema<I, O> {
 /// preventing accidental mixing of semantically different values:
 ///
 /// ```dart
-/// // Two abstract marker classes — never instantiated
+/// // Two abstract marker classes, never instantiated
 /// abstract class _UserIdBrand {}
 /// abstract class _TeamIdBrand {}
 ///
@@ -39,7 +39,7 @@ extension ZSchemaBranding<I, O> on ZemaSchema<I, O> {
 /// final teamId = teamIdSchema.parse('660f9511-…');
 /// // teamId is Branded<String, _TeamIdBrand>
 ///
-/// // Compiler error — cannot pass a team ID where a user ID is expected
+/// // Compiler error, cannot pass a team ID where a user ID is expected
 /// void greet(Branded<String, _UserIdBrand> id) { … }
 /// greet(teamId); // compile-time error!
 /// ```
@@ -84,7 +84,7 @@ final class Branded<T, Brand> {
 /// Internal schema that validates with [base] and wraps the output in
 /// [Branded]`<O, B>`.
 ///
-/// Constructed by [ZSchemaBranding.brand] — do not instantiate directly.
+/// Constructed by [ZSchemaBranding.brand]. Do not instantiate directly.
 final class BrandedSchema<I, O, B> extends ZemaSchema<I, Branded<O, B>> {
   /// The underlying schema whose output is wrapped.
   final ZemaSchema<I, O> base;

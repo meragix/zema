@@ -7,19 +7,19 @@ import 'package:zema/src/helpers/validators.dart';
 
 /// A schema that validates `String` values.
 ///
-/// Construct via `z.string()` — do not instantiate directly.
+/// Construct via `z.string()`. Do not instantiate directly.
 ///
 /// ## Validation order
 ///
 /// When multiple constraints are active, they are checked in this order:
-/// 1. Type check — input must be a `String` (fail-fast, `invalid_type`).
-/// 2. Trim — if [trim] was called, whitespace is stripped from both ends
+/// 1. Type check. Input must be a `String` (fail-fast, `invalid_type`).
+/// 2. Trim. If [trim] was called, whitespace is stripped from both ends
 ///    **before** any further checks. The trimmed string is what gets returned
 ///    on success.
-/// 3. Length — [min] and [max] are checked against the (possibly trimmed) length.
-/// 4. Pattern — [regex] match is tested.
-/// 5. Format — [email], [url], [uuid], [dateTime] are tested in that order.
-/// 6. Enum — [oneOf] is checked last.
+/// 3. Length. [min] and [max] are checked against the (possibly trimmed) length.
+/// 4. Pattern. [regex] match is tested.
+/// 5. Format. [email], [url], [uuid], [dateTime] are tested in that order.
+/// 6. Enum. [oneOf] is checked last.
 ///
 /// All active constraints are evaluated; every failure is collected and
 /// returned together as a single [ZemaFailure].
@@ -48,9 +48,9 @@ import 'package:zema/src/helpers/validators.dart';
 /// ```
 ///
 /// See also:
-/// - `z.coerce().string()` — converts any value to a string before validating.
-/// - `z.coerce().dateTime()` — parses a string/int/DateTime into a [DateTime].
-/// - `z.dateTime()` — accepts DateTime, ISO 8601 string, or Unix timestamp.
+/// - `z.coerce().string()` converts any value to a string before validating.
+/// - `z.coerce().dateTime()` parses a string/int/DateTime into a [DateTime].
+/// - `z.dateTime()` accepts DateTime, ISO 8601 string, or Unix timestamp.
 final class ZemaString extends ZemaSchema<dynamic, String>
     with ZemaCustomMessage<dynamic, String> {
   /// Minimum allowed length (inclusive). `null` means no lower bound.
@@ -83,7 +83,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
   /// When `true`, the string must be a valid ISO 8601 date-time string
   /// parseable by [DateTime.tryParse].
   ///
-  /// This validates the **format** only — the output type remains `String`.
+  /// This validates the **format** only. The output type remains `String`.
   /// To obtain a [DateTime] value, chain `.transform(DateTime.parse)` or use
   /// `z.coerce().dateTime()` / `z.dateTime()` instead.
   ///
@@ -391,7 +391,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
   /// Requires the string to be a valid ISO 8601 date-time string.
   ///
   /// Validates that [DateTime.tryParse] can parse the string. The output
-  /// type remains `String` — this validates **format only**. To produce a
+  /// type remains `String`. This validates **format only**. To produce a
   /// [DateTime] output, chain `.transform(DateTime.parse)`:
   ///
   /// ```dart
@@ -427,7 +427,7 @@ final class ZemaString extends ZemaSchema<dynamic, String>
   /// ```
   ///
   /// See also:
-  /// - `z.literal(value)` — for a schema that matches a single exact value.
+  /// - `z.literal(value)` for a schema that matches a single exact value.
   ZemaString oneOf(List<String> values) => ZemaString(
         minLength: minLength,
         maxLength: maxLength,

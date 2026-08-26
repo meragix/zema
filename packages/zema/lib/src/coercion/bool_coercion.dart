@@ -7,7 +7,7 @@ import 'coerce.dart';
 
 /// A coercion schema that converts loosely-typed input to a Dart `bool`.
 ///
-/// Construct via `z.coerce().boolean()` — do not instantiate directly.
+/// Construct via `z.coerce().boolean()`. Do not instantiate directly.
 ///
 /// ## Standard mode (default)
 ///
@@ -30,8 +30,8 @@ import 'coerce.dart';
 /// `String → bool`) is considered unsafe for your context.
 ///
 /// ```dart
-/// z.coerce().boolean()               // standard — bool, int, string
-/// z.coerce().boolean(strict: true)   // strict — bool only
+/// z.coerce().boolean()               // standard, bool, int, string
+/// z.coerce().boolean(strict: true)   // strict, bool only
 /// ```
 ///
 /// ## Examples
@@ -49,13 +49,13 @@ import 'coerce.dart';
 /// schema.parse('no');    // false
 /// schema.parse('off');   // false
 ///
-/// schema.parse('maybe'); // fails — invalid_coercion
-/// schema.parse(2);       // fails — invalid_coercion
+/// schema.parse('maybe'); // fails, invalid_coercion
+/// schema.parse(2);       // fails, invalid_coercion
 /// ```
 ///
 /// See also:
-/// - [ZemaCoerce.boolean] — factory method on the `z.coerce()` namespace.
-/// - `z.boolean()` — strict schema that only accepts actual `bool` values.
+/// - [ZemaCoerce.boolean] is a factory method on the `z.coerce()` namespace.
+/// - `z.boolean()` is a strict schema that only accepts actual `bool` values.
 final class CoerceBool extends ZemaSchema<dynamic, bool> {
   /// When `true`, only native `bool` values are accepted.
   /// When `false` (default), also coerces `int` and recognised strings.

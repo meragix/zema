@@ -6,7 +6,7 @@ import 'package:zema/src/custom/custom_schema.dart';
 import 'package:zema/src/effects/lazy.dart';
 import 'package:zema/src/primitives/primitives.dart';
 
-/// The Zema schema factory — the single namespace for constructing schemas.
+/// The Zema schema factory, the single namespace for constructing schemas.
 ///
 /// You never instantiate [Zema] directly. Use the global [z] constant (or its
 /// alias [zema]) which holds the single shared instance:
@@ -37,11 +37,11 @@ import 'package:zema/src/primitives/primitives.dart';
 /// | [literal] | [ZemaLiteral] | `T` |
 /// | [lazy] | [ZemaSchema] | `O` |
 /// | [custom] | [ZemaSchema] | `T` |
-/// | [coerce] | [ZemaCoerce] | — (sub-namespace) |
+/// | [coerce] | [ZemaCoerce] | (sub-namespace) |
 ///
 /// See also:
-/// - [z] — the global constant to use in application code.
-/// - [ZemaSchema] — base class with parse, transform, and modifier methods.
+/// - [z] is the global constant to use in application code.
+/// - [ZemaSchema] is the base class with parse, transform, and modifier methods.
 @immutable
 class Zema {
   const Zema._();
@@ -73,7 +73,7 @@ class Zema {
 
   /// Creates a [ZemaInt] schema that validates `int` values.
   ///
-  /// The returned schema accepts Dart `int`s only — not `double`s or numeric
+  /// The returned schema accepts Dart `int`s only, not `double`s or numeric
   /// strings. Chain constraint methods to add range or sign checks:
   ///
   /// ```dart
@@ -150,7 +150,7 @@ class Zema {
   /// Creates a [ZemaArray] schema that validates `List` values.
   ///
   /// Every element in the list is validated against [element]. Validation is
-  /// exhaustive — all element failures are collected before returning.
+  /// exhaustive, all element failures are collected before returning.
   ///
   /// ```dart
   /// z.array(z.string())                // List of strings
@@ -168,7 +168,7 @@ class Zema {
 
   /// Creates a [ZemaObject] schema that validates `Map` values.
   ///
-  /// [shape] defines the expected fields — each key maps to the schema that
+  /// [shape] defines the expected fields, each key maps to the schema that
   /// validates its value. Extra keys in the input are silently ignored by
   /// default (use `.makeStrict()` to reject them). Missing optional fields
   /// arrive as `null` and are validated by their respective schema.
@@ -187,13 +187,13 @@ class Zema {
   /// ```
   ///
   /// Key [ZemaObject] methods available on the returned schema:
-  /// - `.extend(shape)` — adds fields to the schema.
-  /// - `.pick([keys])` — keeps only specific fields.
-  /// - `.omit([keys])` — removes specific fields.
-  /// - `.makeStrict()` — rejects unknown keys.
+  /// - `.extend(shape)` adds fields to the schema.
+  /// - `.pick([keys])` keeps only specific fields.
+  /// - `.omit([keys])` removes specific fields.
+  /// - `.makeStrict()` rejects unknown keys.
   ///
   /// See also:
-  /// - [objectAs] — produces a typed `T` instead of a raw map.
+  /// - [objectAs] produces a typed `T` instead of a raw map.
   ZemaObject<Map<String, dynamic>> object(
     Map<String, ZemaSchema<dynamic, dynamic>> shape,
   ) =>
@@ -221,7 +221,7 @@ class Zema {
   /// If [constructor] throws, the parse fails with a `transform_error` issue.
   ///
   /// See also:
-  /// - [object] — produces `Map<String, dynamic>` without a constructor.
+  /// - [object] produces `Map<String, dynamic>` without a constructor.
   ZemaObject<T> objectAs<T>(
     Map<String, ZemaSchema<dynamic, dynamic>> shape,
     T Function(Map<String, dynamic>) constructor,
@@ -244,7 +244,7 @@ class Zema {
   /// ```
   ///
   /// See also:
-  /// - [object] — for maps with a fixed, known set of string keys.
+  /// - [object] for maps with a fixed, known set of string keys.
   ZemaMap<K, V> map<K, V>(
     ZemaSchema<dynamic, K> keySchema,
     ZemaSchema<dynamic, V> valueSchema,
@@ -321,8 +321,8 @@ class Zema {
   /// if valid. If it returns `false`, a single issue with the given [message]
   /// (default: `'Custom validation failed'`) is produced.
   ///
-  /// Use [custom] for lightweight one-off rules. For richer control —
-  /// multiple issues, async checks, or access to context — use `.refine()`,
+  /// Use [custom] for lightweight one-off rules. For richer control,
+  /// such as multiple issues, async checks, or access to context, use `.refine()`,
   /// `.refineAsync()`, or `.superRefine()` on an existing schema instead.
   ///
   /// ```dart

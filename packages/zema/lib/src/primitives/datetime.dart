@@ -5,7 +5,7 @@ import 'package:zema/src/error/issue.dart';
 
 /// A schema that validates and parses date/time values into [DateTime].
 ///
-/// Construct via `z.dateTime()` — do not instantiate directly.
+/// Construct via `z.dateTime()`. Do not instantiate directly.
 ///
 /// Unlike the other primitive schemas, [ZemaDateTime] is also a **coercion**
 /// schema: it accepts multiple input representations and converts them to
@@ -23,18 +23,18 @@ import 'package:zema/src/error/issue.dart';
 /// ```dart
 /// final schema = z.dateTime();
 ///
-/// schema.parse(DateTime(2024, 1, 15));     // DateTime — passthrough
+/// schema.parse(DateTime(2024, 1, 15));     // DateTime, passthrough
 /// schema.parse('2024-01-15T10:30:00Z');    // ISO 8601 string
 /// schema.parse(1705312200000);             // Unix ms timestamp
 ///
-/// schema.parse('not-a-date');              // fails — invalid_date
-/// schema.parse(true);                      // fails — invalid_date
+/// schema.parse('not-a-date');              // fails, invalid_date
+/// schema.parse(true);                      // fails, invalid_date
 /// ```
 ///
 /// ## Range constraints
 ///
 /// Use [after], [before], or [between] to restrict the accepted range.
-/// Bounds are **inclusive** — a value equal to a bound passes.
+/// Bounds are **inclusive**, a value equal to a bound passes.
 ///
 /// ```dart
 /// final epoch = DateTime(1970);
@@ -49,7 +49,7 @@ import 'package:zema/src/error/issue.dart';
 /// `meta` map contains ISO 8601 strings for the bound and the received value.
 ///
 /// See also:
-/// - [ZemaSchema.optional] — to also accept `null` input.
+/// - [ZemaSchema.optional] to also accept `null` input.
 final class ZemaDateTime extends ZemaSchema<dynamic, DateTime> {
   /// Earliest allowed date (inclusive). `null` means no lower bound.
   final DateTime? min;

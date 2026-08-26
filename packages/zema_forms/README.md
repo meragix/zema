@@ -127,9 +127,9 @@ z.object({
 | `ZemaFormController(schema:)` | Create a controller for the given `ZemaObject`                      |
 | `controllerFor(field)`        | `TextEditingController` for the field                               |
 | `errorsFor(field)`            | `ValueNotifier<List<ZemaIssue>>` for per-field errors               |
-| `touchedFor(field)`           | `ValueNotifier<bool>` — `true` after field loses focus              |
+| `touchedFor(field)`           | `ValueNotifier<bool>`, `true` after field loses focus              |
 | `markTouched(field)`          | Force-mark a field as touched                                       |
-| `isSubmitted`                 | `ValueNotifier<bool>` — `true` after first `submit()`               |
+| `isSubmitted`                 | `ValueNotifier<bool>`, `true` after first `submit()`               |
 | `submitErrors`                | Issues from the last failed `submit()` call; empty on success       |
 | `submit()`                    | Validate, auto-focus first error, return typed output or `null`     |
 | `validatorFor(field)`         | `String? Function(String?)` for `TextFormField.validator`           |

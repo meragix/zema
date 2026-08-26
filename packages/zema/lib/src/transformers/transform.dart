@@ -8,13 +8,13 @@ import 'preprocess.dart';
 /// A schema that validates with [base] and then maps the output through
 /// [transformer], changing the output type from [O] to [T].
 ///
-/// Created by calling [ZemaSchema.transform] on any schema — do not
+/// Created by calling [ZemaSchema.transform] on any schema. Do not
 /// instantiate directly.
 ///
 /// ## Behaviour
 ///
 /// 1. [base] validates the input [I] → [O].
-/// 2. If [base] fails, its errors are forwarded unchanged — [transformer]
+/// 2. If [base] fails, its errors are forwarded unchanged. [transformer]
 ///    is never called.
 /// 3. If [base] succeeds, [transformer] is called with the validated [O].
 /// 4. If [transformer] throws, a `transform_error` issue is produced with
@@ -25,9 +25,9 @@ import 'preprocess.dart';
 ///
 /// ## Type parameters
 ///
-/// - [I] — raw input type (same as [base]'s input).
-/// - [O] — intermediate type produced by [base] on success.
-/// - [T] — final output type produced by [transformer].
+/// - [I] is the raw input type (same as [base]'s input).
+/// - [O] is the intermediate type produced by [base] on success.
+/// - [T] is the final output type produced by [transformer].
 ///
 /// ## Examples
 ///
@@ -44,10 +44,10 @@ import 'preprocess.dart';
 /// ```
 ///
 /// See also:
-/// - [ZemaSchema.transform] — the fluent API method that constructs this.
-/// - [PipedSchema] — chains two full schemas where the output of one is
+/// - [ZemaSchema.transform] is the fluent API method that constructs this.
+/// - [PipedSchema] chains two full schemas where the output of one is
 ///   the input of the next.
-/// - [PreprocessedSchema] — transforms the *input* before validation rather
+/// - [PreprocessedSchema] transforms the *input* before validation rather
 ///   than the output after it.
 final class TransformedSchema<I, O, T> extends ZemaSchema<I, T> {
   /// The schema that validates the raw input.

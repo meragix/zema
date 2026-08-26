@@ -21,10 +21,10 @@
 /// final box = await Hive.openBox('users');
 /// final userBox = box.withZema(userSchema);
 ///
-/// // Write — validated before storage
+/// // Write, validated before storage
 /// await userBox.put('alice', {'id': 'alice', 'name': 'Alice', 'email': 'alice@example.com'});
 ///
-/// // Read — validated on retrieval
+/// // Read, validated on retrieval
 /// final user = userBox.get('alice'); // Map<String, dynamic>?
 /// ```
 library;

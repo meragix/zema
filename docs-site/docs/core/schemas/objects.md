@@ -5,7 +5,7 @@ description: Validate objects and nested structures with Zema
 
 # Objects
 
-Validates `Map` values against a fixed set of named fields. Extra keys are silently stripped from the output by default. Validation is exhaustive — all field failures are collected before returning.
+Validates `Map` values against a fixed set of named fields. Extra keys are silently stripped from the output by default. Validation is exhaustive: all field failures are collected before returning.
 
 ---
 
@@ -83,7 +83,7 @@ final schema = z.object({
 schema.parse({
   'name': 'Alice',
   'email': 'alice@example.com',
-  // phone absent — OK, output contains phone: null
+  // phone absent, OK, output contains phone: null
 });
 ```
 
@@ -97,7 +97,7 @@ final schema = z.object({
 
 schema.parse({
   'name': 'Alice',
-  'bio': null,  // valid — explicit null accepted
+  'bio': null,  // valid, explicit null accepted
 });
 ```
 
@@ -182,7 +182,7 @@ Returns a new schema with the listed fields removed.
 
 ```dart
 final publicSchema = fullSchema.omit(['password']);
-// id, name, email kept — password excluded
+// id, name, email kept, password excluded
 ```
 
 ---
@@ -336,5 +336,5 @@ final configSchema = z.object({
 
 ## Next steps
 
-- [Refinements →](./refinements) — custom validation logic
-- [Composition →](../composition/merging-schemas) — extend, pick, omit patterns
+- [Refinements →](./refinements): custom validation logic
+- [Composition →](../composition/merging-schemas): extend, pick, omit patterns

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:zema/zema.dart';
 import 'package:zema_forms/zema_forms.dart';
 
-// Schema defined at file scope — one allocation, reused for every form build.
+// Schema defined at file scope. One allocation, reused for every form build.
 final _loginSchema = z.object({
   'email': z.string().email(),
   'password': z.string().min(8),

@@ -48,7 +48,7 @@ typedef ZemaHiveMigration = Map<String, dynamic> Function(
 /// A type-safe wrapper around a Hive [Box] that validates every read and write
 /// through a [ZemaSchema].
 ///
-/// Documents are stored as raw [Map<String, dynamic>] — no [TypeAdapter], no
+/// Documents are stored as raw [Map<String, dynamic>] with no [TypeAdapter], no
 /// code generation required.
 ///
 /// ## Create
@@ -58,7 +58,7 @@ typedef ZemaHiveMigration = Map<String, dynamic> Function(
 /// final userBox = box.withZema(userSchema);
 /// ```
 ///
-/// ## Write — validated before storage
+/// ## Write, validated before storage
 ///
 /// ```dart
 /// await userBox.put('alice', {
@@ -67,11 +67,11 @@ typedef ZemaHiveMigration = Map<String, dynamic> Function(
 /// });
 /// ```
 ///
-/// ## Read — validated on retrieval
+/// ## Read, validated on retrieval
 ///
 /// ```dart
 /// final user = userBox.get('alice');
-/// // Map<String, dynamic>? — null if key does not exist or validation fails
+/// // Map<String, dynamic>? - null if key does not exist or validation fails
 /// ```
 ///
 /// ## Migration
@@ -107,7 +107,7 @@ final class ZemaBox<T extends Object> {
 
   /// Validates [value] against the schema and writes it to Hive.
   ///
-  /// Throws [ZemaHiveException] if validation fails — nothing is written.
+  /// Throws [ZemaHiveException] if validation fails; nothing is written.
   Future<void> put(String key, T value) async {
     final map = _toMap(value);
 
@@ -127,7 +127,7 @@ final class ZemaBox<T extends Object> {
   /// Validates all [entries] and writes them atomically.
   ///
   /// Every entry is validated before any write occurs. Throws
-  /// [ZemaHiveException] on the first validation failure — nothing is written.
+  /// [ZemaHiveException] on the first validation failure; nothing is written.
   Future<void> putAll(Map<String, T> entries) async {
     final validated = <String, Map<String, dynamic>>{};
 
@@ -259,7 +259,7 @@ final class ZemaBox<T extends Object> {
         return _onParseError?.call(key, migrated, migratedErrors) ??
             defaultValue;
       } catch (_) {
-        // Migration callback threw — fall through to onParseError.
+        // Migration callback threw, fall through to onParseError.
       }
     }
 

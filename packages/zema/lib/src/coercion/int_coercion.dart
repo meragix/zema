@@ -7,7 +7,7 @@ import 'coerce.dart';
 
 /// A coercion schema that converts loosely-typed input to a Dart `int`.
 ///
-/// Construct via `z.coerce().integer()` — do not instantiate directly.
+/// Construct via `z.coerce().integer()`. Do not instantiate directly.
 ///
 /// ## Standard mode (default)
 ///
@@ -31,8 +31,8 @@ import 'coerce.dart';
 /// (e.g. internal pipeline data where strings should never appear).
 ///
 /// ```dart
-/// z.coerce().integer()               // standard — int, double, string
-/// z.coerce().integer(strict: true)   // strict — int and double only
+/// z.coerce().integer()               // standard, int, double, string
+/// z.coerce().integer(strict: true)   // strict, int and double only
 /// ```
 ///
 /// ## Range constraints
@@ -48,8 +48,8 @@ import 'coerce.dart';
 /// Range failures produce `too_small` or `too_big` issues respectively.
 ///
 /// See also:
-/// - [ZemaCoerce.integer] — factory method on the `z.coerce()` namespace.
-/// - `z.int()` — strict schema that only accepts actual `int` values.
+/// - [ZemaCoerce.integer] is a factory method on the `z.coerce()` namespace.
+/// - `z.int()` is a strict schema that only accepts actual `int` values.
 final class CoerceInt extends ZemaSchema<dynamic, int> {
   /// Lower bound (inclusive). Applied after coercion. `null` means no limit.
   final int? min;

@@ -34,6 +34,6 @@ final ZemaTranslations englishTranslations = {
   'wrong_length': (p) => 'Must be exactly ${p?['length']} characters',
   'invalid_datetime_string': (p) => 'Must be a valid ISO 8601 date-time string',
   'async_refinement_skipped': (p) =>
-      'Schema has async refinements — use safeParseAsync() or parseAsync() '
+      'Schema has async refinements. Use safeParseAsync() or parseAsync() '
       'instead of safeParse() or parse()',
 };

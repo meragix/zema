@@ -12,10 +12,10 @@ Deployed automatically to GitHub Pages on every push to `main` that touches the 
 
 | Package | Description |
 |---|---|
-| [`authyra`](https://pub.dev/packages/authyra) | Core framework — pure Dart, zero Flutter dependency |
-| [`authyra_flutter`](https://pub.dev/packages/authyra_flutter) | Flutter layer — OAuth2 providers, `SecureAuthStorage`, widgets, GoRouter guard |
+| [`authyra`](https://pub.dev/packages/authyra) | Core framework: pure Dart, zero Flutter dependency |
+| [`authyra_flutter`](https://pub.dev/packages/authyra_flutter) | Flutter layer: OAuth2 providers, `SecureAuthStorage`, widgets, GoRouter guard |
 
-`authyra_flutter` re-exports the entire `authyra` package — Flutter apps only need one import.
+`authyra_flutter` re-exports the entire `authyra` package, so Flutter apps only need one import.
 
 ---
 

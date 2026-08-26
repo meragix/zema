@@ -22,7 +22,7 @@
 ///
 /// // Reading
 /// final snapshot = await usersRef.doc('abc').get();
-/// final user = snapshot.data(); // Map<String, dynamic> — validated
+/// final user = snapshot.data(); // Map<String, dynamic>, validated
 ///
 /// // Writing
 /// await usersRef.doc('abc').set({'name': 'Alice', 'email': 'alice@example.com'});

@@ -55,7 +55,7 @@ class ZemaForm<T> extends StatelessWidget {
   /// Returns the nearest [ZemaFormController] from the widget tree, or `null`
   /// when there is no [ZemaForm] ancestor.
   ///
-  /// This call does not register a dependency on [ZemaForm] — the controller
+  /// This call does not register a dependency on [ZemaForm]. The controller
   /// reference is expected to be stable for the lifetime of the form state.
   ///
   /// The type parameter [T] is used only for the return type cast. The lookup

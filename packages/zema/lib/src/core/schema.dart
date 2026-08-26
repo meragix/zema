@@ -16,7 +16,7 @@ import 'package:zema/src/transformers/transform.dart';
 /// The foundation of every Zema schema.
 ///
 /// [ZemaSchema] is a generic, immutable description of a validation rule.
-/// It accepts a value of type [Input], validates it, and—if valid—produces
+/// It accepts a value of type [Input], validates it, and, if valid, produces
 /// a value of type [Output]. [Input] and [Output] may differ when
 /// transformations are applied (see [transform] and [pipe]).
 ///
@@ -49,7 +49,7 @@ import 'package:zema/src/transformers/transform.dart';
 /// // Throws ZemaException on invalid input
 /// final user = schema.parse({'name': 'Alice', 'age': 30});
 ///
-/// // Returns ZemaResult — never throws
+/// // Returns ZemaResult, never throws
 /// final result = schema.safeParse({'name': 'X', 'age': -1});
 /// if (result.isFailure) {
 ///   for (final issue in result.errors) {
@@ -71,8 +71,8 @@ import 'package:zema/src/transformers/transform.dart';
 /// ```
 ///
 /// Type parameters:
-/// - [Input] — the raw type accepted by [safeParse] (often `dynamic`).
-/// - [Output] — the validated, possibly-transformed type produced on success.
+/// - [Input] is the raw type accepted by [safeParse] (often `dynamic`).
+/// - [Output] is the validated, possibly-transformed type produced on success.
 abstract class ZemaSchema<Input, Output> {
   const ZemaSchema();
 
@@ -87,16 +87,16 @@ abstract class ZemaSchema<Input, Output> {
   /// you want a hard crash rather than conditional error-handling.
   ///
   /// ```dart
-  /// // Succeeds — returns the validated value
+  /// // Succeeds, returns the validated value
   /// final name = z.string().min(2).parse('Alice'); // 'Alice'
   ///
-  /// // Fails — throws ZemaException
+  /// // Fails, throws ZemaException
   /// z.string().min(2).parse('X');
   /// ```
   ///
   /// See also:
-  /// - [safeParse] — returns a [ZemaResult] instead of throwing.
-  /// - [parseAsync] — the async equivalent.
+  /// - [safeParse] returns a [ZemaResult] instead of throwing.
+  /// - [parseAsync] is the async equivalent.
   Output parse(Input value) {
     final result = safeParse(value);
     if (result.isFailure) {
@@ -105,7 +105,7 @@ abstract class ZemaSchema<Input, Output> {
     return result.value;
   }
 
-  /// Parses [value] and returns a [ZemaResult] — never throws.
+  /// Parses [value] and returns a [ZemaResult], never throws.
   ///
   /// On success, returns [ZemaSuccess] wrapping the validated [Output].
   /// On failure, returns [ZemaFailure] wrapping every [ZemaIssue] collected
@@ -127,8 +127,8 @@ abstract class ZemaSchema<Input, Output> {
   /// ```
   ///
   /// See also:
-  /// - [parse] — throws on failure instead.
-  /// - [safeParseAsync] — the async equivalent.
+  /// - [parse] throws on failure instead.
+  /// - [safeParseAsync] is the async equivalent.
   ZemaResult<Output> safeParse(Input value);
 
   /// Asynchronously parses [value] and returns the validated [Output].
@@ -145,8 +145,8 @@ abstract class ZemaSchema<Input, Output> {
   /// ```
   ///
   /// See also:
-  /// - [safeParseAsync] — returns [ZemaResult] instead of throwing.
-  /// - [parse] — the synchronous equivalent.
+  /// - [safeParseAsync] returns [ZemaResult] instead of throwing.
+  /// - [parse] is the synchronous equivalent.
   Future<Output> parseAsync(Input value) async {
     final result = await safeParseAsync(value);
     if (result.isFailure) {
@@ -155,7 +155,7 @@ abstract class ZemaSchema<Input, Output> {
     return result.value;
   }
 
-  /// Asynchronously parses [value] and returns a [ZemaResult] — never throws.
+  /// Asynchronously parses [value] and returns a [ZemaResult], never throws.
   ///
   /// The default implementation simply delegates to [safeParse], so sync-only
   /// schemas work transparently in async pipelines without any extra code.
@@ -183,8 +183,8 @@ abstract class ZemaSchema<Input, Output> {
   /// ```
   ///
   /// See also:
-  /// - [safeParseAsync] — the non-throwing variant.
-  /// - [parseAsync] — throws on failure.
+  /// - [safeParseAsync] is the non-throwing variant.
+  /// - [parseAsync] throws on failure.
   Future<ZemaResult<Output>> safeParseAsync(Input value) async {
     return safeParse(value);
   }
@@ -213,12 +213,12 @@ abstract class ZemaSchema<Input, Output> {
   /// manually via `Isolate.run(() => schema.safeParse(value))` inside a
   /// closure that captures the schema in the spawning isolate.
   ///
-  /// For async refinements, use [safeParseAsync] directly — async refinements
+  /// For async refinements, use [safeParseAsync] directly. Async refinements
   /// perform I/O and do not benefit from isolate offloading.
   ///
   /// See also:
-  /// - [safeParse] — the synchronous equivalent.
-  /// - [safeParseAsync] — for schemas with async refinements.
+  /// - [safeParse] is the synchronous equivalent.
+  /// - [safeParseAsync] for schemas with async refinements.
   Future<ZemaResult<Output>> parseInIsolate(Input value) =>
       Isolate.run(() => safeParse(value));
 
@@ -248,9 +248,9 @@ abstract class ZemaSchema<Input, Output> {
   /// If [fn] throws, [safeParse] returns a failure with code `transform_error`.
   ///
   /// See also:
-  /// - [pipe] — for connecting two full schemas where one's output feeds into
+  /// - [pipe] for connecting two full schemas where one's output feeds into
   ///   another's input.
-  /// - [preprocess] — for transforming the *input* before validation, not after.
+  /// - [preprocess] for transforming the *input* before validation, not after.
   ZemaSchema<Input, T> transform<T>(T Function(Output) fn) =>
       TransformedSchema(this, fn);
 
@@ -277,15 +277,15 @@ abstract class ZemaSchema<Input, Output> {
   /// ```
   ///
   /// See also:
-  /// - [transform] — for a simple one-step output transformation.
-  /// - [preprocess] — for transforming the raw *input* before this schema runs.
+  /// - [transform] for a simple one-step output transformation.
+  /// - [preprocess] for transforming the raw *input* before this schema runs.
   ZemaSchema<Input, T> pipe<T>(ZemaSchema<Output, T> next) =>
       PipedSchema(this, next);
 
   /// Applies [fn] to transform the raw input before this schema validates it.
   ///
   /// [preprocess] runs **before** validation. The original [Input] type of
-  /// this schema becomes [I] — the type your preprocessing function accepts.
+  /// this schema becomes [I], the type your preprocessing function accepts.
   /// The [Output] type is unchanged.
   ///
   /// Use this to normalize messy data before it hits your schema rules:
@@ -307,8 +307,8 @@ abstract class ZemaSchema<Input, Output> {
   /// ```
   ///
   /// See also:
-  /// - [transform] — for transforming the *output* after validation.
-  /// - [pipe] — for chaining two complete schemas together.
+  /// - [transform] for transforming the *output* after validation.
+  /// - [pipe] for chaining two complete schemas together.
   ZemaSchema<I, Output> preprocess<I>(Input Function(I) fn) =>
       PreprocessedSchema<I, Input, Output>(fn, this);
 
@@ -328,8 +328,8 @@ abstract class ZemaSchema<Input, Output> {
   /// ```dart
   /// final schema = z.string().min(2).optional();
   ///
-  /// schema.parse(null);    // null  — OK
-  /// schema.parse('Alice'); // 'Alice' — OK
+  /// schema.parse(null);    // null, OK
+  /// schema.parse('Alice'); // 'Alice', OK
   /// schema.parse('X');     // fails: too short
   ///
   /// // Inside an object, missing keys arrive as null
@@ -340,8 +340,8 @@ abstract class ZemaSchema<Input, Output> {
   /// ```
   ///
   /// See also:
-  /// - [nullable] — explicit null is a valid *non-absent* value.
-  /// - [withDefault] — provide a fallback so the output is never null.
+  /// - [nullable] explicit null is a valid *non-absent* value.
+  /// - [withDefault] provide a fallback so the output is never null.
   ZemaSchema<Input?, Output?> optional() => OptionalSchema(this);
 
   /// Wraps this schema so that an explicit `null` input produces a `null`
@@ -357,20 +357,20 @@ abstract class ZemaSchema<Input, Output> {
   /// ```dart
   /// final schema = z.string().nullable();
   ///
-  /// schema.parse(null);    // null  — OK
-  /// schema.parse('Alice'); // 'Alice' — OK
+  /// schema.parse(null);    // null, OK
+  /// schema.parse('Alice'); // 'Alice', OK
   /// schema.parse(42);      // fails: not a string
   /// ```
   ///
   /// See also:
-  /// - [optional] — for absent/missing values.
-  /// - [withDefault] — provide a fallback so the output is never null.
+  /// - [optional] for absent/missing values.
+  /// - [withDefault] provide a fallback so the output is never null.
   ZemaSchema<Input?, Output?> nullable() => NullableSchema(this);
 
   /// Wraps this schema so that `null` input (or a validation failure) yields
   /// [defaultValue] instead of a failure.
   ///
-  /// The returned schema has type `ZemaSchema<Input?, Output>` — the output
+  /// The returned schema has type `ZemaSchema<Input?, Output>`. The output
   /// is never `null` because [defaultValue] fills in the gap.
   ///
   /// ```dart
@@ -387,8 +387,8 @@ abstract class ZemaSchema<Input, Output> {
   /// ```
   ///
   /// See also:
-  /// - [optional] — produces `null` instead of a fallback.
-  /// - [catchError] — for computing a fallback dynamically from the issues.
+  /// - [optional] produces `null` instead of a fallback.
+  /// - [catchError] for computing a fallback dynamically from the issues.
   ZemaSchema<Input?, Output> withDefault(Output defaultValue) =>
       DefaultSchema(this, defaultValue);
 
@@ -397,7 +397,7 @@ abstract class ZemaSchema<Input, Output> {
   ///
   /// Unlike [withDefault], the fallback is derived **from the actual issues**,
   /// giving you full context to decide what to return. The resulting schema
-  /// always succeeds — it never propagates failures to the caller.
+  /// always succeeds, it never propagates failures to the caller.
   ///
   /// ```dart
   /// // Return a sentinel value when validation fails
@@ -415,8 +415,8 @@ abstract class ZemaSchema<Input, Output> {
   /// ```
   ///
   /// See also:
-  /// - [withDefault] — for a static fallback that does not depend on issues.
-  /// - [optional] / [nullable] — for null-based fallbacks.
+  /// - [withDefault] for a static fallback that does not depend on issues.
+  /// - [optional] / [nullable] for null-based fallbacks.
   ZemaSchema<Input, Output> catchError(
     Output Function(List<ZemaIssue>) handler,
   ) =>

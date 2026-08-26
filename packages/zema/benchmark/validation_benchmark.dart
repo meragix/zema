@@ -26,7 +26,7 @@ class IntegerBenchmark extends BenchmarkBase {
 }
 
 // ---------------------------------------------------------------------------
-// Object — flat
+// Object, flat
 // ---------------------------------------------------------------------------
 
 class FlatObjectBenchmark extends BenchmarkBase {
@@ -51,7 +51,7 @@ class FlatObjectBenchmark extends BenchmarkBase {
 }
 
 // ---------------------------------------------------------------------------
-// Object — nested
+// Object, nested
 // ---------------------------------------------------------------------------
 
 class NestedObjectBenchmark extends BenchmarkBase {
@@ -106,7 +106,7 @@ class ArrayOfObjectsBenchmark extends BenchmarkBase {
 }
 
 // ---------------------------------------------------------------------------
-// Union — linear scan
+// Union, linear scan
 // ---------------------------------------------------------------------------
 
 class UnionLinearBenchmark extends BenchmarkBase {
@@ -127,7 +127,7 @@ class UnionLinearBenchmark extends BenchmarkBase {
 }
 
 // ---------------------------------------------------------------------------
-// Union — discriminated
+// Union, discriminated
 // ---------------------------------------------------------------------------
 
 class UnionDiscriminatedBenchmark extends BenchmarkBase {

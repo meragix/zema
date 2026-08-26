@@ -33,7 +33,7 @@ extension ZemaSchemaRefinement<I, O> on ZemaSchema<I, O> {
   /// );
   ///
   /// palindrome.parse('racecar'); // 'racecar'
-  /// palindrome.parse('hello');   // fails — not_palindrome
+  /// palindrome.parse('hello');   // fails, not_palindrome
   ///
   /// // Compound rule on an object
   /// final rangeSchema = z.object({
@@ -45,13 +45,13 @@ extension ZemaSchemaRefinement<I, O> on ZemaSchema<I, O> {
   /// );
   /// ```
   ///
-  /// Note: chained `.refine()` calls are sequential — the first failure stops
+  /// Note: chained `.refine()` calls are sequential, the first failure stops
   /// the chain. To collect multiple issues in a single pass, use [superRefine].
   ///
   /// See also:
-  /// - [refineAsync] — for predicates that require async I/O.
-  /// - [refineWarn] — for advisory checks that don't block the parse.
-  /// - [superRefine] — for producing multiple issues or accessing a context.
+  /// - [refineAsync] for predicates that require async I/O.
+  /// - [refineWarn] for advisory checks that don't block the parse.
+  /// - [superRefine] for producing multiple issues or accessing a context.
   ZemaSchema<I, O> refine(
     bool Function(O) predicate, {
     String? message,
@@ -91,8 +91,8 @@ extension ZemaSchemaRefinement<I, O> on ZemaSchema<I, O> {
   /// ```
   ///
   /// See also:
-  /// - [refine] — the synchronous equivalent.
-  /// - [ZemaSchema.safeParseAsync] — required to exercise async refinements.
+  /// - [refine] is the synchronous equivalent.
+  /// - [ZemaSchema.safeParseAsync] is required to exercise async refinements.
   ZemaSchema<I, O> refineAsync(
     Future<bool> Function(O) predicate, {
     String? message,
@@ -122,14 +122,14 @@ extension ZemaSchemaRefinement<I, O> on ZemaSchema<I, O> {
   ///     );
   ///
   /// final result = passwordSchema.safeParse('hello123');
-  /// print(result.isSuccess);       // true — parse succeeded
+  /// print(result.isSuccess);       // true, parse succeeded
   /// print(result.hasWarnings);     // true
   /// print(result.warnings.first.message); // advisory message
   /// ```
   ///
   /// See also:
-  /// - [refine] — the error-level equivalent.
-  /// - [ZemaResult.warnings] — where warning issues are surfaced.
+  /// - [refine] is the error-level equivalent.
+  /// - [ZemaResult.warnings] is where warning issues are surfaced.
   ZemaSchema<I, O> refineWarn(
     bool Function(O) predicate, {
     String? message,
@@ -172,8 +172,8 @@ extension ZemaSchemaRefinement<I, O> on ZemaSchema<I, O> {
   /// Return `null` or an empty list to indicate that no issues were found.
   ///
   /// See also:
-  /// - [refine] — simpler API for single-issue predicates.
-  /// - [ValidationContext] — the context object passed to the validator.
+  /// - [refine] simpler API for single-issue predicates.
+  /// - [ValidationContext] is the context object passed to the validator.
   ZemaSchema<I, O> superRefine(
     List<ZemaIssue>? Function(O, ValidationContext) validator,
   ) =>
@@ -215,7 +215,7 @@ final class _AsyncRefinedSchema<I, O> extends ZemaSchema<I, O> {
   const _AsyncRefinedSchema(this.base, this.predicate, this.message, this.code);
 
   /// Calling [safeParse] on a schema that contains async refinements is a
-  /// programming error — the async predicate would be silently skipped,
+  /// programming error. The async predicate would be silently skipped,
   /// producing a false success. This method returns a [ZemaFailure] with
   /// code `async_refinement_skipped` to surface the mistake immediately.
   ///
@@ -293,7 +293,7 @@ final class _WarnRefinedSchema<I, O> extends ZemaSchema<I, O> {
 /// Context object passed to [ZemaSchemaRefinement.superRefine] validators.
 ///
 /// Carries the field path and any metadata associated with the current
-/// validation call. Currently used as a carrier for future extensibility —
+/// validation call. Currently used as a carrier for future extensibility.
 /// inspect [path] and [meta] when constructing issues manually.
 ///
 /// ```dart

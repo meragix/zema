@@ -18,7 +18,7 @@ const _existingUser = {
 /// Demonstrates:
 /// - [ZemaFormController.initialValues] to pre-populate fields
 /// - Form-mode bridge: [ZemaFormController.validatorFor] with native
-///   [TextFormField] — zero migration cost for existing forms
+///   [TextFormField], zero migration cost for existing forms
 /// - [ZemaFormController.setValue] to reload data programmatically
 /// - [ZemaFormController.reset] to discard changes
 class ProfilePage extends StatefulWidget {
@@ -91,7 +91,7 @@ class _ProfilePageState extends State<ProfilePage> {
               const SizedBox(height: 24),
 
               // Form-mode: standard Flutter Form + TextFormField.
-              // validatorFor(field) returns String? Function(String?) —
+              // validatorFor(field) returns String? Function(String?),
               // the exact signature TextFormField.validator expects.
               Form(
                 key: _formKey,
@@ -159,7 +159,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 title: 'Why validatorFor?',
                 body: 'Existing apps using Flutter\'s Form widget can adopt '
                     'Zema schemas incrementally. Replace validators one field '
-                    'at a time — no need to rewrite the whole form.',
+                    'at a time, no need to rewrite the whole form.',
               ),
             ],
           ),

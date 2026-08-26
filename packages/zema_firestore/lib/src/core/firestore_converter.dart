@@ -115,7 +115,7 @@ final class ZemaFirestoreConverter<T> {
   /// 3. Removes [documentIdField] (Firestore manages document IDs).
   /// 4. Converts [DateTime] fields to [Timestamp].
   Map<String, dynamic> toFirestore(T value, SetOptions? options) {
-    // Extension types are Map<String, dynamic> at runtime — the cast is safe.
+    // Extension types are Map<String, dynamic> at runtime. The cast is safe.
     final map = Map<String, dynamic>.from(value as Map<String, dynamic>);
 
     if (validateWrites) {

@@ -5,7 +5,7 @@ import 'package:zema/src/error/issue.dart';
 
 /// A schema that accepts **only** a single exact value.
 ///
-/// Construct via `z.literal(value)` — do not instantiate directly.
+/// Construct via `z.literal(value)`. Do not instantiate directly.
 ///
 /// Equality is tested with `==`. Any input that does not equal the expected
 /// [value] produces an `invalid_literal` issue.
@@ -25,13 +25,13 @@ import 'package:zema/src/error/issue.dart';
 ///
 /// ```dart
 /// z.literal('admin').parse('admin');   // 'admin'
-/// z.literal('admin').parse('user');    // fails — invalid_literal
+/// z.literal('admin').parse('user');    // fails, invalid_literal
 ///
 /// z.literal(42).parse(42);             // 42
-/// z.literal(42).parse(43);             // fails — invalid_literal
+/// z.literal(42).parse(43);             // fails, invalid_literal
 ///
 /// z.literal(true).parse(true);         // true
-/// z.literal(true).parse(1);            // fails — int != bool
+/// z.literal(true).parse(1);            // fails, int != bool
 /// ```
 ///
 /// ## Union of literals
@@ -55,8 +55,8 @@ import 'package:zema/src/error/issue.dart';
 /// listed in `meta['allowed']`.
 ///
 /// See also:
-/// - `z.string().oneOf(values)` — for a closed string set with richer errors.
-/// - `z.union(schemas)` — for combining multiple schemas into one.
+/// - `z.string().oneOf(values)` for a closed string set with richer errors.
+/// - `z.union(schemas)` for combining multiple schemas into one.
 final class ZemaLiteral<T> extends ZemaSchema<dynamic, T> {
   /// The exact value this schema accepts.
   final T value;

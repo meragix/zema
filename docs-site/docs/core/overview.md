@@ -35,7 +35,7 @@ z.string()     // String
 z.integer()    // int
 z.double()     // double
 z.boolean()    // bool
-z.dateTime()   // DateTime — also accepts String (ISO 8601) and int (Unix ms)
+z.dateTime()   // DateTime, also accepts String (ISO 8601) and int (Unix ms)
 ```
 
 [Primitives reference →](./schemas/primitives)
@@ -93,10 +93,10 @@ Every schema exposes four parse methods:
 `safeParse` is the standard entry point. `parse` is for contexts where a failure is a programming error and a hard crash is acceptable.
 
 ```dart
-// safeParse — never throws
+// safeParse, never throws
 final result = schema.safeParse(data);
 
-// parse — throws ZemaException on failure
+// parse, throws ZemaException on failure
 final value = schema.parse(data);
 ```
 
@@ -235,7 +235,7 @@ final class ZemaIssue {
 | `.url()`       | `invalid_url`    |
 | `.uuid()`      | `invalid_uuid`   |
 | `.oneOf([...])` | `invalid_enum`  |
-| `.trim()`      | —                |
+| `.trim()`      | N/A              |
 
 ### Integer constraints
 
@@ -267,18 +267,18 @@ final class ZemaIssue {
 
 **Foundations:**
 
-1. [Primitives](./schemas/primitives) — string, integer, double, boolean, dateTime
-2. [Objects](./schemas/objects) — nested structures and typed output
-3. [Arrays](./schemas/arrays) — list validation
+1. [Primitives](./schemas/primitives): string, integer, double, boolean, dateTime
+2. [Objects](./schemas/objects): nested structures and typed output
+3. [Arrays](./schemas/arrays): list validation
 
 **Intermediate:**
 
-1. [Error Handling](./validation/error-handling) — ZemaResult, ZemaIssue, paths
-2. [Transformations](./transformations/transforms) — transform, pipe, preprocess
-3. [Refinements](./schemas/refinements) — refine, superRefine, refineAsync
+1. [Error Handling](./validation/error-handling): ZemaResult, ZemaIssue, paths
+2. [Transformations](./transformations/transforms): transform, pipe, preprocess
+3. [Refinements](./schemas/refinements): refine, superRefine, refineAsync
 
 **Advanced:**
 
-1. [Coercion](./coercion) — form data, query strings, environment variables
-2. [Composition](./composition/merging-schemas) — extend, pick, omit, makeStrict
-3. [Lazy schemas](./schemas/lazy) — recursive and self-referential types
+1. [Coercion](./coercion): form data, query strings, environment variables
+2. [Composition](./composition/merging-schemas): extend, pick, omit, makeStrict
+3. [Lazy schemas](./schemas/lazy): recursive and self-referential types

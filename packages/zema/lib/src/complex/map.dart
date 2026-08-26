@@ -9,22 +9,22 @@ import 'object.dart';
 /// A schema that validates `Map` values with a **dynamic** set of entries,
 /// producing a typed `Map<K, V>`.
 ///
-/// Construct via `z.map(keySchema, valueSchema)` — do not instantiate directly.
+/// Construct via `z.map(keySchema, valueSchema)`. Do not instantiate directly.
 ///
 /// ## ZemaMap vs ZemaObject
 ///
 /// | | [ZemaMap] | [ZemaObject] |
 /// |---|---|---|
-/// | Keys | Dynamic — any number, validated by [keySchema] | Fixed — defined in the shape |
+/// | Keys | Dynamic, any number, validated by [keySchema] | Fixed, defined in the shape |
 /// | Use case | Dictionaries, lookup tables | Structured records |
 /// | Output type | `Map<K, V>` | `Map<String, dynamic>` or `T` |
 ///
 /// ## Validation
 ///
-/// 1. **Type check** — input must be a `Map` (`invalid_type` on failure).
-/// 2. **Size constraints** — [minSize] and [maxSize] are checked before entries
+/// 1. **Type check**. Input must be a `Map` (`invalid_type` on failure).
+/// 2. **Size constraints**. [minSize] and [maxSize] are checked before entries
 ///    (`too_small` / `too_big`).
-/// 3. **Entry validation** — every key is validated by [keySchema] and every
+/// 3. **Entry validation**. Every key is validated by [keySchema] and every
 ///    value by [valueSchema]. Validation is **exhaustive**: all entry failures
 ///    are collected before returning. Issues are scoped to the entry's key
 ///    string in [ZemaIssue.path].
@@ -52,8 +52,8 @@ import 'object.dart';
 /// ```
 ///
 /// See also:
-/// - [ZemaObject] — for maps with a fixed, named set of fields.
-/// - `z.map` — factory method in [Zema].
+/// - [ZemaObject] for maps with a fixed, named set of fields.
+/// - `z.map` is a factory method in [Zema].
 final class ZemaMap<K, V> extends ZemaSchema<dynamic, Map<K, V>> {
   /// Schema applied to every key in the input map.
   final ZemaSchema<dynamic, K> keySchema;

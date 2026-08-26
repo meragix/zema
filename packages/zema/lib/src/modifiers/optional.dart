@@ -6,14 +6,14 @@ import 'package:zema/src/modifiers/modifiers.dart';
 /// A schema that passes `null` through as a `null` output, and delegates
 /// non-null values to the wrapped [base] schema.
 ///
-/// Created by calling [ZemaSchema.optional] on any schema — do not instantiate
+/// Created by calling [ZemaSchema.optional] on any schema. Do not instantiate
 /// directly.
 ///
 /// ## Behaviour
 ///
 /// | Input | Output |
 /// |---|---|
-/// | `null` | `success(null)` — no validation runs |
+/// | `null` | `success(null)`, no validation runs |
 /// | non-null | result of `base.safeParse(value)` |
 ///
 /// The output type widens from `O` to `O?`, and the input type widens from
@@ -21,7 +21,7 @@ import 'package:zema/src/modifiers/modifiers.dart';
 ///
 /// ## Typical use
 ///
-/// Use [OptionalSchema] for fields that may be **absent** — for example, a
+/// Use [OptionalSchema] for fields that may be **absent**, for example, a
 /// JSON key that is not always present. In a [ZemaObject] schema, missing
 /// keys arrive as `null`, so making a field optional means it can be omitted
 /// entirely:
@@ -42,11 +42,11 @@ import 'package:zema/src/modifiers/modifiers.dart';
 /// async delegate is only called for non-null values.
 ///
 /// See also:
-/// - [NullableSchema] — same short-circuit but intended for fields whose
+/// - [NullableSchema] same short-circuit but intended for fields whose
 ///   null has semantic meaning rather than being simply absent.
-/// - [DefaultSchema] — like [OptionalSchema] but substitutes a fallback
+/// - [DefaultSchema] like [OptionalSchema] but substitutes a fallback
 ///   value so the output is never `null`.
-/// - [ZemaSchema.optional] — the fluent API method that constructs this.
+/// - [ZemaSchema.optional] is the fluent API method that constructs this.
 final class OptionalSchema<I, O> extends ZemaSchema<I?, O?> {
   /// The schema used to validate non-null input.
   final ZemaSchema<I, O> base;

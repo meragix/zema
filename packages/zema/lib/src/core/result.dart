@@ -5,11 +5,11 @@ import 'package:zema/src/error/severity.dart';
 
 import 'schema.dart';
 
-/// The result of a Zema validation — either a success or a failure.
+/// The result of a Zema validation, either a success or a failure.
 ///
 /// [ZemaResult] is a sealed type with exactly two variants:
-/// - [ZemaSuccess] — validation passed; holds the validated [T] value.
-/// - [ZemaFailure] — validation failed; holds one or more [ZemaIssue]s.
+/// - [ZemaSuccess] validation passed; holds the validated [T] value.
+/// - [ZemaFailure] validation failed; holds one or more [ZemaIssue]s.
 ///
 /// ## Pattern matching (recommended)
 ///
@@ -56,9 +56,9 @@ import 'schema.dart';
 /// ```
 ///
 /// See also:
-/// - [ZemaSuccess] — the success variant.
-/// - [ZemaFailure] — the failure variant.
-/// - [success], [failure], [singleFailure] — factory helpers for schema authors.
+/// - [ZemaSuccess] the success variant.
+/// - [ZemaFailure] the failure variant.
+/// - [success], [failure], [singleFailure] are factory helpers for schema authors.
 sealed class ZemaResult<T> {
   const ZemaResult();
 
@@ -110,7 +110,7 @@ sealed class ZemaResult<T> {
   /// Informational warnings produced by `.refineWarn()` refinements.
   ///
   /// Non-empty only on [ZemaSuccess] when at least one warning-level
-  /// refinement failed. The parse still succeeded — inspect this list to
+  /// refinement failed. The parse still succeeded. Inspect this list to
   /// surface advisory messages to the user (e.g. "weak password").
   ///
   /// Always empty on [ZemaFailure].
@@ -150,8 +150,8 @@ sealed class ZemaResult<T> {
   /// ```
   ///
   /// See also:
-  /// - [mapToOrNull] — returns `null` on failure instead of a [ZemaFailure].
-  /// - [mapToOrElse] — lets you provide an explicit fallback on failure.
+  /// - [mapToOrNull] returns `null` on failure instead of a [ZemaFailure].
+  /// - [mapToOrElse] lets you provide an explicit fallback on failure.
   ZemaResult<R> mapTo<R>(R Function(Map<String, dynamic>) mapper) {
     return switch (this) {
       ZemaSuccess(value: final v) => ZemaSuccess(_mapValue(v, mapper)),
@@ -162,8 +162,8 @@ sealed class ZemaResult<T> {
   /// Maps a successful `Map<String, dynamic>` value to [R], or calls
   /// [onError] with the issues on failure.
   ///
-  /// Unlike [mapTo], this unwraps the result entirely and returns a plain [R]
-  /// — useful when you want to fold both branches into a single value without
+  /// Unlike [mapTo], this unwraps the result entirely and returns a plain [R].
+  /// Useful when you want to fold both branches into a single value without
   /// keeping the [ZemaResult] wrapper.
   ///
   /// ```dart
@@ -174,8 +174,8 @@ sealed class ZemaResult<T> {
   /// ```
   ///
   /// See also:
-  /// - [mapTo] — keeps the [ZemaResult] wrapper on failure.
-  /// - [mapToOrNull] — returns `null` on failure.
+  /// - [mapTo] keeps the [ZemaResult] wrapper on failure.
+  /// - [mapToOrNull] returns `null` on failure.
   R mapToOrElse<R>(
     R Function(Map<String, dynamic>) mapper, {
     required R Function(List<ZemaIssue>) onError,
@@ -198,8 +198,8 @@ sealed class ZemaResult<T> {
   /// ```
   ///
   /// See also:
-  /// - [mapTo] — preserves the failure variant.
-  /// - [mapToOrElse] — provides a custom fallback on failure.
+  /// - [mapTo] preserves the failure variant.
+  /// - [mapToOrElse] provides a custom fallback on failure.
   R? mapToOrNull<R>(R Function(Map<String, dynamic>) mapper) {
     return switch (this) {
       ZemaSuccess(value: final v) => _mapValue(v, mapper),
@@ -214,7 +214,7 @@ sealed class ZemaResult<T> {
   /// Calls [action] with the validated value if this is a [ZemaSuccess];
   /// does nothing on [ZemaFailure].
   ///
-  /// Returns `void` — intended for side effects such as logging or caching.
+  /// Returns `void`, intended for side effects such as logging or caching.
   ///
   /// ```dart
   /// result.onSuccess((user) => cache.put('user', user));
@@ -226,7 +226,7 @@ sealed class ZemaResult<T> {
   /// Calls [action] with the list of issues if this is a [ZemaFailure];
   /// does nothing on [ZemaSuccess].
   ///
-  /// Returns `void` — intended for side effects such as logging or reporting.
+  /// Returns `void`, intended for side effects such as logging or reporting.
   ///
   /// ```dart
   /// result.onError((issues) => analytics.report(issues));
@@ -262,7 +262,7 @@ sealed class ZemaResult<T> {
 
   /// Handles one or both variants, falling back to [orElse] for unhandled cases.
   ///
-  /// Unlike [when], neither [success] nor [failure] is required — pass only
+  /// Unlike [when], neither [success] nor [failure] is required. Pass only
   /// the handler(s) you care about and let [orElse] cover the rest.
   ///
   /// ```dart

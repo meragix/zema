@@ -35,6 +35,6 @@ final ZemaTranslations frenchTranslations = {
   'invalid_datetime_string': (p) =>
       'Doit être une chaîne de date-heure ISO 8601 valide',
   'async_refinement_skipped': (p) =>
-      'Le schéma contient des raffinements asynchrones — utilisez '
+      'Le schéma contient des raffinements asynchrones. Utilisez '
       'safeParseAsync() ou parseAsync() au lieu de safeParse() ou parse()',
 };

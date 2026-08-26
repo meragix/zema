@@ -116,7 +116,7 @@ void main() {
     });
   });
 
-  group('ZemaFirestoreConverter — date conversion', () {
+  group('ZemaFirestoreConverter, date conversion', () {
     test('toFirestore converts DateTime to Timestamp', () {
       final converter = ZemaFirestoreConverter(schema: _userSchema);
       final now = DateTime(2024, 1, 15);
@@ -180,7 +180,7 @@ void main() {
     });
   });
 
-  group('withZema — CollectionReference integration', () {
+  group('withZema, CollectionReference integration', () {
     late FakeFirebaseFirestore fakeFirestore;
 
     setUp(() {
@@ -225,7 +225,7 @@ void main() {
 
     test('throws ZemaFirestoreException on schema mismatch', () async {
       await fakeFirestore.collection('users').doc('bad').set({
-        'name': '', // too short — min(1)
+        'name': '', // too short, min(1)
         'email': 'not-valid',
       });
 

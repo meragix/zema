@@ -8,15 +8,15 @@ import 'object.dart';
 
 /// A schema that validates `List` values and produces a typed `List<T>`.
 ///
-/// Construct via `z.array(elementSchema)` — do not instantiate directly.
+/// Construct via `z.array(elementSchema)`. Do not instantiate directly.
 ///
 /// ## Validation order
 ///
-/// 1. **Type check** — input must be a `List` (`invalid_type` on failure).
-/// 2. **Length constraints** — [minLength] and [maxLength] are checked next
+/// 1. **Type check**. Input must be a `List` (`invalid_type` on failure).
+/// 2. **Length constraints**. [minLength] and [maxLength] are checked next
 ///    (`too_small` / `too_big`). If either fails, element validation is
 ///    skipped entirely.
-/// 3. **Element validation** — every element is validated by the [element]
+/// 3. **Element validation**. Every element is validated by the [element]
 ///    schema. Validation is **exhaustive**: all element failures are collected
 ///    before returning.
 ///
@@ -45,8 +45,8 @@ import 'object.dart';
 /// ```
 ///
 /// See also:
-/// - [ZemaObject] — for maps with a fixed, named set of fields.
-/// - `z.array` — factory method in [Zema].
+/// - [ZemaObject] for maps with a fixed, named set of fields.
+/// - `z.array` is a factory method in [Zema].
 final class ZemaArray<T> extends ZemaSchema<dynamic, List<T>> {
   /// The schema applied to every element of the list.
   final ZemaSchema<dynamic, T> element;

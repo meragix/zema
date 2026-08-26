@@ -6,14 +6,14 @@ import 'package:zema/src/error/issue.dart';
 /// would silently produce `null` values in translated messages.
 ///
 /// ```dart
-/// // Fragile — typo in 'min' key is invisible at compile time:
+/// // Fragile, typo in 'min' key is invisible at compile time:
 /// ZemaIssue(
 ///   code: 'too_short',
 ///   message: '...',
 ///   meta: {'minn': 2, 'actual': 1},   // silent typo
 /// )
 ///
-/// // Safe — typo caught at compile time:
+/// // Safe, typo caught at compile time:
 /// ZemaIssue(
 ///   code: 'too_short',
 ///   message: '...',

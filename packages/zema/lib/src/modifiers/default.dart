@@ -5,14 +5,14 @@ import 'package:zema/src/modifiers/optional.dart';
 /// A schema that substitutes [defaultValue] whenever the input is `null`
 /// **or** the [base] schema fails, ensuring the output is never `null`.
 ///
-/// Created by calling [ZemaSchema.withDefault] on any schema — do not
+/// Created by calling [ZemaSchema.withDefault] on any schema. Do not
 /// instantiate directly.
 ///
 /// ## Behaviour
 ///
 /// | Input | Base result | Output |
 /// |---|---|---|
-/// | `null` | — (skipped) | `success(defaultValue)` |
+/// | `null` | (skipped) | `success(defaultValue)` |
 /// | non-null | success | `success(base output)` |
 /// | non-null | failure | `success(defaultValue)` |
 ///
@@ -43,7 +43,7 @@ import 'package:zema/src/modifiers/optional.dart';
 /// Because [defaultValue] is also used when the [base] schema fails, this
 /// schema **silently swallows validation errors** for non-null input. If you
 /// need to log or inspect the issues before falling back, use
-/// [ZemaSchema.catchError] instead — it receives the issue list before
+/// [ZemaSchema.catchError] instead. It receives the issue list before
 /// returning the fallback.
 ///
 /// ```dart
@@ -58,9 +58,9 @@ import 'package:zema/src/modifiers/optional.dart';
 /// ```
 ///
 /// See also:
-/// - [ZemaSchema.withDefault] — the fluent API method that constructs this.
-/// - [ZemaSchema.catchError] — for dynamic fallbacks with access to issues.
-/// - [OptionalSchema] — produces `null` instead of a static fallback.
+/// - [ZemaSchema.withDefault] is the fluent API method that constructs this.
+/// - [ZemaSchema.catchError] for dynamic fallbacks with access to issues.
+/// - [OptionalSchema] produces `null` instead of a static fallback.
 final class DefaultSchema<I, O> extends ZemaSchema<I?, O> {
   /// The schema used to validate non-null input.
   final ZemaSchema<I, O> base;

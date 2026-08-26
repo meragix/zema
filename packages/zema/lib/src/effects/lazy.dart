@@ -5,7 +5,7 @@ import 'package:zema/src/factory.dart';
 /// A schema that defers construction of its inner schema to the first parse
 /// call, breaking circular dependencies caused by self-referential types.
 ///
-/// Created by [Zema.lazy] — do not instantiate directly.
+/// Created by [Zema.lazy]. Do not instantiate directly.
 ///
 /// ## Why lazy is needed
 ///
@@ -14,7 +14,7 @@ import 'package:zema/src/factory.dart';
 /// which causes a runtime error:
 ///
 /// ```dart
-/// // ✗ Circular dependency — nodeSchema referenced before it is assigned
+/// // Circular dependency, nodeSchema referenced before it is assigned
 /// final nodeSchema = z.object({
 ///   'value': z.integer(),
 ///   'children': z.array(nodeSchema),
@@ -35,7 +35,7 @@ import 'package:zema/src/factory.dart';
 ///
 /// ## Caching
 ///
-/// The factory function is called exactly once — on the first [safeParse].
+/// The factory function is called exactly once, on the first [safeParse].
 /// The resolved schema is cached and reused for every subsequent call.
 ///
 /// ## Async limitation
@@ -46,7 +46,7 @@ import 'package:zema/src/factory.dart';
 /// the lazy boundary if async validation is needed.
 ///
 /// See also:
-/// - [Zema.lazy] — the factory method that constructs this schema.
+/// - [Zema.lazy] is the factory method that constructs this schema.
 final class LazySchema<I, O> extends ZemaSchema<I, O> {
   final ZemaSchema<I, O> Function() _fn;
   ZemaSchema<I, O>? _cached;

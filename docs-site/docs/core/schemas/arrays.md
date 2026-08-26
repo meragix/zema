@@ -5,7 +5,7 @@ description: Validate arrays and lists with Zema
 
 # Arrays
 
-Validates `List` values. Every element is validated by the element schema. Validation is exhaustive — all element failures are collected before returning.
+Validates `List` values. Every element is validated by the element schema. Validation is exhaustive: all element failures are collected before returning.
 
 ---
 
@@ -268,12 +268,12 @@ final result = schema.safeParse([
 | `.max(n)`        | Maximum length          | `too_big`             |
 | `.length(n)`     | Exact length            | `too_small` / `too_big` |
 | `.nonEmpty()`    | At least 1 item         | `too_small`           |
-| `.optional()`    | Allow null input        | —                     |
-| `.withDefault(v)` | Substitute null with `v` | —                   |
+| `.optional()`    | Allow null input        | N/A                   |
+| `.withDefault(v)` | Substitute null with `v` | N/A                 |
 
 ---
 
 ## Next steps
 
-- [Objects →](./objects) — validate maps and nested structures
-- [Refinements →](./refinements) — custom validation logic
+- [Objects →](./objects): validate maps and nested structures
+- [Refinements →](./refinements): custom validation logic

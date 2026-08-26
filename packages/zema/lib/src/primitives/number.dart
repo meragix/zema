@@ -6,7 +6,7 @@ import 'package:zema/src/extensions/custom_message.dart';
 
 /// A schema that validates Dart `int` values.
 ///
-/// Construct via `z.integer()` — do not instantiate directly.
+/// Construct via `z.integer()`. Do not instantiate directly.
 ///
 /// Only accepts Dart `int`s. `double` values (even whole-number ones like
 /// `42.0`) and numeric strings are rejected with an `invalid_type` issue.
@@ -40,8 +40,8 @@ import 'package:zema/src/extensions/custom_message.dart';
 /// ```
 ///
 /// See also:
-/// - [ZemaDouble] — for `double` values.
-/// - `z.coerce().integer()` — coerces strings/doubles to `int` first.
+/// - [ZemaDouble] for `double` values.
+/// - `z.coerce().integer()` coerces strings/doubles to `int` first.
 final class ZemaInt extends ZemaSchema<dynamic, int>
     with ZemaCustomMessage<dynamic, int> {
   /// Lower bound (inclusive). `null` means no lower limit.
@@ -248,7 +248,7 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
   /// Requires the value to be strictly greater than zero (`value > 0`).
   ///
   /// Produces a `not_positive` issue on failure. Note that `0` is **not**
-  /// positive — use [gte]`(0)` if you want to include zero.
+  /// positive. Use [gte]`(0)` if you want to include zero.
   ///
   /// ```dart
   /// z.integer().positive()
@@ -268,7 +268,7 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
   /// Requires the value to be strictly less than zero (`value < 0`).
   ///
   /// Produces a `not_negative` issue on failure. Note that `0` is **not**
-  /// negative — use [lte]`(-1)` if you need to exclude zero explicitly.
+  /// negative. Use [lte]`(-1)` if you need to exclude zero explicitly.
   ///
   /// ```dart
   /// z.integer().negative()
@@ -365,7 +365,7 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
 
 /// A schema that validates Dart `double` values.
 ///
-/// Construct via `z.double()` — do not instantiate directly.
+/// Construct via `z.double()`. Do not instantiate directly.
 ///
 /// Only accepts Dart `double`s. `int` values and numeric strings are rejected
 /// with an `invalid_type` issue. Use `z.coerce().float()` when the input may
@@ -397,8 +397,8 @@ final class ZemaInt extends ZemaSchema<dynamic, int>
 /// ```
 ///
 /// See also:
-/// - [ZemaInt] — for integer values.
-/// - `z.coerce().float()` — coerces strings/ints to `double` first.
+/// - [ZemaInt] for integer values.
+/// - `z.coerce().float()` coerces strings/ints to `double` first.
 final class ZemaDouble extends ZemaSchema<dynamic, double>
     with ZemaCustomMessage<dynamic, double> {
   /// Lower bound (inclusive). `null` means no lower limit.
@@ -600,7 +600,7 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
   /// Requires the value to be strictly greater than zero (`value > 0.0`).
   ///
   /// Produces a `not_positive` issue on failure. Note that `0.0` is **not**
-  /// positive — use [gte]`(0.0)` if you want to include zero.
+  /// positive. Use [gte]`(0.0)` if you want to include zero.
   ///
   /// ```dart
   /// z.double().positive()
@@ -615,7 +615,7 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
         isFinite: isFinite,
       );
 
-  /// Requires the value to be a finite number — not `NaN`, `Infinity`, or
+  /// Requires the value to be a finite number, not `NaN`, `Infinity`, or
   /// `-Infinity`.
   ///
   /// Produces a `not_finite` issue on failure. Chain with range constraints
@@ -676,7 +676,7 @@ final class ZemaDouble extends ZemaSchema<dynamic, double>
   /// Requires the value to be strictly less than zero (`value < 0.0`).
   ///
   /// Produces a `not_negative` issue on failure. Note that `0.0` is **not**
-  /// negative — use [lte]`(0.0)` or [lt]`(0.0)` to include zero.
+  /// negative. Use [lte]`(0.0)` or [lt]`(0.0)` to include zero.
   ///
   /// ```dart
   /// z.double().negative()

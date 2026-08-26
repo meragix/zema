@@ -1,4 +1,4 @@
-// Complex schema types — re-exported as a single barrel for internal use.
+// Complex schema types, re-exported as a single barrel for internal use.
 
 export './array.dart';
 export './map.dart';

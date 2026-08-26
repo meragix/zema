@@ -22,7 +22,7 @@ final userSchemaV2 = z.object({
 });
 
 // ---------------------------------------------------------------------------
-// Extension type — same runtime representation as Map<String, dynamic>
+// Extension type with same runtime representation as Map<String, dynamic>
 // ---------------------------------------------------------------------------
 
 extension type User(Map<String, dynamic> _) {

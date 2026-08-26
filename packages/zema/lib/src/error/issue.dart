@@ -10,13 +10,13 @@ import 'package:zema/src/modifiers/refined.dart';
 /// Every time a schema rejects a value it produces one or more [ZemaIssue]s.
 /// An issue carries five pieces of information:
 ///
-/// - **[code]** — a stable string identifier for programmatic handling.
-/// - **[message]** — a human-readable description, localised via [ZemaI18n].
-/// - **[path]** — the location in the input structure where the failure
+/// - **[code]** is a stable string identifier for programmatic handling.
+/// - **[message]** is a human-readable description, localised via [ZemaI18n].
+/// - **[path]** is the location in the input structure where the failure
 ///   occurred (empty for root-level failures).
-/// - **[receivedValue]** / **[expected]** / **[meta]** — additional context
+/// - **[receivedValue]** / **[expected]** / **[meta]** are additional context
 ///   for debugging and error-map customisation.
-/// - **[severity]** — whether the issue is a hard [ZemaSeverity.error] that
+/// - **[severity]** indicates whether the issue is a hard [ZemaSeverity.error] that
 ///   blocks the parse, or an informational [ZemaSeverity.warning] that lets
 ///   the parse succeed (see [ZemaSchemaRefinement.refineWarn]).
 ///
@@ -76,7 +76,7 @@ final class ZemaIssue {
 
   /// The expected type or value, for `invalid_type` and similar issues.
   ///
-  /// Complements [receivedValue] — together they let you produce messages like
+  /// Complements [receivedValue]. Together they let you produce messages like
   /// `"Expected int, got String"` without depending on the freeform [message].
   ///
   /// ```dart
@@ -104,8 +104,8 @@ final class ZemaIssue {
 
   /// Whether this issue is a hard error or an informational warning.
   ///
-  /// - [ZemaSeverity.error] (default) — parse fails; result is [ZemaFailure].
-  /// - [ZemaSeverity.warning] — parse succeeds; issue is surfaced via
+  /// - [ZemaSeverity.error] (default) means parse fails; result is [ZemaFailure].
+  /// - [ZemaSeverity.warning] means parse succeeds; issue is surfaced via
   ///   [ZemaResult.warnings] instead of [ZemaResult.errors].
   ///
   /// Warning-level issues are produced by [ZemaSchemaRefinement.refineWarn].

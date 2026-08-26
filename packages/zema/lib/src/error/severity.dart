@@ -22,7 +22,7 @@ import 'package:zema/src/modifiers/refined.dart';
 ///     );
 ///
 /// final result = passwordSchema.safeParse('hello123');
-/// // ZemaSuccess — parse succeeds
+/// // ZemaSuccess, parse succeeds
 /// print(result.hasWarnings); // true
 /// print(result.warnings.first.code); // 'weak_password'
 /// ```

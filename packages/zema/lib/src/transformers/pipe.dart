@@ -7,13 +7,13 @@ import 'transform.dart';
 /// A schema that chains two schemas in sequence: [first] validates the raw
 /// input, then [second] validates [first]'s output.
 ///
-/// Created by calling [ZemaSchema.pipe] on any schema — do not instantiate
+/// Created by calling [ZemaSchema.pipe] on any schema. Do not instantiate
 /// directly.
 ///
 /// ## Behaviour
 ///
 /// 1. [first] validates input [I] → [M].
-/// 2. If [first] fails, its errors are returned immediately — [second] is
+/// 2. If [first] fails, its errors are returned immediately. [second] is
 ///    never called.
 /// 3. If [first] succeeds, its output [M] is passed as input to [second].
 /// 4. [second] validates [M] → [O] and its result (success or failure) is
@@ -21,14 +21,14 @@ import 'transform.dart';
 ///
 /// ## Type parameters
 ///
-/// - [I] — raw input type accepted by [first].
-/// - [M] — intermediate type: output of [first] and input of [second].
-/// - [O] — final output type produced by [second].
+/// - [I] is the raw input type accepted by [first].
+/// - [M] is the intermediate type: output of [first] and input of [second].
+/// - [O] is the final output type produced by [second].
 ///
 /// ## Async behaviour
 ///
 /// In [safeParseAsync], [first] is awaited via `safeParseAsync`. [second] is
-/// then called synchronously via `safeParse` — if [second] also needs async
+/// then called synchronously via `safeParse`. If [second] also needs async
 /// execution, chain another `.pipe()` or override `safeParseAsync` on it.
 ///
 /// ## Examples
@@ -51,14 +51,14 @@ import 'transform.dart';
 /// value needs to pass through a full schema with its own validation rules.
 ///
 /// See also:
-/// - [ZemaSchema.pipe] — the fluent API method that constructs this.
-/// - [TransformedSchema] — simpler one-step output mapping.
-/// - [PreprocessedSchema] — transforms the *input* before the first schema runs.
+  /// - [ZemaSchema.pipe] is the fluent API method that constructs this.
+  /// - [TransformedSchema] is a simpler one-step output mapping.
+  /// - [PreprocessedSchema] transforms the *input* before the first schema runs.
 final class PipedSchema<I, M, O> extends ZemaSchema<I, O> {
-  /// The first schema — validates [I] and produces [M].
+  /// The first schema, validates [I] and produces [M].
   final ZemaSchema<I, M> first;
 
-  /// The second schema — validates [M] (output of [first]) and produces [O].
+  /// The second schema, validates [M] (output of [first]) and produces [O].
   final ZemaSchema<M, O> second;
 
   const PipedSchema(this.first, this.second);

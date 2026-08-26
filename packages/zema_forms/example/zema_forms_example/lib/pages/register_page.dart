@@ -15,7 +15,7 @@ final _registerSchema = z.object({
 /// Demonstrates:
 /// - [ZemaFormController.submitErrors] driving a form-level error banner
 /// - Coercion: [z.coerce] on a numeric text field
-/// - [validateOnChange]: `false` — errors only revealed on submit
+/// - [validateOnChange]: `false`, errors only revealed on submit
 /// - [ZemaFormController.reset]
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -25,7 +25,7 @@ class RegisterPage extends StatefulWidget {
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  // validateOnChange: false — no per-keystroke errors.
+  // validateOnChange: false. No per-keystroke errors.
   // All errors are revealed at once when submit() is called.
   late final _ctrl = ZemaFormController(
     schema: _registerSchema,
@@ -75,7 +75,7 @@ class _RegisterPageState extends State<RegisterPage> {
               ),
               const SizedBox(height: 16),
 
-              // Form-level error banner — driven by submitErrors.
+              // Form-level error banner, driven by submitErrors.
               // Remains visible even when the first erroring field is hidden.
               ValueListenableBuilder<List<ZemaIssue>>(
                 valueListenable: _ctrl.submitErrors,
