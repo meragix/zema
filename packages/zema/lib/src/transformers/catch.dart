@@ -24,7 +24,7 @@ import 'package:zema/src/error/issue.dart';
 /// Use [CatchSchema] when you need a recoverable fallback and want access
 /// to the issues before deciding what to return. For a static value that
 /// requires no inspection of the issues, prefer [ZemaSchema.withDefault]
-  /// instead, it is simpler and clearer in intent.
+/// instead, it is simpler and clearer in intent.
 ///
 /// ```dart
 /// // Static fallback, use withDefault

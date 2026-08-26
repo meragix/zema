@@ -51,9 +51,9 @@ import 'transform.dart';
 /// value needs to pass through a full schema with its own validation rules.
 ///
 /// See also:
-  /// - [ZemaSchema.pipe] is the fluent API method that constructs this.
-  /// - [TransformedSchema] is a simpler one-step output mapping.
-  /// - [PreprocessedSchema] transforms the *input* before the first schema runs.
+/// - [ZemaSchema.pipe] is the fluent API method that constructs this.
+/// - [TransformedSchema] is a simpler one-step output mapping.
+/// - [PreprocessedSchema] transforms the *input* before the first schema runs.
 final class PipedSchema<I, M, O> extends ZemaSchema<I, O> {
   /// The first schema, validates [I] and produces [M].
   final ZemaSchema<I, M> first;
