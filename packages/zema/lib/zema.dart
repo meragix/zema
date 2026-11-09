@@ -124,7 +124,7 @@ export 'src/coercion/coerce.dart' show ZemaCoerce;
 // Modifiers
 // ---------------------------------------------------------------------------
 
-export 'src/modifiers/modifiers.dart' show Branded;
+export 'src/modifiers/modifiers.dart' show Branded, ZemaSchemaBranding;
 export 'src/modifiers/refined.dart'
     show ZemaSchemaRefinement, ValidationContext;
 
