@@ -1,6 +1,6 @@
-import 'dart:isolate';
-
 import 'package:zema/src/complex/object.dart';
+import 'package:zema/src/core/isolate_runner_stub.dart'
+    if (dart.library.isolate) 'package:zema/src/core/isolate_runner_io.dart';
 import 'package:zema/src/core/result.dart';
 import 'package:zema/src/error/exception.dart';
 import 'package:zema/src/error/issue.dart';
@@ -216,11 +216,14 @@ abstract class ZemaSchema<Input, Output> {
   /// For async refinements, use [safeParseAsync] directly. Async refinements
   /// perform I/O and do not benefit from isolate offloading.
   ///
+  /// On the web, where isolates are not available, validation runs on the
+  /// current thread and the result is returned as a completed `Future`.
+  ///
   /// See also:
   /// - [safeParse] is the synchronous equivalent.
   /// - [safeParseAsync] for schemas with async refinements.
   Future<ZemaResult<Output>> parseInIsolate(Input value) =>
-      Isolate.run(() => safeParse(value));
+      runInBackground(() => safeParse(value));
 
   // ===========================================================================
   // TRANSFORMATION METHODS
