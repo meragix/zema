@@ -269,7 +269,7 @@ abstract class ZemaSchema<Input, Output> {
   /// // pass it to an int schema that checks range.
   /// final schema = z.string()
   ///     .transform(int.parse)
-  ///     .pipe(z.int().gte(0).lte(100));
+  ///     .pipe(z.integer().gte(0).lte(100));
   ///
   /// schema.parse('42');   // 42
   /// schema.parse('150');  // fails: value > 100
@@ -279,8 +279,8 @@ abstract class ZemaSchema<Input, Output> {
   /// See also:
   /// - [transform] for a simple one-step output transformation.
   /// - [preprocess] for transforming the raw *input* before this schema runs.
-  ZemaSchema<Input, T> pipe<T>(ZemaSchema<Output, T> next) =>
-      PipedSchema(this, next);
+  ZemaSchema<Input, T> pipe<T>(ZemaSchema<dynamic, T> next) =>
+      PipedSchema<Input, Output, T>(this, next);
 
   /// Applies [fn] to transform the raw input before this schema validates it.
   ///
