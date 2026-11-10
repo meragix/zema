@@ -1,3 +1,9 @@
+## 0.2.0
+
+- Requires `zema: ^0.7.0`.
+- SDK constraint raised to `>=3.8.0`, the minimum already required by `standard_schema`.
+- Added a pub.dev example (`example/main.dart`).
+
 ## 0.1.0
 
 ### Added

@@ -135,7 +135,7 @@ Alternatively, wrap the validated map in an extension type for zero allocation c
 Use `z.coerce()`. It converts strings and compatible types before validation runs.
 
 ```dart
-final port = z.coerce().integer().gte(1).lte(65535);
+final port = z.coerce().integer(min: 1, max: 65535);
 port.parse(Platform.environment['PORT'] ?? '8080'); // int
 ```
 
@@ -169,9 +169,11 @@ ZemaErrorMap.setLocale('fr'); // built-in: 'en', 'fr'
 Register a custom locale:
 
 ```dart
+// Each entry receives the issue parameters (min, max, expected, ...).
+// Codes you leave out fall back to English.
 ZemaI18n.registerTranslations('es', {
-  'invalid_type': 'Tipo inválido: se esperaba {expected}.',
-  'too_short': 'Demasiado corto: mínimo {min}.',
+  'invalid_type': (p) => 'Tipo inválido: se esperaba ${p?['expected']}.',
+  'too_short': (p) => 'Demasiado corto: mínimo ${p?['min']}.',
 });
 ZemaErrorMap.setLocale('es');
 ```

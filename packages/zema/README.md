@@ -1,332 +1,317 @@
 # Zema
 
-[![pub package](https://img.shields.io/pub/v/zema.svg)](https://pub.dev/packages/zema)
-[![package publisher](https://img.shields.io/pub/publisher/zema.svg)](https://pub.dev/packages/zema/publisher)
+[![pub version](https://img.shields.io/pub/v/zema.svg)](https://pub.dev/packages/zema)
+[![pub likes](https://img.shields.io/pub/likes/zema)](https://pub.dev/packages/zema/score)
+[![pub points](https://img.shields.io/pub/points/zema)](https://pub.dev/packages/zema/score)
+[![CI](https://github.com/meragix/zema/actions/workflows/zema.yml/badge.svg)](https://github.com/meragix/zema/actions/workflows/zema.yml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 
-Schema validation for Dart, inspired by [Zod](https://zod.dev). Define schemas once, validate anywhere. All validation errors are collected in a single pass. No silent failures, no partial results.
+**Validate untrusted data in Dart and Flutter.** Describe the shape you expect once, then use that schema for API responses, forms, Firestore documents and local storage.
 
----
+- **Every error, in one pass.** Each issue has a code, a translated message and the exact path (`items.[2].email`), ready to show next to a form field.
+- **No build_runner.** Schemas are plain Dart values. Get typed models with extension types, or hand the validated map to your existing Freezed / json_serializable classes.
+- **Runs everywhere.** Pure Dart, no dependencies besides `meta`: Flutter (mobile, desktop, **web**), server and CLI.
+- **Familiar API.** If you know [Zod](https://zod.dev), you already know Zema: `z.object`, `z.string().email()`, `safeParse`, `refine`, `pipe`.
 
-## Features
+```dart
+import 'dart:convert';
 
-- Fluent, chainable API: `z.string().min(2).email()`
-- Exhaustive error collection: every failing field is reported, not just the first
-- Sealed result type: `ZemaSuccess<T>` and `ZemaFailure<T>`, no exceptions by default
-- Composable objects: `extend()`, `merge()`, `pick()`, `omit()`
-- Discriminated unions with O(1) schema selection
-- Async refinements for database and network checks
-- Coercion for environment variables and query parameters
-- Nominal branding for type-safe IDs
-- Built-in i18n with `en` and `fr` locales; extensible to any locale
+import 'package:zema/zema.dart';
 
----
+// A typed view of the validated map. Zero runtime cost, no code generation.
+extension type User(Map<String, dynamic> data) {
+  int get id => data['id'] as int;
+  String get email => data['email'] as String;
+  String get role => data['role'] as String;
+}
+
+final userSchema = z.objectAs<User>(
+  {
+    'id': z.integer().positive(),
+    'email': z.string().email(),
+    'role': z.string().oneOf(['admin', 'member']),
+    'nickname': z.string().min(2).optional(),
+  },
+  User.new,
+);
+
+void handle(String body) {
+  final result = userSchema.safeParse(jsonDecode(body));
+
+  switch (result) {
+    case ZemaSuccess(:final value):
+      print('Hello ${value.email}'); // value is a User
+    case ZemaFailure(:final errors):
+      for (final issue in errors) {
+        print('${issue.pathString}: ${issue.message}');
+      }
+  }
+}
+
+// handle('{"id": -4, "email": "ada@", "role": "owner"}') prints:
+//   id: Must be a positive number
+//   email: Invalid email format
+//   role: Must be one of: admin, member
+```
+
+## Why Zema?
+
+`User.fromJson(json)` trusts its input. When the backend sends `"id": "42"`, a field disappears, or an old app version wrote a bad Firestore document, you get a `TypeError` at the first bad field, far from where the data came in, with nothing you can show the user.
+
+Zema checks the data at the boundary and tells you **everything** that is wrong, with paths and human-readable messages (built in: English and French, add your own).
+
+### What about Freezed or json_serializable?
+
+They generate models; they do not validate values (`email` is a `String`, not a valid email; `age` is an `int`, not "18 or more"). Zema covers that layer and composes with them:
+
+```dart
+// Validate first, then build your Freezed / json_serializable model
+// from clean data. mapTo only runs on success.
+final profile = z.object({
+  'email': z.string().email(),
+  'age': z.integer().gte(18),
+}).safeParse(json).mapTo(Profile.fromJson);
+```
+
+If you would rather not run `build_runner` at all, `z.objectAs` plus an extension type (as above) gives you typed access with no generated code.
+
+## Ecosystem
+
+| Package | Use it to |
+| --- | --- |
+| [`zema`](https://pub.dev/packages/zema) | Define and run schemas (this package) |
+| [`zema_forms`](https://pub.dev/packages/zema_forms) | Drive Flutter forms from a schema: per-field rebuilds, errors on blur, focus on the first error |
+| [`zema_firestore`](https://pub.dev/packages/zema_firestore) | Validate every Firestore read through `withConverter`, with `Timestamp` and `GeoPoint` schemas |
+| [`zema_hive`](https://pub.dev/packages/zema_hive) | Validate Hive CE reads and writes, migrate old documents on read, no TypeAdapters |
+| [`zema_standard_schema`](https://pub.dev/packages/zema_standard_schema) | Expose any schema through the [Standard Schema](https://pub.dev/packages/standard_schema) contract |
 
 ## Installation
 
-```yaml
-dependencies:
-  zema: ^0.6.0
+```sh
+dart pub add zema
 ```
 
 ```dart
 import 'package:zema/zema.dart';
 ```
 
----
+Requires Dart 3.5 or later.
 
-## Quick start
+## Guide
+
+### Primitives
 
 ```dart
-final userSchema = z.object({
-  'name': z.string().min(2),
-  'email': z.string().email(),
-  'age': z.integer().gte(18).optional(),
-});
+final name = z.string().trim().min(2).max(50);
+final email = z.string().email();
+final website = z.string().url();
+final id = z.string().uuid();
+final zip = z.string().regex(RegExp(r'^\d{5}$'));
+final status = z.string().oneOf(['draft', 'published']);
 
-// parse() returns the validated value or throws ZemaException
-final user = userSchema.parse({
-  'name': 'Alice',
-  'email': 'alice@example.com',
-});
+final age = z.integer().gte(0).lte(120);
+final quantity = z.integer().positive(); // > 0
+final step = z.integer().step(5); // multiple of 5
+final ratio = z.double().gte(0).lte(1);
 
-// safeParse() never throws, returns ZemaResult<T>
-final result = userSchema.safeParse(rawInput);
-
-switch (result) {
-  case ZemaSuccess(:final value):
-    print(value['name']);
-  case ZemaFailure(:final errors):
-    for (final issue in errors) {
-      print('${issue.path.join(".")}: ${issue.message}');
-    }
-}
+final accepted = z.boolean();
+final createdAt = z.dateTime();
+final kind = z.literal('admin');
 ```
 
----
-
-## Primitives
+### Objects
 
 ```dart
-z.string()         // String
-z.integer()        // int
-z.double()         // double
-z.boolean()        // bool
-z.dateTime()       // DateTime
-z.literal('admin') // exact value
-```
-
-### String constraints
-
-```dart
-z.string().min(2).max(100)
-z.string().email()
-z.string().url()
-z.string().uuid()
-z.string().regex(RegExp(r'^\d{5}$'))
-z.string().trim().min(1)
-z.string().oneOf(['draft', 'published', 'archived'])
-```
-
-### Number constraints
-
-```dart
-z.integer().gte(0).lte(120)
-z.integer().positive()      // > 0
-z.integer().negative()      // < 0
-z.integer().nonNegative()   // >= 0
-z.integer().step(5)         // multiple of 5
-
-z.double().gte(0.0).lte(1.0)
-z.double().nonNegative()
-z.double().finite()
-```
-
----
-
-## Objects
-
-```dart
-final schema = z.object({
+final account = z.object({
   'id': z.string().uuid(),
-  'name': z.string().min(2),
   'email': z.string().email(),
   'password': z.string().min(8),
+  'nickname': z.string().optional(), // may be absent or null
 });
 
-// Reject unknown keys
-final strict = schema.makeStrict();
-
-// Add fields
-final extended = schema.extend({'role': z.string()});
-
-// Merge two schemas (fields from other win on conflict)
-final merged = base.merge(override);
-
-// Subset of fields
-final public = schema.pick(['id', 'name', 'email']);
-final safe = schema.omit(['password']);
+final strict = account.makeStrict(); // unknown keys become errors
+final withRole = account.extend({'role': z.string()});
+final public = account.omit(['password']);
+final login = account.pick(['email', 'password']);
+final merged = account.merge(z.object({'plan': z.string()}));
 ```
 
-### Typed output
+`z.object()` produces a `Map<String, dynamic>`. Use `z.objectAs<T>(shape, constructor)` to get a typed value, as in the example at the top.
+
+### Arrays, maps, unions
 
 ```dart
-final schema = z.objectAs(
-  {'name': z.string(), 'age': z.integer()},
-  (map) => User(name: map['name'] as String, age: map['age'] as int),
-);
+final tags = z.array(z.string()).min(1).max(10);
+final scores = z.map(z.string(), z.integer().gte(0));
 
-final User user = schema.parse(data);
-```
+final idOrSlug = z.union<dynamic>([z.integer().positive(), z.string()]);
 
----
-
-## Arrays
-
-```dart
-z.array(z.string())
-z.array(z.integer()).min(1).max(100)
-z.array(z.string().email()).nonEmpty()
-z.array(z.string()).length(3)
-
-// All element errors collected in one pass, with index in error path
-z.array(z.object({'email': z.string().email()}))
-```
-
----
-
-## Unions
-
-```dart
-// Linear scan: first matching schema wins
-final id = z.union<dynamic>([
-  z.string().uuid(),
-  z.integer().positive(),
-]);
-
-// Discriminated union: O(1) lookup via literal field
+// Discriminated union: picks the branch from the 'type' field directly.
 final event = z.union([
-  z.object({'type': z.literal('click'),    'x': z.integer(), 'y': z.integer()}),
-  z.object({'type': z.literal('keypress'), 'key': z.string()}),
+  z.object({'type': z.literal('click'), 'x': z.integer(), 'y': z.integer()}),
+  z.object({'type': z.literal('key'), 'key': z.string()}),
 ]).discriminatedBy('type');
-
-event.parse({'type': 'click', 'x': 100, 'y': 200});
 ```
 
----
-
-## Modifiers
+### Optional, nullable, default, fallback
 
 ```dart
-z.string().optional()             // String? (null passes through)
-z.string().nullable()             // String? (null is a valid value)
-z.integer().withDefault(0)        // always returns a value, never null
-z.integer().catchError((_) => 0)  // intercept failures, inspect issues
-
-// Nominal branding: prevent mixing semantically different IDs
-abstract class _UserIdBrand {}
-abstract class _TeamIdBrand {}
-
-final userIdSchema = z.string().uuid().brand<_UserIdBrand>();
-final teamIdSchema = z.string().uuid().brand<_TeamIdBrand>();
-
-final userId = userIdSchema.parse('550e8400-…'); // Branded<String, _UserIdBrand>
-// greet(teamId); // compile-time error
+final nickname = z.string().optional(); // null passes through
+final middleName = z.string().nullable(); // null is a valid value
+final page = z.integer().withDefault(1); // null becomes 1
+final safeCount = z.integer().catchError((issues) => 0); // never fails
 ```
 
----
-
-## Transformations
+### Transform, pipe, preprocess
 
 ```dart
-// .transform() changes the output type
-final schema = z.string().transform(int.parse); // output: int
+// Change the output after validation.
+final upper = z.string().transform((s) => s.toUpperCase());
 
-// .pipe() passes one schema's output into another
-final piped = z.string().pipe(z.integer());
+// Feed the output into another schema.
+final percent = z.string().transform(int.parse).pipe(z.integer().gte(0).lte(100));
 
-// .preprocess() normalises raw input before validation
-final schema = z.preprocess(
-  (v) => v.toString().trim(),
-  z.string().email(),
-);
+// Clean the raw input before validation.
+final trimmedEmail = z.string().email().preprocess<dynamic>(
+      (v) => v?.toString().trim(),
+    );
 ```
 
----
-
-## Refinements
+### Coercion (env vars, query strings, text fields)
 
 ```dart
-// Single boolean check
-z.string().refine(
-  (s) => s.startsWith('https'),
-  message: 'Must use HTTPS.',
-);
+final port = z.coerce().integer(min: 1, max: 65535); // '8080' -> 8080
+final debug = z.coerce().boolean(); // 'true', '1' -> true
+final price = z.coerce().float(); // '9.99' -> 9.99
+final since = z.coerce().dateTime(); // ISO string or Unix ms -> DateTime
+```
 
-// Multiple issues from one check
-z.string().superRefine((s, ctx) {
-  final issues = <ZemaIssue>[];
-  if (!s.contains(RegExp(r'[A-Z]'))) {
-    issues.add(ZemaIssue(code: 'missing_uppercase', message: 'Needs an uppercase letter.'));
+### Custom rules
+
+```dart
+final https = z.string().url().refine(
+      (s) => s.startsWith('https://'),
+      message: 'Must use HTTPS.',
+    );
+
+final password = z.string().min(8).superRefine((value, ctx) {
+  if (!value.contains(RegExp('[A-Z]'))) {
+    ctx.addIssue(code: 'missing_uppercase', message: 'Add an uppercase letter.');
   }
-  if (!s.contains(RegExp(r'[0-9]'))) {
-    issues.add(ZemaIssue(code: 'missing_digit', message: 'Needs a digit.'));
+  if (!value.contains(RegExp('[0-9]'))) {
+    ctx.addIssue(code: 'missing_digit', message: 'Add a digit.');
   }
-  return issues.isEmpty ? null : issues;
+  return null;
 });
 
-// Async check (database lookup, API call)
-final schema = z.string().email().refineAsync(
-  (email) async => !(await db.emailExists(email)),
-  message: 'Email already taken.',
-);
-
-final result = await schema.safeParseAsync(input);
+// Async checks (database, network) run with safeParseAsync / parseAsync.
+final username = z.string().refineAsync(
+      (name) async => name != 'taken',
+      message: 'Username already taken.',
+    );
+final check = await username.safeParseAsync('ada');
 ```
 
----
-
-## Coercion
-
-Parse strings from environment variables, query parameters, or form inputs:
+### Errors
 
 ```dart
-z.coerce().integer()  // '42' → 42
-z.coerce().double()   // '3.14' → 3.14
-z.coerce().boolean()  // 'true' | '1' → true
-z.coerce().string()   // any → String
-```
-
----
-
-## Error handling
-
-```dart
-// safeParse: sealed result, never throws
-final result = schema.safeParse(input);
+final result = account.safeParse({'email': 'nope'});
 
 if (result.isFailure) {
   for (final issue in result.errors) {
-    // issue.code: machine-readable string ('invalid_type', 'too_short', …)
-    // issue.message: human-readable string
-    // issue.path: location in the input (['user', 'email'])
-    print('[${issue.code}] ${issue.path.join(".")}: ${issue.message}');
+    // issue.code: 'invalid_email', 'too_short', 'required', ...
+    // issue.path: ['email']
+    // issue.message: translated, human-readable text
+    print('[${issue.code}] ${issue.pathString}: ${issue.message}');
   }
+
+  // Nested map for form UIs: {email: {_errors: [Invalid email format]}, ...}
+  final byField = result.errors.format();
 }
 
-// parse: throws ZemaException on failure
+// parse() throws instead of returning a result.
 try {
-  final value = schema.parse(input);
+  account.parse({'email': 'nope'});
 } on ZemaException catch (e) {
-  print(e.issues.map((i) => i.message).join(', '));
+  print(e.issues.length);
 }
 ```
 
----
-
-## i18n
+### Messages and languages
 
 ```dart
-// Built-in locales: 'en' (default), 'fr'
-ZemaErrorMap.setLocale('fr');
+ZemaErrorMap.setLocale('fr'); // built in: 'en' (default), 'fr'
 
-// Custom locale
+// Add a language. Missing codes fall back to English.
 ZemaI18n.registerTranslations('es', {
-  'invalid_type': 'Tipo inválido: se esperaba {expected}, se recibió {received}.',
-  'too_short': 'Demasiado corto: mínimo {min}.',
-  'too_long': 'Demasiado largo: máximo {max}.',
-  'invalid_email': 'Dirección de correo inválida.',
+  'invalid_email': (_) => 'Correo electrónico no válido.',
+  'too_short': (p) => 'Mínimo ${p?['min']} caracteres.',
 });
-ZemaErrorMap.setLocale('es');
 
-// Custom error map for per-schema overrides
-ZemaErrorMap.setErrorMap((code, ctx) {
-  if (code == 'invalid_type' && ctx?['expected'] == 'string') {
-    return 'A text value is required.';
-  }
-  return null; // fall back to locale default
+// Override a message globally. Return null to keep the default.
+ZemaErrorMap.setErrorMap((issue, ctx) {
+  if (issue.code == 'invalid_email') return 'Please enter a valid email.';
+  return null;
 });
+
+// Or per schema.
+final contact = z.string().email(message: 'We need a valid email.');
 ```
 
----
-
-## Custom schemas
+### Branded types
 
 ```dart
-final tokenSchema = z.custom<String>(
-  (value) => value is String && value.startsWith('tok_'),
-  message: 'Must be a valid token.',
+abstract class UserIdBrand {}
+
+final userId = z.string().uuid().brand<UserIdBrand>();
+final Branded<String, UserIdBrand> id = userId.parse(
+  '550e8400-e29b-41d4-a716-446655440000',
+);
+// A plain String or another brand can no longer be passed where a
+// Branded<String, UserIdBrand> is expected.
+```
+
+### Recursive and custom schemas
+
+```dart
+late final ZemaSchema<dynamic, Map<String, dynamic>> category;
+category = z.object({
+  'name': z.string(),
+  'children': z.array(z.lazy(() => category)).optional(),
+});
+
+final token = z.custom<String>(
+  (value) => value.startsWith('tok_'),
+  message: 'Must be an API token.',
 );
 ```
 
----
+## Platform notes
+
+- **Web:** fully supported. On the web, Dart numbers are JavaScript numbers, so `1.0 is int` is true and `z.integer()` accepts `1.0`. `parseInIsolate()` runs on the main thread there (isolates are not available).
+- **Isolates:** on native platforms, `schema.parseInIsolate(value)` offloads large payloads to a background isolate. Schemas with closures (`refine`, `transform`) cannot cross isolates; use `Isolate.run(() => schema.safeParse(value))` for those.
+
+## Performance
+
+Validation costs microseconds per call, which is negligible next to JSON decoding or a network round trip. Zema is not the fastest validator on pub.dev. In the [benchmark](https://github.com/meragix/zema/tree/main/benchmark) below, acanthis is about twice as fast on strings and objects. Lower is better.
+
+| Scenario (µs per call) | zema | acanthis | ez_validator | luthor | zard |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| `String.email` | 6.77 | 3.05 | 6.93 | 10.67 | 9.21 |
+| `Integer.range` | 0.14 | 0.46 | 0.31 | 0.54 | 1.87 |
+| Object, 4 valid fields | 12.78 | 5.60 | 14.50 | 18.68 | 21.41 |
+| Object, 3 invalid fields | 19.20 | 8.63 | 11.77 | 33.21 | 146.44 |
+
+Dart 3.13 AOT (`dart compile exe`), Intel Core i9-9980HK, schemas built once and reused. Run it yourself with `make bench`. Performance work is tracked in [#10](https://github.com/meragix/zema/issues/10); contributions are welcome.
 
 ## Documentation
 
-Full guides, API reference, and examples: [zema.meragix.dev](https://zema.meragix.dev)
+Guides, API reference and recipes: **[zema.meragix.dev](https://zema.meragix.dev)**. Coming from TypeScript? Read [Coming from Zod](https://zema.meragix.dev/getting-started/coming-from-zod).
 
----
+## Contributing and support
 
-## License
+- Found a bug or a confusing error message? [Open an issue](https://github.com/meragix/zema/issues).
+- Want to help? See [CONTRIBUTING.md](https://github.com/meragix/zema/blob/main/CONTRIBUTING.md).
+- If Zema saves you time, a **like on [pub.dev](https://pub.dev/packages/zema)** and a **star on [GitHub](https://github.com/meragix/zema)** help other developers find it.
 
-MIT License. See [LICENSE](LICENSE)
+MIT License.

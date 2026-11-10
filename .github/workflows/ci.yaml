@@ -42,3 +42,40 @@ jobs:
     with:
       package: packages/zema_standard_schema
     secrets: inherit
+
+  # Every ```dart block of the READMEs and pub.dev examples must compile
+  # against the current packages. Docs pages are reported but not gated yet.
+  snippets:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Bootstrap
+        run: |
+          dart pub global activate melos 7.4.0
+          melos bootstrap
+      - name: README and example snippets (gate)
+        run: dart run scripts/check_snippets.dart --readmes
+      - name: Docs snippets (report only)
+        continue-on-error: true
+        run: dart run scripts/check_snippets.dart docs/
+
+  # packages/zema must keep compiling and passing on the web (dart2js).
+  zema_web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+          cache: true
+      - name: Bootstrap
+        run: |
+          dart pub global activate melos 7.4.0
+          melos bootstrap
+      - name: Test on Chrome
+        working-directory: packages/zema
+        run: dart test -p chrome

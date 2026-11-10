@@ -10,10 +10,8 @@ Flutter form widgets backed by [Zema](https://pub.dev/packages/zema) schemas.
 
 ## Installation
 
-```yaml
-dependencies:
-  zema: ^0.6.0
-  zema_forms: ^0.2.0
+```sh
+flutter pub add zema zema_forms
 ```
 
 ## Quick start
@@ -91,22 +89,22 @@ This prevents showing an error after the user types the first character.
 When a form has conditional or hidden fields, pair `submit()` with a banner that reads `submitErrors`:
 
 ```dart
-ValueListenableBuilder<List<ZemaIssue>>(
+final banner = ValueListenableBuilder<List<ZemaIssue>>(
   valueListenable: _ctrl.submitErrors,
   builder: (context, issues, _) {
     if (issues.isEmpty) return const SizedBox.shrink();
     return Text('${issues.length} field(s) require attention.');
   },
-)
+);
 ```
 
 ## Native Form bridge
 
 ```dart
-TextFormField(
+final emailField = TextFormField(
   controller: _ctrl.controllerFor('email'),
   validator: _ctrl.validatorFor('email'),
-)
+);
 ```
 
 ## Numeric fields
@@ -114,10 +112,10 @@ TextFormField(
 `TextField` always produces a `String`. Use the coercion layer for numeric fields:
 
 ```dart
-z.object({
+final orderSchema = z.object({
   'age': z.coerce().integer(min: 0, max: 150),
-  'price': z.coerce().decimal(),
-})
+  'price': z.coerce().float(),
+});
 ```
 
 ## API reference

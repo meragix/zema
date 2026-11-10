@@ -12,11 +12,16 @@ void main() {
         expect(result.value, equals(3.14));
       });
 
-      test('rejects integer value (not a double in Dart)', () {
-        // In Dart, int and double are distinct types at runtime.
-        final schema = z.double();
-        expect(schema.safeParse(42).isFailure, isTrue);
-      });
+      test(
+        'rejects integer value (not a double in Dart)',
+        () {
+          // On native platforms, int and double are distinct types at
+          // runtime. On the web both are JS numbers, so `42 is double` holds.
+          final schema = z.double();
+          expect(schema.safeParse(42).isFailure, isTrue);
+        },
+        testOn: 'vm',
+      );
 
       test('accepts negative double', () {
         final schema = z.double();

@@ -1,17 +1,17 @@
 name: zema_standard_schema
-description: "Standard Schema adapter for Zema — bridges zema with the standard_schema contract."
-version: 0.1.0
-homepage: https://github.com/meragix/zema
+description: "Standard Schema adapter for Zema. Exposes any Zema schema through the standard_schema contract so tools can validate without depending on Zema."
+version: 0.2.0
+homepage: https://zema.meragix.dev/plugins/zema_standard_schema
 repository: https://github.com/meragix/zema/tree/main/packages/zema_standard_schema
 issue_tracker: https://github.com/meragix/zema/issues
 
 environment:
-  sdk: ">=3.5.0 <4.0.0"
+  sdk: ">=3.8.0 <4.0.0"
 
 resolution: workspace
 
 dependencies:
-  zema: ^0.6.0
+  zema: ^0.7.0
   standard_schema: ^0.0.1
 
 dev_dependencies:

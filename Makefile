@@ -1,4 +1,4 @@
-.PHONY: setup bootstrap test analyze format clean
+.PHONY: setup bootstrap test analyze format clean snippets snippets-docs bench ci help
 
 # Setup development environment
 setup:
@@ -47,8 +47,16 @@ version:
 bench:
 	cd benchmark && dart pub get && dart run bin/competitive.dart
 
+# Compile every dart snippet of the READMEs and pub.dev examples
+snippets:
+	dart run scripts/check_snippets.dart --readmes
+
+# Report snippet errors in the docs site pages
+snippets-docs:
+	dart run scripts/check_snippets.dart docs/
+
 # All checks (CI simulation)
-ci: format-check analyze test
+ci: format-check analyze test snippets
 
 # Help
 help:
@@ -59,5 +67,6 @@ help:
 	@echo "  make analyze       - Run static analysis"
 	@echo "  make format        - Format code"
 	@echo "  make clean         - Clean workspace"
+	@echo "  make snippets      - Compile README and example snippets"
 	@echo "  make ci            - Run all CI checks"
 	@echo "  make bench         - Run competitive benchmarks"

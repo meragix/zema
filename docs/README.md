@@ -1,64 +1,34 @@
-# Authyra Documentation
+# Zema documentation site
 
-This directory contains the Nuxt.js + Docus documentation site for Authyra.
+Source of [zema.meragix.dev](https://zema.meragix.dev), built with [Docus](https://docus.dev) (Nuxt) and deployed to GitHub Pages by [`deploy-docs.yml`](../.github/workflows/deploy-docs.yml) on every push to `main` that touches `docs/`.
 
-**Live site**: [meragix.github.io/authyra](https://meragix.github.io/authyra)
-
-Deployed automatically to GitHub Pages on every push to `main` that touches the `docs/` directory.
-
----
-
-## Packages documented
-
-| Package | Description |
-|---|---|
-| [`authyra`](https://pub.dev/packages/authyra) | Core framework: pure Dart, zero Flutter dependency |
-| [`authyra_flutter`](https://pub.dev/packages/authyra_flutter) | Flutter layer: OAuth2 providers, `SecureAuthStorage`, widgets, GoRouter guard |
-
-`authyra_flutter` re-exports the entire `authyra` package, so Flutter apps only need one import.
-
----
-
-## Two-package architecture
-
-```text
-authyra (pure Dart)
-├── AuthyraClient          ← stateless orchestrator (injectable, testable)
-├── AuthyraInstance        ← singleton wrapper (reactive streams + sync cache)
-├── AuthProvider           ← interface for any auth strategy
-├── AuthStorage            ← interface for any persistence backend
-├── CredentialsProvider    ← email/password, any form-based flow
-├── SessionManager         ← multi-account session registry
-└── AccountManager         ← switch, sign out, clean sessions
-
-authyra_flutter (Flutter + re-exports authyra)
-├── OAuth2Provider         ← Authorization Code + PKCE (any IdP)
-├── GoogleProvider         ← prebuilt Google Sign-In
-├── GitHubOAuth2Provider   ← prebuilt GitHub OAuth
-├── AppleProvider          ← Sign in with Apple
-├── ProxyOAuthProvider     ← backend-delegated OAuth (secret stays server-side)
-├── SecureAuthStorage      ← flutter_secure_storage implementation
-└── OAuth2CallbackHandler  ← deep-link router for OAuth redirects
-```
-
-**Design rule**: everything that touches Flutter platform APIs, `url_launcher`, or platform channels lives in `authyra_flutter`. The core is pure Dart.
-
----
-
-## Running locally
+## Local development
 
 ```bash
 cd docs
-npm install
-npm run dev
+npm ci
+npm run dev     # http://localhost:3000
+npm run build   # production build
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+## Structure
 
----
+| Path | Content |
+| --- | --- |
+| `content/index.md` | Landing page |
+| `content/1.getting-started/` | Why Zema, installation, quick start, core concepts, coming from Zod |
+| `content/2.core/` | Schemas, validation, extension types, transformations, composition, advanced |
+| `content/3.plugins/` | `zema_forms`, `zema_firestore`, `zema_hive`, `zema_standard_schema` |
+| `content/faq.md`, `content/troubleshooting.md` | FAQ and common errors |
+| `app/app.config.ts` | Header, logo, social links, colors |
 
-## Content
+## Code samples
 
-All documentation lives in `content/`. Numeric prefixes on directories and files control navigation order (e.g., `1.getting-started/`, `2.core-concepts/`).
+Every ```dart block is compiled against the packages of this repository:
 
-See [`content/doc`](content/doc) for the full content tree and per-page descriptions.
+```bash
+# from the repository root, after `melos bootstrap`
+dart run scripts/check_snippets.dart docs/
+```
+
+The READMEs are a blocking CI check; the docs pages are reported in CI and should be kept at zero API errors. Put `<!-- snippet:skip -->` on the line before a fence for pseudo-code, signatures or examples that are meant not to compile.

@@ -7,7 +7,21 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.6.0] - 2026-06-02
+## [0.7.0] - 2026-11-10
+
+### Added
+
+- Web support: `package:zema` no longer imports `dart:isolate` unconditionally, so it now compiles for Flutter Web and `dart2js`/`dart2wasm`. On the web, `parseInIsolate()` runs validation on the current thread and returns a completed `Future`.
+- `ZemaSchemaBranding` is now exported from `package:zema/zema.dart`. `.brand<B>()` was documented but not reachable from the public library.
+
+### Fixed
+
+- `.pipe()` now accepts every built-in schema. Its parameter was typed `ZemaSchema<Output, T>`, which no built-in schema (all `ZemaSchema<dynamic, T>`) could satisfy, so `z.string().transform(int.parse).pipe(z.integer())` did not compile. The parameter is now `ZemaSchema<dynamic, T>`; the intermediate value is checked at runtime by the next schema.
+- `ZemaObject` no longer writes `null` for optional keys that are absent from the input ([#7](https://github.com/meragix/zema/issues/7)).
+
+### Changed
+
+- Output maps of `z.object()` only contain keys that were present in the input or that produced a non-null value (for example through `.withDefault()`). Code that relied on every shape key being present must use `map['key']` (which returns `null` for absent keys) instead of `containsKey`.
 
 ## [0.6.0] - 2026-06-02
 

@@ -85,6 +85,15 @@ melos format
 # Check formatting without modifying files (used in CI)
 melos format:check
 
+# Compile every ```dart block of the READMEs and pub.dev examples
+make snippets
+
+# Same check on the docs site pages (report only)
+make snippets-docs
+
+# Test the core package on the web (dart2js)
+dart test -p chrome packages/zema
+
 # Run all CI checks at once
 make ci
 
@@ -195,7 +204,10 @@ Rules:
    melos analyze
    melos format:check
    melos test
+   make snippets
    ```
+
+   If you change a public API, update the README and docs examples that use it: `make snippets` fails when a README example no longer compiles.
 
 4. Update `packages/zema/CHANGELOG.md` under `## [Unreleased]` with a concise entry describing what changed.
 

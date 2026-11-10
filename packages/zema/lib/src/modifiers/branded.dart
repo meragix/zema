@@ -8,7 +8,7 @@ import 'package:zema/src/core/schema.dart';
 /// distinguishing it from other schemas that produce the same underlying type.
 ///
 /// See [Branded] for full documentation and usage examples.
-extension ZSchemaBranding<I, O> on ZemaSchema<I, O> {
+extension ZemaSchemaBranding<I, O> on ZemaSchema<I, O> {
   /// Wraps the output of this schema in [Branded]`<O, B>`, applying nominal
   /// typing to an otherwise structurally identical type.
   ///
@@ -60,7 +60,7 @@ extension ZSchemaBranding<I, O> on ZemaSchema<I, O> {
 /// ```
 ///
 /// See also:
-/// - [ZSchemaBranding.brand]: the extension method that produces this wrapper.
+/// - [ZemaSchemaBranding.brand]: the extension method that produces this wrapper.
 /// - [BrandedSchema]: the internal schema implementation.
 @immutable
 final class Branded<T, Brand> {
@@ -84,7 +84,7 @@ final class Branded<T, Brand> {
 /// Internal schema that validates with [base] and wraps the output in
 /// [Branded]`<O, B>`.
 ///
-/// Constructed by [ZSchemaBranding.brand]. Do not instantiate directly.
+/// Constructed by [ZemaSchemaBranding.brand]. Do not instantiate directly.
 final class BrandedSchema<I, O, B> extends ZemaSchema<I, Branded<O, B>> {
   /// The underlying schema whose output is wrapped.
   final ZemaSchema<I, O> base;

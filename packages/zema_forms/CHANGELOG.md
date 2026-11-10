@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 
 ## [Unreleased]
 
+## 0.3.0
+
+- Requires `zema: ^0.7.0` (web support, working `.pipe()` and `.brand()`).
+- Added a pub.dev example (`example/README.md`).
+
+## 0.2.0
+
+- Requires `zema: ^0.6.0`.
+
 ## 0.1.0
 
 Initial release.

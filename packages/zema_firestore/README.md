@@ -8,12 +8,11 @@ Hooks into Firestore's native `withConverter` API so every document read is auto
 
 ## Installation
 
-```yaml
-dependencies:
-  zema: ^0.6.0
-  zema_firestore: ^0.2.0
-  cloud_firestore: ^5.0.0
+```sh
+flutter pub add zema zema_firestore cloud_firestore
 ```
+
+Supports `cloud_firestore` 5.x, 6.x and 7.x.
 
 ## Quick start
 

@@ -1,3 +1,11 @@
+## 0.3.0
+
+- Requires `zema: ^0.7.0`.
+
+## 0.2.0
+
+- Requires `zema: ^0.6.0`.
+
 ## 0.1.0
 
 - Initial release.

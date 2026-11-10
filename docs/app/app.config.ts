@@ -14,7 +14,7 @@ export default defineAppConfig({
   },
   socials: {
     x: 'https://x.com/meragix',
-    discord: 'https://discord.com/invitations/meragix',
+    github: 'https://github.com/meragix/zema',
   },
   ui: {
     colors: {

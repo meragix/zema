@@ -1,12 +1,12 @@
 name: zema_benchmark
-description: Competitive performance benchmarks — zema vs acanthis, ez_validator, luthor, zod_validation, zard.
+description: Competitive performance benchmarks: zema vs acanthis, ez_validator, luthor, zod_validation, zard.
 publish_to: none
 
 environment:
   sdk: '>=3.5.0 <4.0.0'
 
 dependencies:
-  # zema — path dep from this monorepo
+  # zema: path dep from this monorepo
   zema:
     path: ../packages/zema
 

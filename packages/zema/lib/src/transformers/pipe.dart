@@ -59,7 +59,11 @@ final class PipedSchema<I, M, O> extends ZemaSchema<I, O> {
   final ZemaSchema<I, M> first;
 
   /// The second schema, validates [M] (output of [first]) and produces [O].
-  final ZemaSchema<M, O> second;
+  ///
+  /// Typed with a `dynamic` input so that built-in schemas, which all accept
+  /// `dynamic`, can be piped after any other schema. The intermediate value
+  /// is checked at runtime by [second] itself.
+  final ZemaSchema<dynamic, O> second;
 
   const PipedSchema(this.first, this.second);
 

@@ -7,10 +7,7 @@ import 'package:zema/zema.dart';
 /// Zema-specific fields ([code], [receivedValue], [meta]) are not projected
 /// because the upstream contract does not define them.
 StandardIssue zemaIssueToStandard(ZemaIssue issue) {
-  return StandardIssue(
-    message: issue.message,
-    path: issue.path,
-  );
+  return StandardIssue(message: issue.message, path: issue.path);
 }
 
 /// Maps a list of [ZemaIssue]s to [StandardIssue]s,

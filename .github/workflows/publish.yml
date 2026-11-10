@@ -1,20 +1,26 @@
 name: Publish to pub.dev
 
-# Tag convention:
-#   zema-v1.2.3       → publish packages/zema
-#   zema_forms-v1.2.3 → publish packages/zema_forms
+# Tag convention: <package>-<version>, matching the existing tag history.
+#   zema-0.7.0                  -> packages/zema
+#   zema_forms-0.3.0            -> packages/zema_forms
+#   zema_firestore-0.3.0        -> packages/zema_firestore
+#   zema_hive-0.3.0             -> packages/zema_hive
+#   zema_standard_schema-0.2.0  -> packages/zema_standard_schema
+#
+# Each package must have automated publishing enabled on pub.dev
+# (Admin > Automated publishing > GitHub Actions) for repository
+# meragix/zema with the tag pattern "<package>-{{version}}".
 on:
   push:
     tags:
-      - 'zema-v*'
-      - 'zema_forms-v*'
+      - 'zema-[0-9]*'
+      - 'zema_forms-[0-9]*'
+      - 'zema_firestore-[0-9]*'
+      - 'zema_hive-[0-9]*'
+      - 'zema_standard_schema-[0-9]*'
 
 jobs:
-  # ---------------------------------------------------------------------------
-  # packages/zema  (pure Dart)
-  # ---------------------------------------------------------------------------
-  publish-zema:
-    if: startsWith(github.ref_name, 'zema-v') && !startsWith(github.ref_name, 'zema_forms-v')
+  publish:
     runs-on: ubuntu-latest
     permissions:
       id-token: write # Required for OIDC authentication with pub.dev
@@ -22,64 +28,62 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Resolve package from tag
+        id: pkg
+        run: |
+          tag="${GITHUB_REF_NAME}"
+          # Strip from the first "-<digit>": keeps prerelease suffixes
+          # such as zema-0.8.0-dev.1 in the version.
+          name="${tag%%-[0-9]*}"
+          version="${tag#"${name}"-}"
+          dir="packages/${name}"
+          if [ ! -f "${dir}/pubspec.yaml" ]; then
+            echo "Unknown package '${name}' for tag '${tag}'" >&2
+            exit 1
+          fi
+          declared="$(grep -E '^version:' "${dir}/pubspec.yaml" | awk '{print $2}')"
+          if [ "${declared}" != "${version}" ]; then
+            echo "Tag version ${version} does not match pubspec version ${declared}" >&2
+            exit 1
+          fi
+          status="$(curl -s -o /dev/null -w '%{http_code}' \
+            "https://pub.dev/api/packages/${name}/versions/${version}")"
+          echo "name=${name}" >> "$GITHUB_OUTPUT"
+          echo "dir=${dir}" >> "$GITHUB_OUTPUT"
+          echo "exists=$([ "${status}" = "200" ] && echo true || echo false)" >> "$GITHUB_OUTPUT"
+          if grep -qE '^\s+flutter:\s*$' "${dir}/pubspec.yaml"; then
+            echo "flutter=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "flutter=false" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Already published
+        if: steps.pkg.outputs.exists == 'true'
+        run: echo "${GITHUB_REF_NAME} is already on pub.dev, nothing to do."
+
       - uses: subosito/flutter-action@v2
+        if: steps.pkg.outputs.exists == 'false'
         with:
           channel: stable
           cache: true
 
-      - name: Cache pub
-        uses: actions/cache@v3
-        with:
-          path: ~/.pub-cache
-          key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
-
-      - name: Install Melos
-        run: dart pub global activate melos 7.4.0
-
       - name: Bootstrap
-        run: melos bootstrap
+        if: steps.pkg.outputs.exists == 'false'
+        run: |
+          dart pub global activate melos 7.4.0
+          melos bootstrap
 
-      - name: Run tests
-        working-directory: packages/zema
+      - name: Test (Dart)
+        if: steps.pkg.outputs.exists == 'false' && steps.pkg.outputs.flutter == 'false'
+        working-directory: ${{ steps.pkg.outputs.dir }}
         run: dart test
 
-      - name: Publish
-        working-directory: packages/zema
-        run: dart pub publish --force
-
-  # ---------------------------------------------------------------------------
-  # packages/zema_forms  (Flutter)
-  # ---------------------------------------------------------------------------
-  publish-zema_forms:
-    if: startsWith(github.ref_name, 'zema_forms-v')
-    runs-on: ubuntu-latest
-    permissions:
-      id-token: write # Required for OIDC authentication with pub.dev
-
-    steps:
-      - uses: actions/checkout@v4
-
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-          cache: true
-
-      - name: Cache pub
-        uses: actions/cache@v3
-        with:
-          path: ~/.pub-cache
-          key: pub-${{ runner.os }}-${{ hashFiles('**/pubspec.lock') }}
-
-      - name: Install Melos
-        run: dart pub global activate melos 7.4.0
-
-      - name: Bootstrap
-        run: melos bootstrap
-
-      - name: Run tests
-        working-directory: packages/zema_forms
+      - name: Test (Flutter)
+        if: steps.pkg.outputs.exists == 'false' && steps.pkg.outputs.flutter == 'true'
+        working-directory: ${{ steps.pkg.outputs.dir }}
         run: flutter test
 
       - name: Publish
-        working-directory: packages/zema_forms
+        if: steps.pkg.outputs.exists == 'false'
+        working-directory: ${{ steps.pkg.outputs.dir }}
         run: dart pub publish --force

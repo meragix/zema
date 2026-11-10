@@ -1,6 +1,6 @@
-import 'dart:isolate';
-
 import 'package:zema/src/complex/object.dart';
+import 'package:zema/src/core/isolate_runner_stub.dart'
+    if (dart.library.isolate) 'package:zema/src/core/isolate_runner_io.dart';
 import 'package:zema/src/core/result.dart';
 import 'package:zema/src/error/exception.dart';
 import 'package:zema/src/error/issue.dart';
@@ -216,11 +216,14 @@ abstract class ZemaSchema<Input, Output> {
   /// For async refinements, use [safeParseAsync] directly. Async refinements
   /// perform I/O and do not benefit from isolate offloading.
   ///
+  /// On the web, where isolates are not available, validation runs on the
+  /// current thread and the result is returned as a completed `Future`.
+  ///
   /// See also:
   /// - [safeParse] is the synchronous equivalent.
   /// - [safeParseAsync] for schemas with async refinements.
   Future<ZemaResult<Output>> parseInIsolate(Input value) =>
-      Isolate.run(() => safeParse(value));
+      runInBackground(() => safeParse(value));
 
   // ===========================================================================
   // TRANSFORMATION METHODS
@@ -269,7 +272,7 @@ abstract class ZemaSchema<Input, Output> {
   /// // pass it to an int schema that checks range.
   /// final schema = z.string()
   ///     .transform(int.parse)
-  ///     .pipe(z.int().gte(0).lte(100));
+  ///     .pipe(z.integer().gte(0).lte(100));
   ///
   /// schema.parse('42');   // 42
   /// schema.parse('150');  // fails: value > 100
@@ -279,8 +282,8 @@ abstract class ZemaSchema<Input, Output> {
   /// See also:
   /// - [transform] for a simple one-step output transformation.
   /// - [preprocess] for transforming the raw *input* before this schema runs.
-  ZemaSchema<Input, T> pipe<T>(ZemaSchema<Output, T> next) =>
-      PipedSchema(this, next);
+  ZemaSchema<Input, T> pipe<T>(ZemaSchema<dynamic, T> next) =>
+      PipedSchema<Input, Output, T>(this, next);
 
   /// Applies [fn] to transform the raw input before this schema validates it.
   ///
