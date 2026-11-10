@@ -19,9 +19,8 @@ seo:
 
 ```dart
 // Accept both int and whole-number double
-z.preprocess(
-  (v) => v is double ? v.toInt() : v,
-  z.integer(),
+z.integer().preprocess<dynamic>(
+  (v) => v is double && v == v.roundToDouble() ? v.toInt() : v,
 );
 ```
 
@@ -188,6 +187,7 @@ void main() {
 
 **Fix:** Provide an explicit type argument:
 
+<!-- snippet:skip -->
 ```dart
 // Fails to infer T
 z.union([z.string(), z.integer()])
