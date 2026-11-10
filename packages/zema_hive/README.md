@@ -8,11 +8,8 @@ Type-safe local storage without TypeAdapters or code generation. Wrap any Hive `
 
 ## Installation
 
-```yaml
-dependencies:
-  zema: ^0.6.0
-  zema_hive: ^0.2.0
-  hive_ce: ^2.19.3
+```sh
+dart pub add zema zema_hive hive_ce
 ```
 
 ## Quick start
@@ -56,13 +53,23 @@ print(user?['name']); // Alice
 Use Dart extension types to get named field access without any runtime overhead:
 
 ```dart
-extension type User(Map<String, dynamic> _) {
+// `implements Object` is required: ZemaBox<T> needs a non-nullable type.
+extension type User(Map<String, dynamic> _) implements Object {
   String get id => _['id'] as String;
   String get name => _['name'] as String;
   String get email => _['email'] as String;
 }
 
-final userBox = box.withZema<User>(userSchema);
+final typedUserSchema = z.objectAs<User>(
+  {
+    'id': z.string(),
+    'name': z.string().min(1),
+    'email': z.string().email(),
+  },
+  User.new,
+);
+
+final userBox = box.withZema(typedUserSchema);
 
 await userBox.put('alice', User({'id': 'alice', 'name': 'Alice', 'email': 'alice@example.com'}));
 

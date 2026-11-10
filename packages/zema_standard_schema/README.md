@@ -8,11 +8,8 @@ Standard Schema adapter for [Zema](https://pub.dev/packages/zema). Bridges any `
 
 ## Installation
 
-```yaml
-dependencies:
-  zema: ^0.6.0
-  zema_standard_schema: ^0.1.0
-  standard_schema: ^0.0.1
+```sh
+dart pub add zema zema_standard_schema standard_schema
 ```
 
 ```dart
@@ -28,9 +25,10 @@ final emailSchema = z.string().email().min(3);
 // Wrap with .asStandard and use with any Standard Schema consumer
 final standard = emailSchema.asStandard;
 
-final result = standard.standard.validate('not-an-email');
-if (result is StandardFailure) {
-  for (final issue in result.issues) {
+// validate() returns FutureOr: await it so async schemas work too.
+final result = await standard.standard.validate('not-an-email');
+if (result case StandardFailure(:final issues)) {
+  for (final issue in issues) {
     print('${issue.path.join(".")}: ${issue.message}');
   }
 }
