@@ -1,22 +1,22 @@
 ---
 seo:
-  title: Zema | Schema Validation for Dart
-  description: Type-safe schema validation for Dart and Flutter. Define schemas once, collect all errors in a single pass, and validate anywhere.
+  title: Zema | Validate untrusted data in Dart and Flutter
+  description: Zod-style schema validation for Dart and Flutter. One schema for API responses, forms, Firestore and Hive. Every error in one pass, translated messages, typed results, no build_runner.
 ---
 
 ::u-page-hero
 #title
-Schema validation for Dart. [Define once, validate anywhere.]{.text-primary}
+Validate untrusted data in Dart and Flutter. [One schema, every boundary.]{.text-primary}
 
 #description
-Zema is a schema validation library for Dart inspired by Zod. A fluent chainable API, exhaustive error collection, and a sealed result type that never throws unless you want it to.
+Describe the data you expect once. Zema checks API responses, form input, Firestore documents and local storage against it, reports every problem with its path and a translated message, and hands you clean, typed values. Pure Dart, works on mobile, desktop, web and server. No code generation.
 
 #links
   :::u-button
   ---
   color: neutral
   size: xl
-  to: /getting-started/installation
+  to: /getting-started/quick-start
   trailing-icon: i-lucide-arrow-right
   ---
   Get started
@@ -32,76 +32,126 @@ Zema is a schema validation library for Dart inspired by Zod. A fluent chainable
   ---
   Star on GitHub
   :::
+
+  :::u-button
+  ---
+  color: neutral
+  icon: simple-icons-dart
+  size: xl
+  to: "https://pub.dev/packages/zema"
+  variant: ghost
+  ---
+  pub.dev
+  :::
 ::
 
 ::u-page-section
 #title
-Everything you need to validate data in Dart
+From `fromJson` crashes to useful errors
+
+#description
+`User.fromJson(json)` throws a `TypeError` on the first unexpected field, far from where the data came in, with nothing to show the user. A Zema schema reports everything at once:
+
+#default
+```dart
+final signUp = z.object({
+  'email': z.string().email(),
+  'password': z.string().min(8),
+  'age': z.integer().gte(18).optional(),
+});
+
+final result = signUp.safeParse({'email': 'ada@', 'password': '123'});
+
+for (final issue in result.errors) {
+  print('${issue.pathString}: ${issue.message}');
+}
+// email: Invalid email format
+// password: Must be at least 8 characters
+```
+::
+
+::u-page-section
+#title
+Built for the places where Dart apps break
 
 #features
   :::u-page-feature
   ---
-  icon: i-lucide-layers
+  icon: i-lucide-cloud-download
+  to: /getting-started/quick-start
   ---
   #title
-  [Fluent]{.text-primary} chainable API
+  [API responses]{.text-primary}
 
   #description
-  Build schemas by chaining constraints: `z.string().min(2).email()`. Every method returns a new immutable schema instance: no mutation, no side effects.
+  Validate JSON before it reaches your models. Get typed values with `z.objectAs` and an extension type, or pass the clean map to your Freezed / json_serializable `fromJson`.
   :::
 
   :::u-page-feature
   ---
-  icon: i-lucide-list-checks
+  icon: i-lucide-text-cursor-input
+  to: /plugins/zema_forms
   ---
   #title
-  [Exhaustive]{.text-primary} error collection
+  [Flutter forms]{.text-primary}
 
   #description
-  Every failing field is reported in a single parse call. No silent failures, no early exits. Each issue carries a code, a human-readable message, and a path to the exact location in the input.
+  `zema_forms` drives text fields from the same schema: errors after blur, per-field rebuilds, focus on the first invalid field, coercion for numeric inputs.
   :::
 
   :::u-page-feature
   ---
-  icon: i-lucide-shield
+  icon: i-lucide-flame
+  to: /plugins/zema_firestore
   ---
   #title
-  [Sealed]{.text-primary} result type
+  [Firestore]{.text-primary}
 
   #description
-  `safeParse()` returns `ZemaSuccess<T>` or `ZemaFailure<T>`, never throws. Use Dart 3 pattern matching to handle both cases. Call `parse()` when you prefer an exception on failure.
+  `zema_firestore` plugs into `withConverter`: every document read is validated, with `Timestamp`, `GeoPoint` and `DocumentReference` schemas. Supports `cloud_firestore` 5 to 7.
   :::
 
   :::u-page-feature
   ---
-  icon: i-lucide-blocks
+  icon: i-lucide-hard-drive
+  to: /plugins/zema_hive
   ---
   #title
-  [Composable]{.text-primary} object schemas
+  [Local storage]{.text-primary}
 
   #description
-  Build complex schemas from simple ones. `extend()`, `merge()`, `pick()`, and `omit()` let you derive new schemas from existing ones without repetition.
+  `zema_hive` validates Hive CE writes and reads, and migrates documents written by older app versions on read. No TypeAdapters, no code generation.
   :::
 
   :::u-page-feature
   ---
-  icon: i-lucide-zap
+  icon: i-lucide-languages
+  to: /core/validation/error-handling
   ---
   #title
-  [Discriminated]{.text-primary} unions
+  [Messages for humans]{.text-primary}
 
   #description
-  `discriminatedBy()` selects the matching schema directly from a literal field, O(1) instead of a linear scan. No unnecessary validation of non-matching schemas.
+  Each issue carries a code, a path such as `items.[2].email` and a translated message. English and French built in, add any locale, override any message.
   :::
 
   :::u-page-feature
   ---
-  icon: i-lucide-repeat
+  icon: i-lucide-code
+  to: /getting-started/coming-from-zod
   ---
   #title
-  [Coercion]{.text-primary} for raw inputs
+  [Feels like Zod]{.text-primary}
 
   #description
-  `z.coerce()` converts strings from environment variables, query parameters, and form inputs into the correct Dart type before validation runs.
+  `z.object`, `safeParse`, `refine`, `transform`, `pipe`, discriminated unions, coercion. If you know Zod from TypeScript, you already know Zema.
   :::
+::
+
+::u-page-section
+#title
+Why not just Freezed or json_serializable?
+
+#description
+They generate models; they do not check values. `email` is a `String`, not a valid email. `age` is an `int`, not "18 or more". Zema covers that layer and composes with them, or replaces code generation entirely with extension types. [Read the full comparison](/getting-started/why-zema).
 ::
