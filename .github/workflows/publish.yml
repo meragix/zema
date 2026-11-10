@@ -22,6 +22,9 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    # Fail fast instead of hanging for hours if authentication breaks
+    # (dart pub publish falls back to an interactive OAuth prompt).
+    timeout-minutes: 20
     permissions:
       id-token: write # Required for OIDC authentication with pub.dev
 
@@ -82,6 +85,22 @@ jobs:
         if: steps.pkg.outputs.exists == 'false' && steps.pkg.outputs.flutter == 'true'
         working-directory: ${{ steps.pkg.outputs.dir }}
         run: flutter test
+
+      # subosito/flutter-action does not exchange the GitHub OIDC token for a
+      # pub.dev token (dart-lang/setup-dart does). Do it explicitly, otherwise
+      # dart pub publish waits forever for a browser login.
+      - name: Authenticate with pub.dev (GitHub OIDC)
+        if: steps.pkg.outputs.exists == 'false'
+        run: |
+          token="$(curl -sLS "${ACTIONS_ID_TOKEN_REQUEST_URL}&audience=https://pub.dev" \
+            -H "Authorization: bearer ${ACTIONS_ID_TOKEN_REQUEST_TOKEN}" | jq -r '.value')"
+          if [ -z "${token}" ] || [ "${token}" = "null" ]; then
+            echo "Could not obtain a GitHub OIDC token for pub.dev" >&2
+            exit 1
+          fi
+          echo "::add-mask::${token}"
+          echo "PUB_TOKEN=${token}" >> "$GITHUB_ENV"
+          dart pub token add https://pub.dev --env-var PUB_TOKEN
 
       - name: Publish
         if: steps.pkg.outputs.exists == 'false'
