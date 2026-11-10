@@ -302,7 +302,7 @@ Validation costs microseconds per call, which is negligible next to JSON decodin
 | Object, 4 valid fields | 12.78 | 5.60 | 14.50 | 18.68 | 21.41 |
 | Object, 3 invalid fields | 19.20 | 8.63 | 11.77 | 33.21 | 146.44 |
 
-Dart 3.13 AOT (`dart compile exe`), Intel Core i9-9980HK, schemas built once and reused. Run it yourself with `make bench`. Performance work is tracked in the issues; contributions are welcome.
+Dart 3.13 AOT (`dart compile exe`), Intel Core i9-9980HK, schemas built once and reused. Run it yourself with `make bench`. Performance work is tracked in [#10](https://github.com/meragix/zema/issues/10); contributions are welcome.
 
 ## Documentation
 
