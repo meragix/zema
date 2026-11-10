@@ -32,8 +32,10 @@ jobs:
         id: pkg
         run: |
           tag="${GITHUB_REF_NAME}"
-          name="${tag%-*}"
-          version="${tag##*-}"
+          # Strip from the first "-<digit>": keeps prerelease suffixes
+          # such as zema-0.8.0-dev.1 in the version.
+          name="${tag%%-[0-9]*}"
+          version="${tag#"${name}"-}"
           dir="packages/${name}"
           if [ ! -f "${dir}/pubspec.yaml" ]; then
             echo "Unknown package '${name}' for tag '${tag}'" >&2
