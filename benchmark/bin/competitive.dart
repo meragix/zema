@@ -8,28 +8,28 @@
 // schemas are defined at the top level and reused across many calls.
 //
 // Scenarios:
-//   1. String.email     — validate an email string
-//   2. Integer.range    — validate an integer within [0, 120]
-//   3. Object.flat      — validate a 4-field flat map
-//   4. Object.failure   — validate an invalid 3-field map (error path)
+//   1. String.email    : validate an email string
+//   2. Integer.range   : validate an integer within [0, 120]
+//   3. Object.flat     : validate a 4-field flat map
+//   4. Object.failure  : validate an invalid 3-field map (error path)
 
 // ignore_for_file: avoid_print
 
 import 'package:benchmark_harness/benchmark_harness.dart';
 
-// zema — this library
+// zema: this library
 import 'package:zema/zema.dart';
 
-// acanthis — Zod-inspired, uses top-level functions
+// acanthis: Zod-inspired, uses top-level functions
 import 'package:acanthis/acanthis.dart' as acanthis;
 
-// ez_validator — Flutter form validator, EzValidator<T> / EzSchema
+// ez_validator: Flutter form validator, EzValidator<T> / EzSchema
 import 'package:ez_validator/ez_validator.dart';
 
-// luthor — uses the `l` singleton
+// luthor: uses the `l` singleton
 import 'package:luthor/luthor.dart';
 
-// zard — Zod-inspired, uses z factory (aliased to avoid conflict with zema's z)
+// zard: Zod-inspired, uses z factory (aliased to avoid conflict with zema's z)
 import 'package:zard/zard.dart' as zard;
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -195,7 +195,7 @@ class EzObjectFlat extends BenchmarkBase {
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
-// 4. Object.failure  (3 fields, all invalid — error-collection path)
+// 4. Object.failure  (3 fields, all invalid, error-collection path)
 // ─────────────────────────────────────────────────────────────────────────────
 
 class ZemaObjectFailure extends BenchmarkBase {
@@ -266,7 +266,7 @@ void _header(String title) {
 
 void main() {
   print('Zema competitive benchmarks\n');
-  print('Results in µs/iteration — lower is better.\n');
+  print('Results in µs/iteration. Lower is better.\n');
   print('Schemas are defined once (static final) and reused.');
 
   _header('1 · String.email');

@@ -20,7 +20,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      # Flutter action bundles the Dart SDK — no need for dart-lang/setup-dart.
+      # Flutter action bundles the Dart SDK, no need for dart-lang/setup-dart.
       # Flutter is required anyway for `melos bootstrap` (workspace has Flutter packages).
       - uses: subosito/flutter-action@v2
         with:

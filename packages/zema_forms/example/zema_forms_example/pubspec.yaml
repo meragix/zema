@@ -1,5 +1,5 @@
 name: zema_forms_example
-description: "Example app demonstrating zema_forms — schema-backed Flutter forms."
+description: "Example app demonstrating zema_forms: schema-backed Flutter forms."
 publish_to: 'none'
 version: 1.0.0+1
 
