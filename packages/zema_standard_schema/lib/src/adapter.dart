@@ -30,10 +30,7 @@ final class ZemaStandardAdapter<Input, Output>
 
   @override
   StandardSchemaPropsV1<Input, Output> get standard =>
-      StandardSchemaPropsV1<Input, Output>(
-        vendor: 'zema',
-        validate: _validate,
-      );
+      StandardSchemaPropsV1<Input, Output>(vendor: 'zema', validate: _validate);
 
   FutureOr<StandardResult<Output>> _validate(
     Object? value, [
@@ -42,8 +39,9 @@ final class ZemaStandardAdapter<Input, Output>
     final result = _schema.safeParse(value as Input);
     return switch (result) {
       ZemaSuccess<Output>(:final value) => StandardSuccess(value),
-      ZemaFailure<Output>(:final errors) =>
-        StandardFailure<Output>(zemaIssuesToStandard(errors)),
+      ZemaFailure<Output>(:final errors) => StandardFailure<Output>(
+        zemaIssuesToStandard(errors),
+      ),
     };
   }
 }

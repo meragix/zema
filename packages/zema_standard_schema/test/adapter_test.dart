@@ -28,9 +28,7 @@ void main() {
     });
 
     test('maps issue path correctly', () {
-      final schema = z.object({
-        'name': z.string().min(2),
-      });
+      final schema = z.object({'name': z.string().min(2)});
       final adapter = ZemaStandardAdapter(schema);
 
       final result = adapter.standard.validate(<String, dynamic>{'name': 'X'});
@@ -48,7 +46,10 @@ void main() {
     });
 
     test('filters out warning-level issues', () {
-      final schema = z.string().min(1).refineWarn(
+      final schema = z
+          .string()
+          .min(1)
+          .refineWarn(
             (value) => value.length > 5,
             message: 'Value is unusually long',
           );
